@@ -1,0 +1,15 @@
+@model FastBurger.Application.DTOs.MenuDTO
+
+<h1>@Model.Nombre</h1>
+
+<div>
+    <p><strong>Descripción:</strong> @Model.Descripcion</p>
+    <p><strong>Activo:</strong> @(Model.Activo ? "Sí" : "No")</p>
+    <p><strong>Días de la semana:</strong> @Model.DiasSemana</p>
+    <p><strong>Fecha Inicio:</strong> @(Model.FechaInicio?.ToString() ?? "No definida")</p>
+    <p><strong>Fecha Fin:</strong> @(Model.FechaFin?.ToString() ?? "No definida")</p>
+    <p><strong>Hora Inicio:</strong> @(Model.HoraInicio?.ToString() ?? "No definida")</p>
+    <p><strong>Hora Fin:</strong> @(Model.HoraFin?.ToString() ?? "No definida")</p>
+</div>
+
+<a asp-action="Index">Volver</a>

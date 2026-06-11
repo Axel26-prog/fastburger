@@ -1,0 +1,18 @@
+@model FastBurger.Application.DTOs.ProductoDTO
+
+<h1>@Model.Nombre</h1>
+
+<div>
+    <p><strong>Descripción:</strong> @Model.Descripcion</p>
+    <p><strong>Precio:</strong> @Model.Precio</p>
+    <p><strong>Categoría:</strong> @Model.NombreCategoria</p>
+    <p><strong>Tiempo de Prep:</strong> @Model.TiempoPrepMin min</p>
+    <p><strong>Calorías:</strong> @Model.Calorias</p>
+    <p><strong>Disponible:</strong> @(Model.Disponible ? "Sí" : "No")</p>
+    @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+    {
+        <img src="@Model.ImagenUrl" alt="@Model.Nombre" style="max-width: 300px;" />
+    }
+</div>
+
+<a asp-action="Index">Volver</a>

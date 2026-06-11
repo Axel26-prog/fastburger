@@ -1,6 +1,18 @@
+using FastBurger.Application.Interfaces;
+using FastBurger.Application.Services;
+using FastBurger.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddDbContext<FastBurgerContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IProductoService, ProductoService>();
+builder.Services.AddScoped<IComboService, ComboService>();
+builder.Services.AddScoped<IMenuService, MenuService>();
+builder.Services.AddScoped<IProcesoPreparacionService, ProcesoPreparacionService>();
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

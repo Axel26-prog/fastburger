@@ -1,0 +1,30 @@
+@model IEnumerable<FastBurger.Application.DTOs.ComboDTO>
+
+<h1>Combos</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Categoría</th>
+            <th>Disponible</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var combo in Model)
+        {
+            <tr>
+                <td>@combo.Nombre</td>
+                <td>@combo.Descripcion</td>
+                <td>@combo.Precio</td>
+                <td>@combo.NombreCategoria</td>
+                <td>@(combo.Disponible ? "Sí" : "No")</td>
+                <td>
+                    <a asp-action="Detalle" asp-route-id="@combo.IdCombo">Ver Detalle</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,8 +1,8 @@
 using System.Diagnostics;
-using FastBurger.Models;
+using FastBurger.Infrastructure.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FastBurger.Controllers
+namespace FastBurger.Web.Controllers
 {
     public class HomeController : Controller
     {

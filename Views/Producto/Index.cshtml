@@ -1,0 +1,30 @@
+@model IEnumerable<FastBurger.Application.DTOs.ProductoDTO>
+
+<h1>Productos</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Categoría</th>
+            <th>Disponible</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var producto in Model)
+        {
+            <tr>
+                <td>@producto.Nombre</td>
+                <td>@producto.Descripcion</td>
+                <td>@producto.Precio</td>
+                <td>@producto.NombreCategoria</td>
+                <td>@(producto.Disponible ? "Sí" : "No")</td>
+                <td>
+                    <a asp-action="Detalle" asp-route-id="@producto.IdProducto">Ver Detalle</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

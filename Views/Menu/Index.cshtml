@@ -1,0 +1,32 @@
+@model IEnumerable<FastBurger.Application.DTOs.MenuDTO>
+
+<h1>Menús</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Activo</th>
+            <th>Días</th>
+            <th>Hora Inicio</th>
+            <th>Hora Fin</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var menu in Model)
+        {
+            <tr>
+                <td>@menu.Nombre</td>
+                <td>@menu.Descripcion</td>
+                <td>@(menu.Activo ? "Sí" : "No")</td>
+                <td>@menu.DiasSemana</td>
+                <td>@menu.HoraInicio</td>
+                <td>@menu.HoraFin</td>
+                <td>
+                    <a asp-action="Disponible" asp-route-id="@menu.IdMenu">Ver Disponible</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

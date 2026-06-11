@@ -1,0 +1,24 @@
+@model FastBurger.Application.DTOs.ComboDTO
+
+<h1>@Model.Nombre</h1>
+
+<div>
+    <p><strong>Descripción:</strong> @Model.Descripcion</p>
+    <p><strong>Precio:</strong> @Model.Precio</p>
+    <p><strong>Categoría:</strong> @Model.NombreCategoria</p>
+    <p><strong>Disponible:</strong> @(Model.Disponible ? "Sí" : "No")</p>
+    @if (Model.FechaInicio.HasValue)
+    {
+        <p><strong>Fecha Inicio:</strong> @Model.FechaInicio.Value</p>
+    }
+    @if (Model.FechaFin.HasValue)
+    {
+        <p><strong>Fecha Fin:</strong> @Model.FechaFin.Value</p>
+    }
+    @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+    {
+        <img src="@Model.ImagenUrl" alt="@Model.Nombre" style="max-width: 300px;" />
+    }
+</div>
+
+<a asp-action="Index">Volver</a>
