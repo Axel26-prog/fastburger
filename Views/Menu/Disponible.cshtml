@@ -6,74 +6,117 @@
 
 @if (Model == null)
 {
-    <div class="alert alert-warning text-center mt-4" role="alert">
-        <h4 class="alert-heading">No hay menú disponible</h4>
+    <div class="alert alert-warning text-center mt-4 py-4" role="alert">
+        <h4 class="alert-heading">⚠️ No hay menú disponible</h4>
         <p class="mb-0">@ViewBag.Mensaje</p>
     </div>
 }
 else
 {
-    <div class="text-center mb-5 mt-3">
-        <h1 class="fw-bold display-5" style="color:#3D2B1F;">🍔 @Model.Nombre</h1>
-        <p class="lead fst-italic text-muted">@Model.Descripcion</p>
-        <div class="d-flex justify-content-center gap-4 flex-wrap">
-            <span>📅 @(Model.FechaInicio?.ToString("dd/MM/yyyy") ?? "—") — @(Model.FechaFin?.ToString("dd/MM/yyyy") ?? "—")</span>
-            <span>🕐 @(Model.HoraInicio?.ToString(@"hh\:mm") ?? "—") a @(Model.HoraFin?.ToString(@"hh\:mm") ?? "—")</span>
-            @if (!string.IsNullOrEmpty(Model.DiasSemana))
+    <div class="menu-container mx-auto my-4" style="max-width: 900px;">
+        <div class="menu-header text-center py-4 px-3" style="background: #3D2B1F; color: #fff; border-radius: 8px 8px 0 0;">
+            <h1 class="display-5 fw-bold mb-2">🍔 @Model.Nombre</h1>
+            @if (!string.IsNullOrEmpty(Model.Descripcion))
             {
-                <span>📆 @Model.DiasSemana</span>
+                <p class="lead mb-0 opacity-75">@Model.Descripcion</p>
             }
         </div>
-    </div>
 
-    @if (Model.Items.Any())
-    {
-        @foreach (var grupo in Model.Items.GroupBy(i => i.Categoria))
-        {
-            <div class="mb-5">
-                <h3 class="fw-bold pb-2 mb-4" style="color:#E63946; border-bottom: 3px solid #F4A261;">@grupo.Key</h3>
-
-                @{
-                    var productos = grupo.Where(i => i.Tipo == "Producto");
-                    var combos = grupo.Where(i => i.Tipo == "Combo");
-                }
-
-                @if (productos.Any())
+        <div class="menu-availability text-center py-3 px-3" style="background: #F4A261; color: #3D2B1F;">
+            <div class="d-flex justify-content-center gap-4 flex-wrap">
+                <span class="fw-bold">📅 @(Model.FechaInicio?.ToString("dd/MM/yyyy") ?? "—") — @(Model.FechaFin?.ToString("dd/MM/yyyy") ?? "—")</span>
+                <span class="fw-bold">🕐 @(Model.HoraInicio?.ToString(@"hh\:mm") ?? "—") — @(Model.HoraFin?.ToString(@"hh\:mm") ?? "—")</span>
+                @if (!string.IsNullOrEmpty(Model.DiasSemana))
                 {
-                    <h6 class="text-uppercase text-muted fw-bold mb-3">Productos</h6>
-                    @foreach (var item in productos)
-                    {
-                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2" style="border-bottom: 1px dashed #ddd;">
-                            <div>
-                                <h5 class="mb-0 fw-bold" style="color:#3D2B1F;">@item.Nombre</h5>
-                            </div>
-                            <span class="fw-bold fs-5" style="color:#E63946;">₡@item.Precio</span>
-                        </div>
-                    }
-                }
-
-                @if (combos.Any())
-                {
-                    <h6 class="text-uppercase text-muted fw-bold mb-3 mt-4">Combos</h6>
-                    @foreach (var item in combos)
-                    {
-                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2" style="border-bottom: 1px dashed #ddd;">
-                            <div>
-                                <h5 class="mb-0 fw-bold" style="color:#3D2B1F;">@item.Nombre</h5>
-                            </div>
-                            <span class="fw-bold fs-5" style="color:#E63946;">₡@item.Precio</span>
-                        </div>
-                    }
+                    <span class="fw-bold">📆 @Model.DiasSemana</span>
                 }
             </div>
-        }
-    }
-    else
-    {
-        <p class="text-muted text-center fs-5">Este menú no tiene items cargados.</p>
-    }
+        </div>
+
+        <div class="menu-body p-4" style="background: #FFFDF9; border: 2px solid #3D2B1F; border-top: none; border-bottom: none;">
+            @if (Model.Items.Any())
+            {
+                @foreach (var grupo in Model.Items.GroupBy(i => i.Categoria).OrderBy(g => g.Key))
+                {
+                    <div class="mb-4">
+                        <h3 class="text-center fw-bold py-2 px-3 mb-3" style="color: #fff; background: #E63946; border-radius: 4px; text-transform: uppercase; font-size: 1.1rem;">
+                            @grupo.Key
+                        </h3>
+
+                        @{
+                            var productos = grupo.Where(i => i.Tipo == "Producto").ToList();
+                            var combos = grupo.Where(i => i.Tipo == "Combo").ToList();
+                        }
+
+                        @if (productos.Any())
+                        {
+                            <div class="row g-3 mb-3">
+                                @foreach (var item in productos)
+                                {
+                                    <div class="col-12 col-md-6">
+                                        <div class="d-flex align-items-center p-2 rounded" style="background: #fff; border: 1px solid #e0d5c7; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                            @if (!string.IsNullOrEmpty(item.ImagenUrl))
+                                            {
+                                                <img src="@item.ImagenUrl" alt="@item.Nombre" class="rounded me-3" style="width: 70px; height: 70px; object-fit: cover;" />
+                                            }
+                                            else
+                                            {
+                                                <div class="rounded me-3 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px; background: #f0f0f0;">
+                                                    <span class="text-muted small">Sin img</span>
+                                                </div>
+                                            }
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-0 fw-bold" style="color: #3D2B1F;">@item.Nombre</h6>
+                                            </div>
+                                            <span class="fw-bold ms-2" style="color: #E63946;">₡@item.Precio</span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+
+                        @if (combos.Any())
+                        {
+                            <div class="row g-3">
+                                @foreach (var item in combos)
+                                {
+                                    <div class="col-12 col-md-6">
+                                        <div class="d-flex align-items-center p-2 rounded" style="background: #fff; border: 1px solid #e0d5c7; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                            @if (!string.IsNullOrEmpty(item.ImagenUrl))
+                                            {
+                                                <img src="@item.ImagenUrl" alt="@item.Nombre" class="rounded me-3" style="width: 70px; height: 70px; object-fit: cover;" />
+                                            }
+                                            else
+                                            {
+                                                <div class="rounded me-3 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px; background: #f0f0f0;">
+                                                    <span class="text-muted small">Sin img</span>
+                                                </div>
+                                            }
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-0 fw-bold" style="color: #3D2B1F;">@item.Nombre</h6>
+                                                <span class="badge mt-1" style="background: #F4A261; color: #3D2B1F; font-size: 0.65rem;">COMBO</span>
+                                            </div>
+                                            <span class="fw-bold ms-2" style="color: #E63946;">₡@item.Precio</span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted text-center fs-5 py-4">Este menú no tiene productos disponibles.</p>
+            }
+        </div>
+
+        <div class="menu-footer text-center py-3" style="background: #3D2B1F; color: #fff; border-radius: 0 0 8px 8px;">
+            <small class="opacity-75">FastBurger © @DateTime.Now.Year</small>
+        </div>
+    </div>
 }
 
-<div class="text-center mt-4">
-    <a asp-action="Index" class="btn btn-outline-secondary">← Volver</a>
+<div class="text-center mt-4 mb-3">
+    <a asp-action="Index" class="btn btn-outline-secondary">← Volver al Listado</a>
 </div>
