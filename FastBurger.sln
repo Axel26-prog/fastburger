@@ -9,6 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastBurger.Infrastructure",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastBurger.Application", "..\FastBurger.Application\FastBurger.Application.csproj", "{9A04E5AF-E14D-4007-9A11-3F987C9483CC}"
 EndProject
+
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +28,7 @@ Global
 		{9A04E5AF-E14D-4007-9A11-3F987C9483CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A04E5AF-E14D-4007-9A11-3F987C9483CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A04E5AF-E14D-4007-9A11-3F987C9483CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

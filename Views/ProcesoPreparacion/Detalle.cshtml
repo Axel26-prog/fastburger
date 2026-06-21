@@ -1,10 +1,34 @@
 @model FastBurger.Application.DTOs.ProcesoPreparacionDTO
 
-<h1>Proceso de Preparación</h1>
+@{
+    ViewData["Title"] = "Proceso — " + Model.NombreProducto;
+}
 
-<div>
-    <p><strong>Producto:</strong> @Model.NombreProducto</p>
-    <p><strong>Descripción:</strong> @Model.Descripcion</p>
-</div>
+<h1 class="fw-bold mb-2" style="color:#3D2B1F;">Proceso de Preparación</h1>
+<h4 class="text-muted mb-4">@Model.NombreProducto</h4>
 
-<a asp-action="Index">Volver</a>
+@if (!string.IsNullOrEmpty(Model.Descripcion))
+{
+    <p class="text-muted mb-4">@Model.Descripcion</p>
+}
+
+@if (Model.Pasos.Any())
+{
+    <div class="timeline-fb">
+        @foreach (var paso in Model.Pasos.OrderBy(p => p.Orden))
+        {
+            <div class="timeline-step">
+                <div class="timeline-number">@paso.Orden</div>
+                <div class="timeline-content">
+                    <h5 class="mb-0 fw-bold" style="color:#3D2B1F;">@paso.NombreEstacion</h5>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p class="text-muted">Este proceso no tiene pasos definidos.</p>
+}
+
+<a asp-action="Index" class="btn btn-outline-secondary mt-4">← Volver</a>

@@ -1,22 +1,128 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+html, body {
+    height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    background-color: #FFF8F0;
+    color: #3D2B1F;
+}
+
+.flex-grow-1 {
+    flex: 1 0 auto;
+}
+
+.navbar-fb {
+    background-color: #E63946;
+}
+
+.navbar-fb .nav-link {
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+}
+
+.navbar-fb .nav-link:hover,
+.navbar-fb .nav-link:focus {
+    color: #fff;
+}
+
+.navbar-fb .navbar-brand {
+    color: #fff;
+}
+
+.footer-fb {
+    background-color: #3D2B1F;
+    color: #fff;
+    padding: 1.2rem 0;
+}
+
+.footer-fb a {
+    color: #F4A261;
+}
+
+.btn-fb {
+    background-color: #E63946;
+    color: #fff;
+    border: none;
+}
+
+.btn-fb:hover,
+.btn-fb:focus {
+    background-color: #F4A261;
+    color: #3D2B1F;
+}
+
+.card-fb {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-fb:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(244, 162, 97, 0.1);
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #E63946;
+}
+
+.timeline-fb {
+    position: relative;
+    padding-left: 0;
+}
+
+.timeline-fb::before {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: #F4A261;
+    border-radius: 2px;
+}
+
+.timeline-step {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.timeline-number {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #E63946;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    z-index: 1;
+}
+
+.timeline-content {
+    margin-left: 1.2rem;
+    background: #fff;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    flex-grow: 1;
 }

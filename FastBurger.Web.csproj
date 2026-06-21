@@ -22,4 +22,9 @@
     <ProjectReference Include="..\FastBurger.Application\FastBurger.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\combos\" />
+    <Folder Include="wwwroot\images\productos\" />
+  </ItemGroup>
+
 </Project>

@@ -1,24 +1,35 @@
 @model IEnumerable<FastBurger.Application.DTOs.ProcesoPreparacionDTO>
 
-<h1>Procesos de Preparación</h1>
+@{
+    ViewData["Title"] = "Procesos de Preparación";
+}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Producto</th>
-            <th>Descripción</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var proceso in Model)
-        {
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="fw-bold" style="color:#3D2B1F;">Procesos de Preparación</h1>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead style="background:#3D2B1F; color:#fff;">
             <tr>
-                <td>@proceso.NombreProducto</td>
-                <td>@proceso.Descripcion</td>
-                <td>
-                    <a asp-action="Detalle" asp-route-id="@proceso.IdProceso">Ver Detalle</a>
-                </td>
+                <th class="rounded-start">Producto</th>
+                <th class="text-center">Pasos</th>
+                <th class="text-end rounded-end"></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var proceso in Model)
+            {
+                <tr>
+                    <td class="fw-bold">@proceso.NombreProducto</td>
+                    <td class="text-center">
+                        <span class="badge rounded-pill" style="background:#E63946;">@proceso.CantidadPasos pasos</span>
+                    </td>
+                    <td class="text-end">
+                        <a asp-action="Detalle" asp-route-id="@proceso.IdProceso" class="btn btn-sm btn-fb">Ver Detalle</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

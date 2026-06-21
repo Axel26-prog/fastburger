@@ -1,32 +1,58 @@
 @model IEnumerable<FastBurger.Application.DTOs.MenuDTO>
 
-<h1>Menús</h1>
+@{
+    ViewData["Title"] = "Menús";
+}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Activo</th>
-            <th>Días</th>
-            <th>Hora Inicio</th>
-            <th>Hora Fin</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var menu in Model)
-        {
-            <tr>
-                <td>@menu.Nombre</td>
-                <td>@menu.Descripcion</td>
-                <td>@(menu.Activo ? "Sí" : "No")</td>
-                <td>@menu.DiasSemana</td>
-                <td>@menu.HoraInicio</td>
-                <td>@menu.HoraFin</td>
-                <td>
-                    <a asp-action="Disponible" asp-route-id="@menu.IdMenu">Ver Disponible</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="fw-bold" style="color:#3D2B1F;">Menús</h1>
+    <a asp-action="Disponible" class="btn btn-fb">Ver Menú Disponible</a>
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @foreach (var menu in Model)
+    {
+        <div class="col">
+            <div class="card h-100 shadow-sm border-0 card-fb">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title fw-bold mb-0" style="color:#3D2B1F;">@menu.Nombre</h5>
+                        @if (menu.Activo)
+                        {
+                            <span class="badge bg-success">Activo</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Inactivo</span>
+                        }
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(menu.Descripcion))
+                    {
+                        <p class="card-text text-muted small">@menu.Descripcion</p>
+                    }
+
+                    <hr />
+
+                    <div class="mb-2">
+                        <small class="text-muted d-block">📅 Fechas</small>
+                        <span>@(menu.FechaInicio?.ToString("dd/MM/yyyy") ?? "—") — @(menu.FechaFin?.ToString("dd/MM/yyyy") ?? "—")</span>
+                    </div>
+
+                    <div class="mb-2">
+                        <small class="text-muted d-block">🕐 Horario</small>
+                        <span>@(menu.HoraInicio?.ToString(@"hh\:mm") ?? "—") a @(menu.HoraFin?.ToString(@"hh\:mm") ?? "—")</span>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(menu.DiasSemana))
+                    {
+                        <div class="mb-2">
+                            <small class="text-muted d-block">📆 Días</small>
+                            <span>@menu.DiasSemana</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

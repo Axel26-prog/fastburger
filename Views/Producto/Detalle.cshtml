@@ -1,18 +1,55 @@
 @model FastBurger.Application.DTOs.ProductoDTO
 
-<h1>@Model.Nombre</h1>
+@{
+    ViewData["Title"] = Model.Nombre;
+}
 
-<div>
-    <p><strong>Descripción:</strong> @Model.Descripcion</p>
-    <p><strong>Precio:</strong> @Model.Precio</p>
-    <p><strong>Categoría:</strong> @Model.NombreCategoria</p>
-    <p><strong>Tiempo de Prep:</strong> @Model.TiempoPrepMin min</p>
-    <p><strong>Calorías:</strong> @Model.Calorias</p>
-    <p><strong>Disponible:</strong> @(Model.Disponible ? "Sí" : "No")</p>
-    @if (!string.IsNullOrEmpty(Model.ImagenUrl))
-    {
-        <img src="@Model.ImagenUrl" alt="@Model.Nombre" style="max-width: 300px;" />
-    }
+<div class="row g-5 mt-2">
+    <div class="col-md-5">
+        @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+        {
+            <img src="@Model.ImagenUrl" alt="@Model.Nombre" class="img-fluid rounded shadow-sm" style="max-width:100%;" />
+        }
+        else
+        {
+            <div class="rounded shadow-sm d-flex align-items-center justify-content-center" style="width:100%; height:300px; background:#f0f0f0;">
+                <span class="text-muted fs-5">Sin imagen disponible</span>
+            </div>
+        }
+    </div>
+    <div class="col-md-7">
+        <h1 class="fw-bold mb-3" style="color:#3D2B1F;">@Model.Nombre</h1>
+        <span class="badge mb-3" style="background:#F4A261; color:#3D2B1F;">@Model.NombreCategoria</span>
+
+        <p class="fs-4 fw-bold" style="color:#E63946;">₡@Model.Precio</p>
+
+        <p class="text-muted">@Model.Descripcion</p>
+
+        <p>
+            <strong>Disponible:</strong>
+            @if (Model.Disponible)
+            {
+                <span class="badge bg-success">Sí</span>
+            }
+            else
+            {
+                <span class="badge bg-danger">No</span>
+            }
+        </p>
+
+        @if (Model.Ingredientes.Any())
+        {
+            <h5 class="fw-bold mt-4 mb-3" style="color:#3D2B1F;">Ingredientes</h5>
+            <ul class="list-unstyled">
+                @foreach (var ingrediente in Model.Ingredientes)
+                {
+                    <li class="mb-2">
+                        <span style="color:#E63946;">✓</span> @ingrediente
+                    </li>
+                }
+            </ul>
+        }
+    </div>
 </div>
 
-<a asp-action="Index">Volver</a>
+<a asp-action="Index" class="btn btn-outline-secondary mt-4">← Volver</a>

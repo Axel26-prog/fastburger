@@ -1,8 +1,10 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center py-5">
+    <img src="~/images/LogoFastBurger.png" alt="FastBurger" class="mb-4" style="max-width:250px;" />
+    <h1 class="display-4 fw-bold mb-3" style="color:#3D2B1F;">Bienvenido a FastBurger</h1>
+    <p class="lead text-muted mb-4">Las mejores hamburguesas, combos y menús al mejor precio.</p>
+    <a asp-controller="Menu" asp-action="Disponible" class="btn btn-fb btn-lg px-5">Ver Menú</a>
 </div>
