@@ -1,0 +1,61 @@
+@model IEnumerable<FastBurger.Application.DTOs.ProductoDTO>
+
+@{
+    ViewData["Title"] = "Mantenimiento - Productos";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="fw-bold" style="color:#3D2B1F;">Mantenimiento de Productos</h1>
+    <a asp-action="Crear" class="btn btn-fb">+ Nuevo Producto</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Imagen</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Disponible</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var producto in Model)
+            {
+                <tr>
+                    <td>
+                        @if (!string.IsNullOrEmpty(producto.ImagenUrl))
+                        {
+                            <img src="@producto.ImagenUrl" alt="@producto.Nombre" style="height:50px; width:50px; object-fit:cover;" class="rounded" />
+                        }
+                        else
+                        {
+                            <div class="rounded d-flex align-items-center justify-content-center" style="height:50px; width:50px; background:#f0f0f0;">
+                                <span class="text-muted small">Sin img</span>
+                            </div>
+                        }
+                    </td>
+                    <td class="fw-semibold">@producto.Nombre</td>
+                    <td><span class="badge bg-secondary">@producto.NombreCategoria</span></td>
+                    <td class="fw-bold" style="color:#E63946;">₡@producto.Precio</td>
+                    <td>
+                        @if (producto.Disponible)
+                        {
+                            <span class="badge bg-success">Sí</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">No</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Detalle" asp-route-id="@producto.IdProducto" class="btn btn-sm btn-outline-secondary">Ver</a>
+                        <a asp-action="Editar" asp-route-id="@producto.IdProducto" class="btn btn-sm btn-fb">Editar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
