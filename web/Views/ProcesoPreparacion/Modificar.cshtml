@@ -1,0 +1,199 @@
+@model FastBurger.Application.DTOs.UpdateProcesoPreparacionDTO
+
+@{
+    ViewData["Title"] = "Modificar Proceso de Preparación";
+    var productos = ViewBag.Productos as IEnumerable<FastBurger.Application.DTOs.ProductoSimpleDTO>;
+    var estaciones = ViewBag.Estaciones as IEnumerable<FastBurger.Application.DTOs.EstacionSimpleDTO>;
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-header" style="background-color:#3D2B1F; color:#fff;">
+                <h4 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Modificar Proceso de Preparación</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Modificar" method="post" id="procesoForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="IdProceso" />
+
+                    <div class="mb-3">
+                        <label asp-for="IdProducto" class="form-label fw-semibold"></label>
+                        <select asp-for="IdProducto" class="form-select">
+                            <option value="">-- Seleccionar Producto --</option>
+                            @if (productos != null)
+                            {
+                                @foreach (var prod in productos)
+                                {
+                                    <option value="@prod.IdProducto">@prod.Nombre</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdProducto" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Descripcion" class="form-label fw-semibold"></label>
+                        <textarea asp-for="Descripcion" class="form-control" rows="2"></textarea>
+                        <span asp-validation-for="Descripcion" class="text-danger small"></span>
+                    </div>
+
+                    <hr class="my-4" />
+                    <h5 class="fw-bold mb-3" style="color:#3D2B1F;">Pasos del Proceso</h5>
+
+                    <div id="pasosContainer">
+                    </div>
+
+                    <button type="button" class="btn btn-outline-primary" onclick="agregarPaso()">
+                        <i class="bi bi-plus-circle me-1"></i> Agregar Paso
+                    </button>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a asp-action="Mantenimiento" class="btn btn-outline-secondary me-md-2">Cancelar</a>
+                        <button type="submit" class="btn btn-fb">
+                            <i class="bi bi-check-circle me-1"></i> Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        let pasoIndex = 0;
+
+        const pasosIniciales = @Html.Raw(Json.Serialize(Model.Pasos));
+
+        function agregarPaso() {
+            const container = document.getElementById('pasosContainer');
+            const estaciones = @Html.Raw(Json.Serialize(estaciones));
+            
+            let opcionesEstaciones = '<option value="">-- Estación --</option>';
+            estaciones.forEach(function(est) {
+                opcionesEstaciones += `<option value="${est.idEstacion}">${est.nombre}</option>`;
+            });
+
+            const pasoHtml = `
+                <div class="card mb-3 paso-item" data-paso-index="${pasoIndex}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0 fw-bold" style="color:#3D2B1F;">Paso <span class="paso-numero">${pasoIndex + 1}</span></h6>
+                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="eliminarPaso(${pasoIndex})">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-2">
+                                <label class="form-label small fw-semibold">Orden</label>
+                                <input type="number" class="form-control" name="Pasos[${pasoIndex}].Orden" value="${pasoIndex + 1}" min="1" required />
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label class="form-label small fw-semibold">Estación</label>
+                                <select class="form-select" name="Pasos[${pasoIndex}].IdEstacion" required>
+                                    ${opcionesEstaciones}
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label class="form-label small fw-semibold">Tiempo (min)</label>
+                                <input type="number" class="form-control" name="Pasos[${pasoIndex}].TiempoMin" value="5" min="1" required />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label small fw-semibold">Descripción</label>
+                                <input type="text" class="form-control" name="Pasos[${pasoIndex}].Descripcion" placeholder="Ej: Freír la carne" required />
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label small fw-semibold">Temperatura (°C) - Opcional</label>
+                                <input type="number" class="form-control" name="Pasos[${pasoIndex}].TemperaturaC" placeholder="Ej: 180" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', pasoHtml);
+            pasoIndex++;
+            actualizarNumerosPasos();
+        }
+
+        function eliminarPaso(index) {
+            const paso = document.querySelector(`.paso-item[data-paso-index="${index}"]`);
+            if (paso) {
+                paso.remove();
+                actualizarNumerosPasos();
+            }
+        }
+
+        function actualizarNumerosPasos() {
+            const pasos = document.querySelectorAll('.paso-item');
+            pasos.forEach((paso, idx) => {
+                paso.querySelector('.paso-numero').textContent = idx + 1;
+                paso.querySelectorAll('input, select').forEach(input => {
+                    if (input.name) {
+                        input.name = input.name.replace(/Pasos\[\d+\]/g, `Pasos[${idx}]`);
+                    }
+                });
+            });
+            pasoIndex = pasos.length;
+        }
+
+        if (pasosIniciales && pasosIniciales.length > 0) {
+            pasosIniciales.forEach(function(paso) {
+                const container = document.getElementById('pasosContainer');
+                const estaciones = @Html.Raw(Json.Serialize(estaciones));
+                
+                let opcionesEstaciones = '<option value="">-- Estación --</option>';
+                estaciones.forEach(function(est) {
+                    const selected = est.idEstacion === paso.idEstacion ? 'selected' : '';
+                    opcionesEstaciones += `<option value="${est.idEstacion}" ${selected}>${est.nombre}</option>`;
+                });
+
+                const pasoHtml = `
+                    <div class="card mb-3 paso-item" data-paso-index="${pasoIndex}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0 fw-bold" style="color:#3D2B1F;">Paso <span class="paso-numero">${pasoIndex + 1}</span></h6>
+                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="eliminarPaso(${pasoIndex})">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label small fw-semibold">Orden</label>
+                                    <input type="number" class="form-control" name="Pasos[${pasoIndex}].Orden" value="${paso.orden}" min="1" required />
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label small fw-semibold">Estación</label>
+                                    <select class="form-select" name="Pasos[${pasoIndex}].IdEstacion" required>
+                                        ${opcionesEstaciones}
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label small fw-semibold">Tiempo (min)</label>
+                                    <input type="number" class="form-control" name="Pasos[${pasoIndex}].TiempoMin" value="${paso.tiempoMin}" min="1" required />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label small fw-semibold">Descripción</label>
+                                    <input type="text" class="form-control" name="Pasos[${pasoIndex}].Descripcion" value="${paso.descripcion || ''}" placeholder="Ej: Freír la carne" required />
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label small fw-semibold">Temperatura (°C) - Opcional</label>
+                                    <input type="number" class="form-control" name="Pasos[${pasoIndex}].TemperaturaC" value="${paso.temperaturaC || ''}" placeholder="Ej: 180" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', pasoHtml);
+                pasoIndex++;
+            });
+        } else {
+            agregarPaso();
+        }
+    </script>
+}

@@ -1,0 +1,159 @@
+@model FastBurger.Application.DTOs.MenuDTO
+
+@{
+    ViewData["Title"] = Model.Nombre;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="fw-bold mb-1" style="color:#3D2B1F;">@Model.Nombre</h1>
+        @if (Model.Activo)
+        {
+            <span class="badge bg-success">Activo</span>
+        }
+        else
+        {
+            <span class="badge bg-secondary">Inactivo</span>
+        }
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">← Volver</a>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Descripcion))
+{
+    <p class="text-muted mb-4">@Model.Descripcion</p>
+}
+
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3" style="color:#3D2B1F;">📅 Vigencia</h5>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="p-3 rounded" style="background:#FFF8F0;">
+                            <small class="text-muted d-block">Fecha Inicio</small>
+                            <span class="fw-semibold">@(Model.FechaInicio?.ToString("dd/MM/yyyy") ?? "—")</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 rounded" style="background:#FFF8F0;">
+                            <small class="text-muted d-block">Fecha Fin</small>
+                            <span class="fw-semibold">@(Model.FechaFin?.ToString("dd/MM/yyyy") ?? "—")</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3" style="color:#3D2B1F;">🕐 Horario</h5>
+                <div class="p-3 rounded" style="background:#FFF8F0;">
+                    <span class="fw-semibold">
+                        @(Model.HoraInicio?.ToString(@"hh\:mm") ?? "—") — @(Model.HoraFin?.ToString(@"hh\:mm") ?? "—")
+                    </span>
+                </div>
+                @if (!string.IsNullOrEmpty(Model.DiasSemana))
+                {
+                    <div class="mt-3">
+                        <small class="text-muted d-block">Días de la semana</small>
+                        <span class="fw-semibold">@Model.DiasSemana</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.Items.Any())
+{
+    <h4 class="fw-bold mb-3" style="color:#3D2B1F;">📦 Contenido del Menú</h4>
+    
+    @foreach (var grupo in Model.Items.GroupBy(i => i.Categoria).OrderBy(g => g.Key))
+    {
+        <div class="mb-4">
+            <h5 class="fw-bold py-2 px-3 mb-3" style="color:#fff; background:#E63946; border-radius:4px;">
+                @grupo.Key
+            </h5>
+
+            @{
+                var productos = grupo.Where(i => i.Tipo == "Producto").ToList();
+                var combos = grupo.Where(i => i.Tipo == "Combo").ToList();
+            }
+
+            @if (productos.Any())
+            {
+                <div class="row g-3 mb-3">
+                    @foreach (var item in productos)
+                    {
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="card shadow-sm border-0 h-100">
+                                <div class="card-body d-flex align-items-center">
+                                    @if (!string.IsNullOrEmpty(item.ImagenUrl))
+                                    {
+                                        <img src="@item.ImagenUrl" alt="@item.Nombre" class="rounded me-3" style="width:60px; height:60px; object-fit:cover;" />
+                                    }
+                                    else
+                                    {
+                                        <div class="rounded me-3 d-flex align-items-center justify-content-center" style="width:60px; height:60px; background:#f0f0f0;">
+                                            <span class="text-muted small">Sin img</span>
+                                        </div>
+                                    }
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-0 fw-bold" style="color:#3D2B1F;">@item.Nombre</h6>
+                                        <span class="badge mt-1" style="background:#F4A261; color:#3D2B1F;">Producto</span>
+                                    </div>
+                                    <span class="fw-bold" style="color:#E63946;">₡@item.Precio.ToString("N2")</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
+            @if (combos.Any())
+            {
+                <div class="row g-3">
+                    @foreach (var item in combos)
+                    {
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="card shadow-sm border-0 h-100">
+                                <div class="card-body d-flex align-items-center">
+                                    @if (!string.IsNullOrEmpty(item.ImagenUrl))
+                                    {
+                                        <img src="@item.ImagenUrl" alt="@item.Nombre" class="rounded me-3" style="width:60px; height:60px; object-fit:cover;" />
+                                    }
+                                    else
+                                    {
+                                        <div class="rounded me-3 d-flex align-items-center justify-content-center" style="width:60px; height:60px; background:#f0f0f0;">
+                                            <span class="text-muted small">Sin img</span>
+                                        </div>
+                                    }
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-0 fw-bold" style="color:#3D2B1F;">@item.Nombre</h6>
+                                        <span class="badge mt-1" style="background:#E63946; color:#fff;">COMBO</span>
+                                    </div>
+                                    <span class="fw-bold" style="color:#E63946;">₡@item.Precio.ToString("N2")</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+}
+else
+{
+    <div class="alert alert-info text-center">
+        Este menú no tiene productos ni combos asignados.
+    </div>
+}
+
+<div class="mt-4">
+    <a asp-action="Mantenimiento" class="btn btn-outline-primary">
+        <i class="bi bi-pencil me-1"></i> Editar Menú
+    </a>
+</div>

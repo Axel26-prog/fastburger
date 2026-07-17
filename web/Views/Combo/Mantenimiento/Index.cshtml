@@ -1,0 +1,91 @@
+@model IEnumerable<FastBurger.Application.DTOs.ComboDTO>
+
+@{
+    ViewData["Title"] = "Mantenimiento de Combos";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="fw-bold" style="color:#3D2B1F;">Mantenimiento de Combos</h1>
+    <a asp-action="Crear" class="btn btn-fb">
+        <i class="bi bi-plus-circle"></i> Nuevo Combo
+    </a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead style="background-color:#3D2B1F; color:#fff;">
+                    <tr>
+                        <th class="py-3 px-4">Imagen</th>
+                        <th class="py-3">Nombre</th>
+                        <th class="py-3">Precio</th>
+                        <th class="py-3">Productos</th>
+                        <th class="py-3">Disponible</th>
+                        <th class="py-3 text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var combo in Model)
+                    {
+                        <tr>
+                            <td class="px-4">
+                                @if (!string.IsNullOrEmpty(combo.ImagenUrl))
+                                {
+                                    <img src="@combo.ImagenUrl" alt="@combo.Nombre" 
+                                         class="rounded" style="width:60px; height:60px; object-fit:cover;" />
+                                }
+                                else
+                                {
+                                    <div class="rounded bg-light d-flex align-items-center justify-content-center" 
+                                         style="width:60px; height:60px;">
+                                        <span class="text-muted small">Sin img</span>
+                                    </div>
+                                }
+                            </td>
+                            <td class="align-middle fw-semibold">@combo.Nombre</td>
+                            <td class="align-middle">₡@combo.Precio.ToString("N2")</td>
+                            <td class="align-middle">
+                                <span class="badge bg-secondary">@combo.Productos.Count productos</span>
+                            </td>
+                            <td class="align-middle">
+                                @if (combo.Disponible)
+                                {
+                                    <span class="badge bg-success">Sí</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">No</span>
+                                }
+                            </td>
+                            <td class="align-middle text-center">
+                                <a asp-action="Detalle" asp-route-id="@combo.IdCombo" 
+                                   class="btn btn-sm btn-outline-secondary me-1" title="Ver Detalle">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a asp-action="Modificar" asp-route-id="@combo.IdCombo" 
+                                   class="btn btn-sm btn-outline-primary me-1" title="Modificar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form asp-action="Eliminar" asp-route-id="@combo.IdCombo" 
+                                      method="post" class="d-inline" 
+                                      onsubmit="return confirm('¿Está seguro que desea eliminar este combo?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+        ← Volver al Inicio
+    </a>
+</div>

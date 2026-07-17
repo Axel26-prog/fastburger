@@ -1,0 +1,74 @@
+@model IEnumerable<FastBurger.Application.DTOs.ProcesoPreparacionDTO>
+
+@{
+    ViewData["Title"] = "Mantenimiento de Procesos";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="fw-bold" style="color:#3D2B1F;">Mantenimiento de Procesos</h1>
+    <a asp-action="Crear" class="btn btn-fb">
+        <i class="bi bi-plus-circle"></i> Nuevo Proceso
+    </a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead style="background-color:#3D2B1F; color:#fff;">
+                    <tr>
+                        <th class="py-3">Producto</th>
+                        <th class="py-3">Descripción</th>
+                        <th class="py-3 text-center">Pasos</th>
+                        <th class="py-3 text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var proceso in Model)
+                    {
+                        <tr>
+                            <td class="align-middle fw-semibold">@proceso.NombreProducto</td>
+                            <td class="align-middle">
+                                @if (!string.IsNullOrEmpty(proceso.Descripcion))
+                                {
+                                    <span class="text-muted">@(proceso.Descripcion.Length > 50 ? proceso.Descripcion.Substring(0, 50) + "..." : proceso.Descripcion)</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Sin descripción</span>
+                                }
+                            </td>
+                            <td class="align-middle text-center">
+                                <span class="badge rounded-pill" style="background:#E63946;">@proceso.CantidadPasos pasos</span>
+                            </td>
+                            <td class="align-middle text-center">
+                                <a asp-action="Detalle" asp-route-id="@proceso.IdProceso" 
+                                   class="btn btn-sm btn-outline-secondary me-1" title="Ver Detalle">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a asp-action="Modificar" asp-route-id="@proceso.IdProceso" 
+                                   class="btn btn-sm btn-outline-primary me-1" title="Modificar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form asp-action="Eliminar" asp-route-id="@proceso.IdProceso" 
+                                      method="post" class="d-inline" 
+                                      onsubmit="return confirm('¿Está seguro que desea eliminar este proceso?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+        ← Volver al Inicio
+    </a>
+</div>

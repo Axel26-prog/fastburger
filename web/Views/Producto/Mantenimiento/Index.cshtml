@@ -1,0 +1,93 @@
+@model IEnumerable<FastBurger.Application.DTOs.ProductoDTO>
+
+@{
+    ViewData["Title"] = "Mantenimiento de Productos";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="fw-bold" style="color:#3D2B1F;">Mantenimiento de Productos</h1>
+    <a asp-action="Crear" class="btn btn-fb">
+        <i class="bi bi-plus-circle"></i> Nuevo Producto
+    </a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead style="background-color:#3D2B1F; color:#fff;">
+                    <tr>
+                        <th class="py-3 px-4">Imagen</th>
+                        <th class="py-3">Nombre</th>
+                        <th class="py-3">Categoría</th>
+                        <th class="py-3">Precio</th>
+                        <th class="py-3">Disponible</th>
+                        <th class="py-3 text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var producto in Model)
+                    {
+                        <tr>
+                            <td class="px-4">
+                                @if (!string.IsNullOrEmpty(producto.ImagenUrl))
+                                {
+                                    <img src="@producto.ImagenUrl" alt="@producto.Nombre" 
+                                         class="rounded" style="width:60px; height:60px; object-fit:cover;" />
+                                }
+                                else
+                                {
+                                    <div class="rounded bg-light d-flex align-items-center justify-content-center" 
+                                         style="width:60px; height:60px;">
+                                        <span class="text-muted small">Sin img</span>
+                                    </div>
+                                }
+                            </td>
+                            <td class="align-middle fw-semibold">@producto.Nombre</td>
+                            <td class="align-middle">
+                                <span class="badge" style="background-color:#F4A261; color:#3D2B1F;">
+                                    @producto.NombreCategoria
+                                </span>
+                            </td>
+                            <td class="align-middle">₡@producto.Precio.ToString("N2")</td>
+                            <td class="align-middle">
+                                @if (producto.Disponible)
+                                {
+                                    <span class="badge bg-success">Sí</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">No</span>
+                                }
+                            </td>
+                            <td class="align-middle text-center">
+                                <a asp-action="Detalle" asp-route-id="@producto.IdProducto" 
+                                   class="btn btn-sm btn-outline-secondary me-1" title="Ver Detalle">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a asp-action="Modificar" asp-route-id="@producto.IdProducto" 
+                                   class="btn btn-sm btn-outline-primary me-1" title="Modificar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form asp-action="Eliminar" asp-route-id="@producto.IdProducto" 
+                                      method="post" class="d-inline" 
+                                      onsubmit="return confirm('¿Está seguro que desea eliminar este producto?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+        ← Volver al Inicio
+    </a>
+</div>

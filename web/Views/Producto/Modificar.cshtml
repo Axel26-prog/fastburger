@@ -1,20 +1,23 @@
-@model FastBurger.Application.DTOs.CreateProductoDTO
+@model FastBurger.Application.DTOs.UpdateProductoDTO
 
 @{
-    ViewData["Title"] = "Crear Producto";
+    ViewData["Title"] = "Modificar Producto";
     var categorias = ViewBag.Categorias as IEnumerable<FastBurger.Application.DTOs.CategoriaDTO>;
     var ingredientes = ViewBag.Ingredientes as IEnumerable<FastBurger.Application.DTOs.IngredienteDTO>;
+    var ingredientesProducto = ViewBag.IngredientesProducto as List<string>;
 }
 
 <div class="row justify-content-center">
     <div class="col-md-8 col-lg-6">
         <div class="card shadow-sm border-0 mt-4">
             <div class="card-header" style="background-color:#3D2B1F; color:#fff;">
-                <h4 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Nuevo Producto</h4>
+                <h4 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Modificar Producto</h4>
             </div>
             <div class="card-body">
-                <form asp-action="Crear" method="post" enctype="multipart/form-data">
+                <form asp-action="Modificar" method="post" enctype="multipart/form-data">
                     @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="IdProducto" />
+                    <input type="hidden" asp-for="ImagenUrlActual" />
 
                     <div class="mb-3">
                         <label asp-for="Nombre" class="form-label fw-semibold"></label>
@@ -63,7 +66,8 @@
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" 
                                                name="IngredienteIds" value="@ing.IdIngrediente" 
-                                               id="ing-@ing.IdIngrediente" />
+                                               id="ing-@ing.IdIngrediente"
+                                               @(ingredientesProducto != null && ingredientesProducto.Contains(ing.Nombre) ? "checked" : "") />
                                         <label class="form-check-label" for="ing-@ing.IdIngrediente">
                                             @ing.Nombre
                                             @if (ing.Alergenico)
@@ -78,9 +82,16 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Imagen del Producto</label>
+                        <label class="form-label fw-semibold">Nueva Imagen</label>
                         <input type="file" name="Imagen" class="form-control" accept="image/*" />
-                        <span class="text-muted small">Tamaño máximo: 2MB. Formatos: JPG, PNG, GIF</span>
+                        @if (!string.IsNullOrEmpty(Model.ImagenUrlActual))
+                        {
+                            <div class="mt-2">
+                                <p class="small text-muted mb-1">Imagen actual:</p>
+                                <img src="@Model.ImagenUrlActual" alt="Imagen actual" 
+                                     class="rounded" style="max-height: 120px;" />
+                            </div>
+                        }
                     </div>
 
                     <div class="row">
@@ -104,7 +115,7 @@
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
                         <a asp-action="Mantenimiento" class="btn btn-outline-secondary me-md-2">Cancelar</a>
                         <button type="submit" class="btn btn-fb">
-                            <i class="bi bi-check-circle me-1"></i> Guardar Producto
+                            <i class="bi bi-check-circle me-1"></i> Guardar Cambios
                         </button>
                     </div>
                 </form>

@@ -1,0 +1,82 @@
+@model IEnumerable<FastBurger.Application.DTOs.MenuDTO>
+
+@{
+    ViewData["Title"] = "Mantenimiento de Menús";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="fw-bold" style="color:#3D2B1F;">Mantenimiento de Menús</h1>
+    <a asp-action="Crear" class="btn btn-fb">
+        <i class="bi bi-plus-circle"></i> Nuevo Menú
+    </a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead style="background-color:#3D2B1F; color:#fff;">
+                    <tr>
+                        <th class="py-3">Nombre</th>
+                        <th class="py-3">Fecha Inicio</th>
+                        <th class="py-3">Fecha Fin</th>
+                        <th class="py-3">Horario</th>
+                        <th class="py-3">Estado</th>
+                        <th class="py-3 text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var menu in Model)
+                    {
+                        <tr>
+                            <td class="align-middle fw-semibold">@menu.Nombre</td>
+                            <td class="align-middle">
+                                @(menu.FechaInicio?.ToString("dd/MM/yyyy") ?? "—")
+                            </td>
+                            <td class="align-middle">
+                                @(menu.FechaFin?.ToString("dd/MM/yyyy") ?? "—")
+                            </td>
+                            <td class="align-middle">
+                                @(menu.HoraInicio?.ToString(@"hh\:mm") ?? "—") - @(menu.HoraFin?.ToString(@"hh\:mm") ?? "—")
+                            </td>
+                            <td class="align-middle">
+                                @if (menu.Activo)
+                                {
+                                    <span class="badge bg-success">Activo</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Inactivo</span>
+                                }
+                            </td>
+                            <td class="align-middle text-center">
+                                <a asp-action="Detalle" asp-route-id="@menu.IdMenu" 
+                                   class="btn btn-sm btn-outline-secondary me-1" title="Ver Detalle">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a asp-action="Modificar" asp-route-id="@menu.IdMenu" 
+                                   class="btn btn-sm btn-outline-primary me-1" title="Modificar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form asp-action="Eliminar" asp-route-id="@menu.IdMenu" 
+                                      method="post" class="d-inline" 
+                                      onsubmit="return confirm('¿Está seguro que desea eliminar este menú?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+        ← Volver al Inicio
+    </a>
+</div>

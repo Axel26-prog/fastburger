@@ -1,3 +1,4 @@
+using FastBurger.Application.DTOs;
 using FastBurger.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,7 +7,7 @@ namespace FastBurger.Web.Controllers;
 public class MenuController : Controller
 {
     private readonly IMenuService _menuService;
-            
+
     public MenuController(IMenuService menuService)
     {
         _menuService = menuService;
@@ -34,5 +35,96 @@ public class MenuController : Controller
             return View(null);
         }
         return View(menu);
+    }
+
+    public async Task<IActionResult> Mantenimiento()
+    {
+        var menus = await _menuService.GetAllAsync();
+        return View("Mantenimiento/Index", menus.OrderByDescending(m => m.FechaInicio));
+    }
+
+    public async Task<IActionResult> Crear()
+    {
+        var productos = await _menuService.GetProductosDisponiblesAsync();
+        var combos = await _menuService.GetCombosDisponiblesAsync();
+        ViewBag.Productos = productos;
+        ViewBag.Combos = combos;
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Crear(CreateMenuDTO dto)
+    {
+        if (ModelState.IsValid)
+        {
+            if (dto.FechaInicio.HasValue && dto.FechaFin.HasValue && dto.FechaInicio > dto.FechaFin)
+            {
+                ModelState.AddModelError("FechaFin", "La fecha de fin debe ser mayor o igual a la fecha de inicio");
+                var prods = await _menuService.GetProductosDisponiblesAsync();
+                var comb = await _menuService.GetCombosDisponiblesAsync();
+                ViewBag.Productos = prods;
+                ViewBag.Combos = comb;
+                return View(dto);
+            }
+
+            await _menuService.CreateAsync(dto);
+            return RedirectToAction(nameof(Mantenimiento));
+        }
+
+        var productos = await _menuService.GetProductosDisponiblesAsync();
+        var combos = await _menuService.GetCombosDisponiblesAsync();
+        ViewBag.Productos = productos;
+        ViewBag.Combos = combos;
+        return View(dto);
+    }
+
+    public async Task<IActionResult> Modificar(int id)
+    {
+        var menu = await _menuService.GetByIdAsync(id);
+        if (menu == null) return NotFound();
+
+        var menuCompleto = await _menuService.GetByIdAsync(id);
+        var productos = await _menuService.GetProductosDisponiblesAsync();
+        var combos = await _menuService.GetCombosDisponiblesAsync();
+        ViewBag.Productos = productos;
+        ViewBag.Combos = combos;
+
+        return View(menu);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Modificar(UpdateMenuDTO dto)
+    {
+        if (ModelState.IsValid)
+        {
+            if (dto.FechaInicio.HasValue && dto.FechaFin.HasValue && dto.FechaInicio > dto.FechaFin)
+            {
+                ModelState.AddModelError("FechaFin", "La fecha de fin debe ser mayor o igual a la fecha de inicio");
+                var prods = await _menuService.GetProductosDisponiblesAsync();
+                var comb = await _menuService.GetCombosDisponiblesAsync();
+                ViewBag.Productos = prods;
+                ViewBag.Combos = comb;
+                return View(dto);
+            }
+
+            await _menuService.UpdateAsync(dto);
+            return RedirectToAction(nameof(Mantenimiento));
+        }
+
+        var productos = await _menuService.GetProductosDisponiblesAsync();
+        var combos = await _menuService.GetCombosDisponiblesAsync();
+        ViewBag.Productos = productos;
+        ViewBag.Combos = combos;
+        return View(dto);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Eliminar(int id)
+    {
+        await _menuService.DeleteAsync(id);
+        return RedirectToAction(nameof(Mantenimiento));
     }
 }
