@@ -1,4 +1,4 @@
-@model FastBurger.Application.DTOs.MenuDTO
+@model FastBurger.Application.DTOs.MenuForEditDTO
 
 @{
     ViewData["Title"] = "Modificar Menú";
@@ -75,18 +75,20 @@
                                 @foreach (var prod in productos)
                                 {
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input producto-check" type="checkbox" 
-                                               name="ProductoIds" value="@prod.IdProducto" 
-                                               id="prod-@prod.IdProducto" 
+                                        <input class="form-check-input producto-check" type="checkbox"
+                                               name="ProductoIds" value="@prod.IdProducto"
+                                               id="prod-@prod.IdProducto"
                                                data-precio="@prod.Precio"
+                                               @(Model.ProductoIds.Contains(prod.IdProducto) ? "checked" : "")
                                                onchange="togglePrecioProducto(@prod.IdProducto)" />
                                         <label class="form-check-label" for="prod-@prod.IdProducto">
                                             @prod.Nombre - <span class="text-muted">₡@prod.Precio.ToString("N2")</span>
                                         </label>
-                                        <div class="mt-2 ms-4" id="precio-producto-@prod.IdProducto" style="display:none;">
+                                        <div class="mt-2 ms-4" id="precio-producto-@prod.IdProducto" style="@(Model.ProductoIds.Contains(prod.IdProducto) ? "display:block;" : "display:none;")">
                                             <label class="form-label small">Precio Especial (opcional)</label>
-                                            <input type="number" class="form-control form-control-sm" 
-                                                   name="PreciosProductos[@prod.IdProducto]" 
+                                            <input type="number" class="form-control form-control-sm"
+                                                   name="PreciosProductos[@prod.IdProducto]"
+                                                   value="@(Model.PreciosProductos.TryGetValue(prod.IdProducto, out var pp) && pp.HasValue ? pp.Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : "")"
                                                    placeholder="@prod.Precio.ToString("N2")" step="0.01" min="0" />
                                         </div>
                                     </div>
@@ -109,18 +111,20 @@
                                 @foreach (var combo in combos)
                                 {
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input combo-check" type="checkbox" 
-                                               name="ComboIds" value="@combo.IdCombo" 
-                                               id="combo-@combo.IdCombo" 
+                                        <input class="form-check-input combo-check" type="checkbox"
+                                               name="ComboIds" value="@combo.IdCombo"
+                                               id="combo-@combo.IdCombo"
                                                data-precio="@combo.Precio"
+                                               @(Model.ComboIds.Contains(combo.IdCombo) ? "checked" : "")
                                                onchange="togglePrecioCombo(@combo.IdCombo)" />
                                         <label class="form-check-label" for="combo-@combo.IdCombo">
                                             @combo.Nombre - <span class="text-muted">₡@combo.Precio.ToString("N2")</span>
                                         </label>
-                                        <div class="mt-2 ms-4" id="precio-combo-@combo.IdCombo" style="display:none;">
+                                        <div class="mt-2 ms-4" id="precio-combo-@combo.IdCombo" style="@(Model.ComboIds.Contains(combo.IdCombo) ? "display:block;" : "display:none;")">
                                             <label class="form-label small">Precio Especial (opcional)</label>
-                                            <input type="number" class="form-control form-control-sm" 
-                                                   name="PreciosCombos[@combo.IdCombo]" 
+                                            <input type="number" class="form-control form-control-sm"
+                                                   name="PreciosCombos[@combo.IdCombo]"
+                                                   value="@(Model.PreciosCombos.TryGetValue(combo.IdCombo, out var pc) && pc.HasValue ? pc.Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : "")"
                                                    placeholder="@combo.Precio.ToString("N2")" step="0.01" min="0" />
                                         </div>
                                     </div>
@@ -172,5 +176,28 @@
                 precioDiv.style.display = 'none';
             }
         }
+
+        document.getElementById('menuForm').addEventListener('submit', function (e) {
+            var horaInicio = document.getElementById('HoraInicio').value;
+            var horaFin = document.getElementById('HoraFin').value;
+            var errorSpan = document.getElementById('horaError');
+
+            if (horaInicio && horaFin) {
+                if (horaInicio >= horaFin) {
+                    e.preventDefault();
+                    if (!errorSpan) {
+                        errorSpan = document.createElement('span');
+                        errorSpan.id = 'horaError';
+                        errorSpan.className = 'text-danger small';
+                        document.getElementById('HoraFin').parentElement.appendChild(errorSpan);
+                    }
+                    errorSpan.textContent = 'La hora de fin debe ser estrictamente mayor que la hora de inicio. Los turnos que crucen medianoche (ej. 22:00-02:00) no están permitidos.';
+                    document.getElementById('HoraFin').classList.add('is-invalid');
+                } else {
+                    if (errorSpan) errorSpan.textContent = '';
+                    document.getElementById('HoraFin').classList.remove('is-invalid');
+                }
+            }
+        });
     </script>
 }

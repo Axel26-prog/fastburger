@@ -21,7 +21,7 @@ public class ProcesoPreparacionController : Controller
 
     public async Task<IActionResult> Mantenimiento()
     {
-        var procesos = await _procesoPreparacionService.GetAllAsync();
+        var procesos = await _procesoPreparacionService.GetAllForMantenimientoAsync();
         return View("Mantenimiento/Index", procesos);
     }
 
@@ -67,6 +67,7 @@ public class ProcesoPreparacionController : Controller
         {
             IdProceso = proceso.IdProceso,
             IdProducto = proceso.IdProducto,
+            NombreProducto = proceso.NombreProducto,
             Descripcion = proceso.Descripcion,
             Pasos = proceso.Pasos.Select(p => new PasoCreacionDTO
             {

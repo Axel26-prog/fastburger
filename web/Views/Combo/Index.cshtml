@@ -27,7 +27,7 @@
                     <h5 class="card-title fw-bold" style="color:#3D2B1F;">@combo.Nombre</h5>
                     <span class="badge bg-secondary mb-2 align-self-start">@combo.NombreCategoria</span>
                     <p class="mb-1 text-muted"><small>🍟 @combo.Productos.Count productos</small></p>
-                    <p class="card-text fs-4 fw-bold mt-auto" style="color:#E63946;">₡@combo.Precio</p>
+                    <p class="card-text fs-4 fw-bold mt-auto text-end" style="color:#E63946;">₡@combo.Precio</p>
                     <a asp-action="Detalle" asp-route-id="@combo.IdCombo" class="btn btn-fb w-100">Ver Detalle</a>
                 </div>
             </div>

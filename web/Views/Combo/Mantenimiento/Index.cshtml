@@ -20,7 +20,6 @@
                         <th class="py-3 px-4">Imagen</th>
                         <th class="py-3">Nombre</th>
                         <th class="py-3">Precio</th>
-                        <th class="py-3">Productos</th>
                         <th class="py-3">Disponible</th>
                         <th class="py-3 text-center">Acciones</th>
                     </tr>
@@ -44,10 +43,7 @@
                                 }
                             </td>
                             <td class="align-middle fw-semibold">@combo.Nombre</td>
-                            <td class="align-middle">₡@combo.Precio.ToString("N2")</td>
-                            <td class="align-middle">
-                                <span class="badge bg-secondary">@combo.Productos.Count productos</span>
-                            </td>
+                            <td class="align-middle text-end">₡@combo.Precio.ToString("N2")</td>
                             <td class="align-middle">
                                 @if (combo.Disponible)
                                 {

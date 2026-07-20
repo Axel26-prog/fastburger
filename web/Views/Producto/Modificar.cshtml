@@ -4,7 +4,7 @@
     ViewData["Title"] = "Modificar Producto";
     var categorias = ViewBag.Categorias as IEnumerable<FastBurger.Application.DTOs.CategoriaDTO>;
     var ingredientes = ViewBag.Ingredientes as IEnumerable<FastBurger.Application.DTOs.IngredienteDTO>;
-    var ingredientesProducto = ViewBag.IngredientesProducto as List<string>;
+    var ingredientesProducto = ViewBag.IngredientesProducto as List<int>;
 }
 
 <div class="row justify-content-center">
@@ -64,10 +64,10 @@
                                 @foreach (var ing in ingredientes)
                                 {
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" 
-                                               name="IngredienteIds" value="@ing.IdIngrediente" 
+                                        <input class="form-check-input" type="checkbox"
+                                               name="IngredienteIds" value="@ing.IdIngrediente"
                                                id="ing-@ing.IdIngrediente"
-                                               @(ingredientesProducto != null && ingredientesProducto.Contains(ing.Nombre) ? "checked" : "") />
+                                               @(ingredientesProducto != null && ingredientesProducto.Contains(ing.IdIngrediente) ? "checked" : "") />
                                         <label class="form-check-label" for="ing-@ing.IdIngrediente">
                                             @ing.Nombre
                                             @if (ing.Alergenico)

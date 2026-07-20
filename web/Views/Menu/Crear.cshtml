@@ -171,5 +171,28 @@
                 precioDiv.style.display = 'none';
             }
         }
+
+        document.getElementById('menuForm').addEventListener('submit', function (e) {
+            var horaInicio = document.getElementById('HoraInicio').value;
+            var horaFin = document.getElementById('HoraFin').value;
+            var errorSpan = document.getElementById('horaError');
+
+            if (horaInicio && horaFin) {
+                if (horaInicio >= horaFin) {
+                    e.preventDefault();
+                    if (!errorSpan) {
+                        errorSpan = document.createElement('span');
+                        errorSpan.id = 'horaError';
+                        errorSpan.className = 'text-danger small';
+                        document.getElementById('HoraFin').parentElement.appendChild(errorSpan);
+                    }
+                    errorSpan.textContent = 'La hora de fin debe ser estrictamente mayor que la hora de inicio. Los turnos que crucen medianoche (ej. 22:00-02:00) no están permitidos.';
+                    document.getElementById('HoraFin').classList.add('is-invalid');
+                } else {
+                    if (errorSpan) errorSpan.textContent = '';
+                    document.getElementById('HoraFin').classList.remove('is-invalid');
+                }
+            }
+        });
     </script>
 }

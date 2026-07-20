@@ -30,7 +30,7 @@ public class ProductoController : Controller
 
     public async Task<IActionResult> Mantenimiento()
     {
-        var productos = await _productoService.GetAllAsync();
+        var productos = await _productoService.GetAllForMantenimientoAsync();
         return View("Mantenimiento/Index", productos);
     }
 
@@ -49,21 +49,56 @@ public class ProductoController : Controller
     {
         if (ModelState.IsValid)
         {
-            if (Request.Form.Files.Count > 0)
+            try
             {
-                var file = Request.Form.Files[0];
-                if (file.Length > 0)
+                if (Request.Form.Files.Count == 0 || Request.Form.Files[0].Length == 0)
                 {
-                    var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-                    var path = Path.Combine(_webHostEnvironment.WebRootPath, "images", "productos", fileName);
-                    using var stream = new FileStream(path, FileMode.Create);
-                    await file.CopyToAsync(stream);
-                    dto.ImagenUrl = $"/images/productos/{fileName}";
+                    ModelState.AddModelError("Nombre", "Debe subir una imagen del producto.");
+                    var cats = await _productoService.GetCategoriasAsync();
+                    var ings = await _productoService.GetIngredientesAsync();
+                    ViewBag.Categorias = cats;
+                    ViewBag.Ingredientes = ings;
+                    return View(dto);
                 }
-            }
 
-            await _productoService.CreateAsync(dto);
-            return RedirectToAction(nameof(Mantenimiento));
+                var file = Request.Form.Files[0];
+                var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+
+                if (!allowedExtensions.Contains(extension))
+                {
+                    ModelState.AddModelError("Nombre", "El archivo debe ser una imagen válida (JPG, PNG, GIF o WebP).");
+                    var cats = await _productoService.GetCategoriasAsync();
+                    var ings = await _productoService.GetIngredientesAsync();
+                    ViewBag.Categorias = cats;
+                    ViewBag.Ingredientes = ings;
+                    return View(dto);
+                }
+
+                const long maxSize = 5 * 1024 * 1024; // 5MB
+                if (file.Length > maxSize)
+                {
+                    ModelState.AddModelError("Nombre", "La imagen no puede superar los 5 MB.");
+                    var cats = await _productoService.GetCategoriasAsync();
+                    var ings = await _productoService.GetIngredientesAsync();
+                    ViewBag.Categorias = cats;
+                    ViewBag.Ingredientes = ings;
+                    return View(dto);
+                }
+
+                var fileName = $"{Guid.NewGuid()}{extension}";
+                var path = Path.Combine(_webHostEnvironment.WebRootPath, "images", "productos", fileName);
+                using var stream = new FileStream(path, FileMode.Create);
+                await file.CopyToAsync(stream);
+                dto.ImagenUrl = $"/images/productos/{fileName}";
+
+                await _productoService.CreateAsync(dto);
+                return RedirectToAction(nameof(Mantenimiento));
+            }
+            catch (InvalidOperationException ex)
+            {
+                ModelState.AddModelError("Nombre", ex.Message);
+            }
         }
 
         var categorias = await _productoService.GetCategoriasAsync();
@@ -88,14 +123,15 @@ public class ProductoController : Controller
             ImagenUrlActual = producto.ImagenUrl,
             Disponible = producto.Disponible,
             TiempoPrepMin = producto.TiempoPrepMin,
-            Calorias = producto.Calorias
+            Calorias = producto.Calorias,
+            IngredienteIds = producto.IngredienteIds
         };
 
         var categorias = await _productoService.GetCategoriasAsync();
         var ingredientes = await _productoService.GetIngredientesAsync();
         ViewBag.Categorias = categorias;
         ViewBag.Ingredientes = ingredientes;
-        ViewBag.IngredientesProducto = producto.Ingredientes;
+        ViewBag.IngredientesProducto = producto.IngredienteIds;
 
         return View(productoVM);
     }
@@ -106,32 +142,67 @@ public class ProductoController : Controller
     {
         if (ModelState.IsValid)
         {
-            if (Request.Form.Files.Count > 0)
+            try
             {
-                var file = Request.Form.Files[0];
-                if (file.Length > 0)
+                if (Request.Form.Files.Count > 0)
                 {
-                    if (!string.IsNullOrEmpty(dto.ImagenUrlActual))
+                    var file = Request.Form.Files[0];
+                    if (file.Length > 0)
                     {
-                        var oldPath = Path.Combine(_webHostEnvironment.WebRootPath, dto.ImagenUrlActual.TrimStart('/'));
-                        if (System.IO.File.Exists(oldPath))
-                            System.IO.File.Delete(oldPath);
+                        var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+                        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+
+                        if (!allowedExtensions.Contains(extension))
+                        {
+                            ModelState.AddModelError("Nombre", "El archivo debe ser una imagen válida (JPG, PNG, GIF o WebP).");
+                            var cats = await _productoService.GetCategoriasAsync();
+                            var ings = await _productoService.GetIngredientesAsync();
+                            ViewBag.Categorias = cats;
+                            ViewBag.Ingredientes = ings;
+                            return View(dto);
+                        }
+
+                        const long maxSize = 5 * 1024 * 1024; // 5MB
+                        if (file.Length > maxSize)
+                        {
+                            ModelState.AddModelError("Nombre", "La imagen no puede superar los 5 MB.");
+                            var cats = await _productoService.GetCategoriasAsync();
+                            var ings = await _productoService.GetIngredientesAsync();
+                            ViewBag.Categorias = cats;
+                            ViewBag.Ingredientes = ings;
+                            return View(dto);
+                        }
+
+                        if (!string.IsNullOrEmpty(dto.ImagenUrlActual))
+                        {
+                            var oldPath = Path.Combine(_webHostEnvironment.WebRootPath, dto.ImagenUrlActual.TrimStart('/'));
+                            if (System.IO.File.Exists(oldPath))
+                                System.IO.File.Delete(oldPath);
+                        }
+
+                        var fileName = $"{Guid.NewGuid()}{extension}";
+                        var path = Path.Combine(_webHostEnvironment.WebRootPath, "images", "productos", fileName);
+                        using var stream = new FileStream(path, FileMode.Create);
+                        await file.CopyToAsync(stream);
+                        dto.ImagenUrl = $"/images/productos/{fileName}";
                     }
-
-                    var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-                    var path = Path.Combine(_webHostEnvironment.WebRootPath, "images", "productos", fileName);
-                    using var stream = new FileStream(path, FileMode.Create);
-                    await file.CopyToAsync(stream);
-                    dto.ImagenUrl = $"/images/productos/{fileName}";
+                    else
+                    {
+                        dto.ImagenUrl = dto.ImagenUrlActual;
+                    }
                 }
-            }
-            else
-            {
-                dto.ImagenUrl = dto.ImagenUrlActual;
-            }
+                else
+                {
+                    dto.ImagenUrl = dto.ImagenUrlActual;
+                }
 
-            await _productoService.UpdateAsync(dto);
-            return RedirectToAction(nameof(Mantenimiento));
+                await _productoService.UpdateAsync(dto);
+                return RedirectToAction(nameof(Mantenimiento));
+            }
+            catch (InvalidOperationException ex)
+            {
+                ModelState.AddModelError("Nombre", ex.Message);
+            }
         }
 
         var categorias = await _productoService.GetCategoriasAsync();
@@ -145,14 +216,6 @@ public class ProductoController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Eliminar(int id)
     {
-        var producto = await _productoService.GetByIdAsync(id);
-        if (producto != null && !string.IsNullOrEmpty(producto.ImagenUrl))
-        {
-            var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, producto.ImagenUrl.TrimStart('/'));
-            if (System.IO.File.Exists(imagePath))
-                System.IO.File.Delete(imagePath);
-        }
-
         await _productoService.DeleteAsync(id);
         return RedirectToAction(nameof(Mantenimiento));
     }

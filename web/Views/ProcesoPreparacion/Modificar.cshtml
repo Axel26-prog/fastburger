@@ -18,18 +18,9 @@
                     <input type="hidden" asp-for="IdProceso" />
 
                     <div class="mb-3">
-                        <label asp-for="IdProducto" class="form-label fw-semibold"></label>
-                        <select asp-for="IdProducto" class="form-select">
-                            <option value="">-- Seleccionar Producto --</option>
-                            @if (productos != null)
-                            {
-                                @foreach (var prod in productos)
-                                {
-                                    <option value="@prod.IdProducto">@prod.Nombre</option>
-                                }
-                            }
-                        </select>
-                        <span asp-validation-for="IdProducto" class="text-danger small"></span>
+                        <label class="form-label fw-semibold">Producto</label>
+                        <input type="hidden" asp-for="IdProducto" />
+                        <input type="text" class="form-control" value="@Model.NombreProducto" readonly />
                     </div>
 
                     <div class="mb-3">

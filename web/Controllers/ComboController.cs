@@ -23,7 +23,7 @@ public class ComboController : Controller
 
     public async Task<IActionResult> Mantenimiento()
     {
-        var combos = await _comboService.GetAllAsync();
+        var combos = await _comboService.GetAllForMantenimientoAsync();
         return View("Mantenimiento/Index", combos);
     }
 
@@ -80,12 +80,13 @@ public class ComboController : Controller
             Nombre = combo.Nombre,
             Precio = combo.Precio,
             ImagenUrlActual = combo.ImagenUrl,
-            Disponible = combo.Disponible
+            Disponible = combo.Disponible,
+            ProductoIds = combo.ProductoIds
         };
 
         var productos = await _comboService.GetProductosAsync();
         ViewBag.Productos = productos;
-        ViewBag.ProductosCombo = combo.Productos;
+        ViewBag.ProductosCombo = combo.ProductoIds;
 
         return View(comboVM);
     }
@@ -133,14 +134,6 @@ public class ComboController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Eliminar(int id)
     {
-        var combo = await _comboService.GetByIdAsync(id);
-        if (combo != null && !string.IsNullOrEmpty(combo.ImagenUrl))
-        {
-            var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, combo.ImagenUrl.TrimStart('/'));
-            if (System.IO.File.Exists(imagePath))
-                System.IO.File.Delete(imagePath);
-        }
-
         await _comboService.DeleteAsync(id);
         return RedirectToAction(nameof(Mantenimiento));
     }

@@ -20,7 +20,23 @@
             <div class="timeline-step">
                 <div class="timeline-number">@paso.Orden</div>
                 <div class="timeline-content">
-                    <h5 class="mb-0 fw-bold" style="color:#3D2B1F;">@paso.NombreEstacion</h5>
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h5 class="mb-1 fw-bold" style="color:#3D2B1F;">@paso.NombreEstacion</h5>
+                        <div class="text-muted small">
+                            @if (paso.TiempoMin > 0)
+                            {
+                                <span class="me-3"><i class="bi bi-clock"></i> @paso.TiempoMin min</span>
+                            }
+                            @if (paso.TemperaturaC.HasValue)
+                            {
+                                <span><i class="bi bi-thermometer-half"></i> @paso.TemperaturaC.Value°C</span>
+                            }
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(paso.Descripcion))
+                    {
+                        <p class="mb-0 text-muted">@paso.Descripcion</p>
+                    }
                 </div>
             </div>
         }
