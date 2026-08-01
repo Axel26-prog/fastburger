@@ -1,0 +1,15 @@
+C:\Users\Axel\source\repos\monorepo\fastBurger.Infrastructure\bin\Debug\net8.0\FastBurger.Infrastructure.deps.json
+C:\Users\Axel\source\repos\monorepo\fastBurger.Infrastructure\bin\Debug\net8.0\FastBurger.Infrastructure.runtimeconfig.json
+C:\Users\Axel\source\repos\monorepo\fastBurger.Infrastructure\bin\Debug\net8.0\FastBurger.Infrastructure.dll
+C:\Users\Axel\source\repos\monorepo\fastBurger.Infrastructure\bin\Debug\net8.0\FastBurger.Infrastructure.pdb
+C:\Users\Axel\source\repos\monorepo\fastBurger.Infrastructure\obj\Debug\net8.0\FastBurger.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\Axel\source\repos\monorepo\fastBurger.Infrastructure\obj\Debug\net8.0\FastBurger.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Axel\source\repos\monorepo\fastBurger.Infrastructure\obj\Debug\net8.0\FastBurger.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\Axel\source\repos\monorepo\fastBurger.Infrastructure\obj\Debug\net8.0\FastBurger.Infrastructure.AssemblyInfo.cs
+C:\Users\Axel\source\repos\monorepo\fastBurger.Infrastructure\obj\Debug\net8.0\FastBurger.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\Axel\source\repos\monorepo\fastBurger.Infrastructure\obj\Debug\net8.0\FastBurger.Infrastructure.sourcelink.json
+C:\Users\Axel\source\repos\monorepo\fastBurger.Infrastructure\obj\Debug\net8.0\FastBurger.Infrastructure.dll
+C:\Users\Axel\source\repos\monorepo\fastBurger.Infrastructure\obj\Debug\net8.0\refint\FastBurger.Infrastructure.dll
+C:\Users\Axel\source\repos\monorepo\fastBurger.Infrastructure\obj\Debug\net8.0\FastBurger.Infrastructure.pdb
+C:\Users\Axel\source\repos\monorepo\fastBurger.Infrastructure\obj\Debug\net8.0\FastBurger.Infrastructure.genruntimeconfig.cache
+C:\Users\Axel\source\repos\monorepo\fastBurger.Infrastructure\obj\Debug\net8.0\ref\FastBurger.Infrastructure.dll
