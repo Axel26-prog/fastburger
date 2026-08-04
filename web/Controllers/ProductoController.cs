@@ -21,6 +21,13 @@ public class ProductoController : Controller
         return View(productos);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Listar()
+    {
+        var productos = await _productoService.GetAllAsync();
+        return Json(productos.Select(p => new { id = p.IdProducto, nombre = p.Nombre, precio = p.Precio, disponible = p.Disponible }));
+    }
+
     public async Task<IActionResult> Detalle(int id)
     {
         var producto = await _productoService.GetByIdAsync(id);

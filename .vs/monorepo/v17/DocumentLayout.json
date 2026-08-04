@@ -3,6 +3,22 @@
   "WorkspaceRootPath": "C:\\Users\\Axel\\source\\repos\\monorepo\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Views\\Shared\\_Layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:web\\Views\\Shared\\_Layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Views\\Carrito\\Index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:web\\Views\\Carrito\\Index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Views\\Shared\\Components\\CarritoContador\\Default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:web\\Views\\Shared\\Components\\CarritoContador\\Default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\CarritoController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:web\\Controllers\\CarritoController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\web\\FastBurger.Web.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:web\\FastBurger.Web.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     },
@@ -18,11 +34,63 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "web\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "web\\Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-08-01T18:12:30.256Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Views\\Carrito\\Index.cshtml",
+              "RelativeDocumentMoniker": "web\\Views\\Carrito\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Views\\Carrito\\Index.cshtml",
+              "RelativeToolTip": "web\\Views\\Carrito\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-08-01T18:12:04.765Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Default.cshtml",
+              "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Views\\Shared\\Components\\CarritoContador\\Default.cshtml",
+              "RelativeDocumentMoniker": "web\\Views\\Shared\\Components\\CarritoContador\\Default.cshtml",
+              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Views\\Shared\\Components\\CarritoContador\\Default.cshtml",
+              "RelativeToolTip": "web\\Views\\Shared\\Components\\CarritoContador\\Default.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-08-01T18:11:10.154Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CarritoController.cs",
+              "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\CarritoController.cs",
+              "RelativeDocumentMoniker": "web\\Controllers\\CarritoController.cs",
+              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\CarritoController.cs",
+              "RelativeToolTip": "web\\Controllers\\CarritoController.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAABkAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-01T17:19:53.277Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "web\\Views\\Home\\Index.cshtml",
@@ -34,7 +102,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "FastBurger.Web.csproj",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\FastBurger.Web.csproj",
               "RelativeDocumentMoniker": "web\\FastBurger.Web.csproj",

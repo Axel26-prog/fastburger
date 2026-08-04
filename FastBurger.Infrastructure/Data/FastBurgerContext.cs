@@ -708,9 +708,6 @@ public partial class FastBurgerContext : DbContext
             entity.Property(e => e.FechaRegistro)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnName("fecha_registro");
-            entity.Property(e => e.FotoPerfil)
-                .HasMaxLength(300)
-                .HasColumnName("foto_perfil");
             entity.Property(e => e.IdRol).HasColumnName("id_rol");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(100)

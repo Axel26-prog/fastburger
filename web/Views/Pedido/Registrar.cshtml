@@ -1,0 +1,693 @@
+@model FastBurger.Application.DTOs.CreatePedidoDTO?
+
+@{
+    ViewData["Title"] = "Registrar Pedido";
+    Layout = "_Layout";
+    var info = ViewBag.UsuarioInfo as FastBurger.Application.DTOs.InfoUsuarioDTO;
+    var esEncargadoOAdmin = info?.EsEncargadoOAdmin == true;
+    var fechaActual = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+}
+
+<input type="hidden" id="esEncargadoOAdmin" value="@esEncargadoOAdmin.ToString().ToLower()" />
+<input type="hidden" id="usuarioIdActual" value="@info?.IdUsuario" />
+<input type="hidden" id="rolIdActual" value="@info?.IdRol" />
+
+<div class="invoice-wrapper">
+    <div class="invoice-header bg-fb-primary text-white p-4 rounded mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h2 class="mb-0">FastBurger</h2>
+                <p class="mb-0 opacity-75">Registro de Pedido</p>
+            </div>
+            <div class="col-md-6 text-end">
+                <h4 class="mb-1">Fecha: @fechaActual</h4>
+                <p class="mb-0 opacity-75">NUEVO PEDIDO</p>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <form asp-action="Registrar" method="post" id="pedidoForm">
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Datos del Cliente</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (esEncargadoOAdmin)
+                        {
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Seleccionar Cliente *</label>
+                                    <select id="clienteSelect" class="form-select" required>
+                                        <option value="">-- Seleccione un cliente --</option>
+                                        @foreach (var cliente in ViewBag.Clientes)
+                                        {
+                                            <option value="@cliente.IdUsuario"
+                                                    data-nombre="@cliente.Nombre"
+                                                    data-apellidos="@cliente.Apellidos"
+                                                    data-correo="@cliente.Correo"
+                                                    data-telefono="@cliente.Telefono">
+                                                @cliente.Nombre @cliente.Apellidos (@cliente.Correo)
+                                            </option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        }
+
+                        <div id="infoClienteSection" class="@(esEncargadoOAdmin ? "mt-3" : "")">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="form-label">Nombre</label>
+                                    <input type="text" id="clienteNombre" class="form-control" value="@info?.Nombre" readonly />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Apellidos</label>
+                                    <input type="text" id="clienteApellidos" class="form-control" value="@info?.Apellidos" readonly />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Correo</label>
+                                    <input type="text" id="clienteCorreo" class="form-control" value="@info?.Correo" readonly />
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-4">
+                                    <label class="form-label">Teléfono</label>
+                                    <input type="text" id="clienteTelefono" class="form-control" value="@info?.Telefono" readonly />
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" id="idUsuarioSeleccionado" name="IdUsuario" value="@info?.IdUsuario" />
+                    </div>
+                </div>
+
+                @if (esEncargadoOAdmin)
+                {
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">Encargado que Registra</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" value="@info?.Nombre" readonly />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Apellidos</label>
+                                    <input type="text" class="form-control" value="@info?.Apellidos" readonly />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Rol</label>
+                                    <input type="text" class="form-control" value="@info?.NombreRol" readonly />
+                                </div>
+                            </div>
+                            <input type="hidden" name="IdEmpleado" value="@info?.IdUsuario" />
+                        </div>
+                    </div>
+                }
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Método de Entrega</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="TipoEntrega" id="tipoRecoger" value="recoger" checked onchange="calcularTotales()">
+                                    <label class="form-check-label" for="tipoRecoger">
+                                        <strong>Recoger en Tienda</strong>
+                                        <small class="d-block text-muted">Sin costo adicional</small>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="TipoEntrega" id="tipoDelivery" value="domicilio" onchange="calcularTotales()">
+                                    <label class="form-check-label" for="tipoDelivery">
+                                        <strong>Domicilio</strong>
+                                        <small class="d-block text-muted">₡500 costo de envío</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="direccionSection" class="mt-3 d-none">
+                            <label class="form-label">Dirección de Entrega</label>
+                            <select id="direccionSelect" class="form-select">
+                                <option value="">-- Seleccione una dirección --</option>
+                            </select>
+                            <input type="hidden" id="idDireccionSeleccionada" name="IdDireccion" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Detalle del Pedido</h5>
+                        <div>
+                            <button type="button" class="btn btn-sm btn-outline-primary me-2" onclick="agregarLineaProducto()">+ Producto</button>
+                            <button type="button" class="btn btn-sm btn-outline-success" onclick="agregarLineaCombo()">+ Combo</button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="detalleTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 28%">Producto / Combo</th>
+                                        <th class="text-center" style="width: 10%">Cantidad</th>
+                                        <th class="text-end" style="width: 13%">P. Unit.</th>
+                                        <th class="text-end" style="width: 12%">Impuesto</th>
+                                        <th class="text-end" style="width: 12%">Subtotal</th>
+                                        <th style="width: 20%">Observaciones</th>
+                                        <th style="width: 5%"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="detalleBody">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="p-3 text-center text-muted" id="emptyDetalle">
+                            <p>No hay productos agregados. Use los botones de arriba para agregar.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Datos del Pago</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="form-label">Método de Pago *</label>
+                                <select name="IdMetodoPago" id="metodoPagoSelect" class="form-select" required>
+                                    <option value="">-- Seleccione --</option>
+                                    @foreach (var metodo in ViewBag.MetodosPago)
+                                    {
+                                        <option value="@metodo.IdMetodo">@metodo.Nombre</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Descuento (₡)</label>
+                                <input type="number" name="Descuento" id="descuentoInput" class="form-control" value="0" min="0" step="100" oninput="calcularTotales()" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Referencia</label>
+                                <input type="text" name="ReferenciaPago" class="form-control" placeholder="Opcional" />
+                            </div>
+                        </div>
+
+                        <div id="pagoTarjetaSection" class="mt-3 d-none">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Número de Tarjeta</label>
+                                    <input type="text" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Vencimiento</label>
+                                    <input type="text" class="form-control" placeholder="MM/YY" maxlength="5" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">CVV</label>
+                                    <input type="text" class="form-control" placeholder="123" maxlength="4" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="pagoEfectivoSection" class="mt-3 d-none">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Monto con que Paga (₡) *</label>
+                                    <input type="number" name="MontoRecibido" id="montoRecibidoInput" class="form-control" min="0" step="100" oninput="calcularVuelto()" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Vuelto</label>
+                                    <input type="text" id="vueltoDisplay" class="form-control" readonly value="₡0.00" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Notas del Pedido</h5>
+                    </div>
+                    <div class="card-body">
+                        <textarea name="Notas" class="form-control" rows="2" placeholder="Indicaciones especiales para el pedido..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm sticky-top" style="top: 100px;">
+                    <div class="card-header bg-fb-primary text-white">
+                        <h5 class="mb-0">Resumen del Pedido</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-borderless mb-0">
+                            <tbody>
+                                <tr>
+                                    <td>Subtotal</td>
+                                    <td class="text-end" id="subtotalDisplay">₡0.00</td>
+                                </tr>
+                                <tr class="text-success">
+                                    <td>Descuento</td>
+                                    <td class="text-end" id="descuentoDisplay">-₡0.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Impuesto (13%)</td>
+                                    <td class="text-end" id="impuestoDisplay">₡0.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Costo de Envío</td>
+                                    <td class="text-end" id="envioDisplay">₡0.00</td>
+                                </tr>
+                                <tr class="table-dark fw-bold border-top">
+                                    <td class="fs-5">TOTAL</td>
+                                    <td class="text-end fs-5" id="totalDisplay">₡0.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <input type="hidden" name="CostoEnvio" id="costoEnvioHidden" value="0" />
+                        <button type="submit" class="btn btn-fb-primary w-100 btn-lg" id="btnConfirmar" disabled>
+                            <span class="spinner-border spinner-border-sm me-2 d-none" role="status"></span>
+                            <span id="btnText">Confirmar Pedido</span>
+                        </button>
+                        <p class="text-muted text-center small mb-0 mt-2">
+                            Al confirmar, el pedido pasará a estado "Aceptada"
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="mt-4">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+            ← Continuar Comprando
+        </a>
+    </div>
+</div>
+
+<div class="modal fade" id="productoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Seleccionar Producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Buscar producto</label>
+                    <input type="text" id="buscarProducto" class="form-control" placeholder="Escriba para buscar..." />
+                </div>
+                <div id="productosList" class="list-group" style="max-height: 300px; overflow-y: auto;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="comboModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Seleccionar Combo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="combosList" class="list-group" style="max-height: 300px; overflow-y: auto;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const TASA_IMPUESTO = 0.13;
+        let lineasDetalle = [];
+        let indiceLinea = 0;
+        let tipoModalActual = '';
+        let productosData = [];
+        let combosData = [];
+
+        const carritoData = @Html.Raw(Json.Serialize(ViewBag.Carrito));
+
+        $(document).ready(function() {
+            cargarProductos();
+            cargarCombos();
+
+            if (carritoData && carritoData.items && carritoData.items.length > 0) {
+                carritoData.items.forEach(function(item) {
+                    agregarLineaDesdeCarrito(
+                        item.idProducto,
+                        item.idCombo,
+                        item.nombreProducto || item.nombreCombo,
+                        item.precioUnitario,
+                        item.cantidad,
+                        item.notas
+                    );
+                });
+                calcularTotales();
+            }
+
+            if ($('#esEncargadoOAdmin').val() === 'true') {
+                $('#clienteSelect').on('change', function() {
+                    const option = $(this).find(':selected');
+                    if (this.value) {
+                        $('#idUsuarioSeleccionado').val(this.value);
+                        $('#clienteNombre').val(option.data('nombre'));
+                        $('#clienteApellidos').val(option.data('apellidos'));
+                        $('#clienteCorreo').val(option.data('correo'));
+                        $('#clienteTelefono').val(option.data('telefono'));
+                        cargarDirecciones(this.value);
+                    }
+                    validarFormulario();
+                });
+            }
+
+            $('#metodoPagoSelect').on('change', function() {
+                const metodoTexto = $(this).find(':selected').text().toLowerCase();
+                if (metodoTexto.includes('tarjeta')) {
+                    $('#pagoTarjetaSection').removeClass('d-none');
+                    $('#pagoEfectivoSection').addClass('d-none');
+                } else if (metodoTexto.includes('efectivo')) {
+                    $('#pagoTarjetaSection').addClass('d-none');
+                    $('#pagoEfectivoSection').removeClass('d-none');
+                } else {
+                    $('#pagoTarjetaSection').addClass('d-none');
+                    $('#pagoEfectivoSection').addClass('d-none');
+                }
+                validarFormulario();
+            });
+
+            $('#buscarProducto').on('input', function() {
+                const texto = $(this).val().toLowerCase();
+                if (texto.length >= 2) {
+                    const filtrados = productosData.filter(p => p.nombre.toLowerCase().includes(texto));
+                    renderizarProductos(filtrados);
+                } else {
+                    renderizarProductos(productosData);
+                }
+            });
+
+            validarFormulario();
+        });
+
+        function cargarProductos() {
+            $.getJSON('/Producto/Listar', function(productos) {
+                productosData = productos.filter(p => p.disponible);
+                renderizarProductos(productosData);
+            });
+        }
+
+        function cargarCombos() {
+            $.getJSON('/Combo/Listar', function(combos) {
+                combosData = combos.filter(c => c.disponible);
+                renderizarCombos(combosData);
+            });
+        }
+
+        function renderizarProductos(productos) {
+            $('#productosList').empty();
+            productos.forEach(p => {
+                if (p.disponible) {
+                    $('#productosList').append(
+                        `<button type="button" class="list-group-item list-group-item-action" onclick="seleccionarProducto(${p.id}, '${p.nombre.replace(/'/g, "\\'")}')">
+                            ${p.nombre}
+                        </button>`
+                    );
+                }
+            });
+        }
+
+        function renderizarCombos(combos) {
+            $('#combosList').empty();
+            combos.forEach(c => {
+                $('#combosList').append(
+                    `<button type="button" class="list-group-item list-group-item-action" onclick="seleccionarCombo(${c.id}, '${c.nombre.replace(/'/g, "\\'")}')">
+                        ${c.nombre}
+                    </button>`
+                );
+            });
+        }
+
+        function agregarLineaProducto() {
+            tipoModalActual = 'producto';
+            const modal = new bootstrap.Modal($('#productoModal'));
+            modal.show();
+        }
+
+        function agregarLineaCombo() {
+            tipoModalActual = 'combo';
+            const modal = new bootstrap.Modal($('#comboModal'));
+            modal.show();
+        }
+
+        function seleccionarProducto(id, nombre) {
+            $.get('/Pedido/ObtenerPrecio?tipo=1&id=' + id, function(response) {
+                agregarLinea(id, null, nombre, response.precio);
+                bootstrap.Modal.getInstance($('#productoModal')).hide();
+            });
+        }
+
+        function seleccionarCombo(id, nombre) {
+            $.get('/Pedido/ObtenerPrecio?tipo=2&id=' + id, function(response) {
+                agregarLinea(null, id, nombre, response.precio);
+                bootstrap.Modal.getInstance($('#comboModal')).hide();
+            });
+        }
+
+        function agregarLinea(idProducto, idCombo, nombre, precio) {
+            const linea = {
+                indice: indiceLinea++,
+                idProducto: idProducto,
+                idCombo: idCombo,
+                nombre: nombre,
+                cantidad: 1,
+                precioUnitario: precio,
+                notas: ''
+            };
+            lineasDetalle.push(linea);
+            renderizarLineas();
+            calcularTotales();
+        }
+
+        function agregarLineaDesdeCarrito(idProducto, idCombo, nombre, precio, cantidad, notas) {
+            const linea = {
+                indice: indiceLinea++,
+                idProducto: idProducto,
+                idCombo: idCombo,
+                nombre: nombre,
+                cantidad: cantidad || 1,
+                precioUnitario: precio,
+                notas: notas || ''
+            };
+            lineasDetalle.push(linea);
+            renderizarLineas();
+            validarFormulario();
+        }
+
+        function renderizarLineas() {
+            $('#detalleBody').empty();
+            if (lineasDetalle.length === 0) {
+                $('#emptyDetalle').removeClass('d-none');
+                return;
+            }
+            $('#emptyDetalle').addClass('d-none');
+
+            lineasDetalle.forEach((linea, index) => {
+                const subtotal = linea.cantidad * linea.precioUnitario;
+                const impuestoLinea = subtotal * TASA_IMPUESTO;
+                const row = `
+                    <tr>
+                        <td>
+                            <input type="hidden" name="LineasDetalle[${index}].IdProducto" value="${linea.idProducto || ''}" />
+                            <input type="hidden" name="LineasDetalle[${index}].IdCombo" value="${linea.idCombo || ''}" />
+                            <input type="hidden" name="LineasDetalle[${index}].PrecioUnitario" value="${linea.precioUnitario}" />
+                            ${linea.nombre}
+                        </td>
+                        <td class="text-center">
+                            <input type="number" name="LineasDetalle[${index}].Cantidad" 
+                                   class="form-control text-center cantidad-input" 
+                                   value="${linea.cantidad}" min="1" max="99"
+                                   onchange="actualizarCantidad(${index}, this.value)" 
+                                   onclick="this.select();" />
+                        </td>
+                        <td class="text-end">₡${linea.precioUnitario.toFixed(2)}</td>
+                        <td class="text-end">₡${impuestoLinea.toFixed(2)}</td>
+                        <td class="text-end fw-bold">₡${subtotal.toFixed(2)}</td>
+                        <td>
+                            <input type="text" name="LineasDetalle[${index}].Notas" 
+                                   class="form-control" value="${linea.notas}"
+                                   placeholder="Obs..."
+                                   onchange="actualizarNotas(${index}, this.value)" />
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="eliminarLinea(${index})">
+                                ×
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                $('#detalleBody').append(row);
+            });
+        }
+
+        function mostrarNotificacion(mensaje, tipo) {
+            const tipoClass = tipo === 'error' ? 'bg-danger' : 'bg-info';
+            if ($('#formToast').length === 0) {
+                $('body').append('<div class="toast-container position-fixed bottom-0 end-0 p-3"><div id="formToast" class="toast" role="alert"><div class="toast-header ' + tipoClass + ' text-white"><strong class="me-auto">Pedido</strong><button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button></div><div class="toast-body" id="formToastBody"></div></div></div>');
+                }
+            $('#formToast > .toast-header').removeClass('bg-danger bg-info bg-success').addClass(tipoClass);
+            $('#formToastBody').text(mensaje);
+            var toast = new bootstrap.Toast($('#formToast'));
+            toast.show();
+        }
+
+        function actualizarCantidad(indice, valor) {
+            if (valor === '' || valor === null) {
+                return;
+            }
+            const cantidad = parseInt(valor);
+            if (isNaN(cantidad)) {
+                mostrarNotificacion('La cantidad debe ser un número válido.', 'error');
+                renderizarLineas();
+                return;
+            }
+            if (cantidad <= 0) {
+                mostrarNotificacion('Cantidad 0 elimina la línea del pedido.', 'info');
+                eliminarLinea(indice);
+                return;
+            }
+            lineasDetalle[indice].cantidad = cantidad;
+            renderizarLineas();
+            calcularTotales();
+        }
+
+        function actualizarNotas(indice, valor) {
+            lineasDetalle[indice].notas = valor;
+        }
+
+        function eliminarLinea(indice) {
+            lineasDetalle.splice(indice, 1);
+            renderizarLineas();
+            calcularTotales();
+        }
+
+        function calcularTotales() {
+            const tipoEntrega = $('input[name="TipoEntrega"]:checked').val();
+            const descuento = parseFloat($('#descuentoInput').val()) || 0;
+            const costoEnvio = tipoEntrega === 'domicilio' ? 500 : 0;
+
+            let subtotal = 0;
+            let impuesto = 0;
+
+            lineasDetalle.forEach(linea => {
+                const subtotalLinea = linea.cantidad * linea.precioUnitario;
+                subtotal += subtotalLinea;
+                impuesto += subtotalLinea * TASA_IMPUESTO;
+            });
+
+            const total = subtotal - descuento + impuesto + costoEnvio;
+
+            $('#subtotalDisplay').text('₡' + subtotal.toFixed(2));
+            $('#descuentoDisplay').text('-₡' + descuento.toFixed(2));
+            $('#impuestoDisplay').text('₡' + impuesto.toFixed(2));
+            $('#envioDisplay').text('₡' + costoEnvio.toFixed(2));
+            $('#totalDisplay').text('₡' + total.toFixed(2));
+            $('#costoEnvioHidden').val(costoEnvio);
+
+            if (tipoEntrega === 'domicilio') {
+                $('#direccionSection').removeClass('d-none');
+            } else {
+                $('#direccionSection').addClass('d-none');
+            }
+
+            if (descuento > 0) {
+                $('#descuentoDisplay').closest('tr').removeClass('d-none');
+            } else {
+                $('#descuentoDisplay').closest('tr').addClass('d-none');
+            }
+
+            validarFormulario();
+        }
+
+        function calcularVuelto() {
+            const total = parseFloat($('#totalDisplay').text().replace('₡', '').replace(/,/g, '')) || 0;
+            const montoRecibido = parseFloat($('#montoRecibidoInput').val()) || 0;
+            const vuelto = montoRecibido - total;
+            $('#vueltoDisplay').val(vuelto >= 0 ? '₡' + vuelto.toFixed(2) : 'Monto insuficiente');
+        }
+
+        function validarFormulario() {
+            const tieneLineas = lineasDetalle.length > 0;
+            const esAdmin = $('#esEncargadoOAdmin').val() === 'true';
+            const tieneCliente = esAdmin ? ($('#clienteSelect').val() !== '') : true;
+            const tieneMetodoPago = $('#metodoPagoSelect').val() !== '';
+
+            const formularioValido = tieneLineas && tieneCliente && tieneMetodoPago;
+            $('#btnConfirmar').prop('disabled', !formularioValido);
+        }
+
+        function cargarDirecciones(usuarioId) {
+            $.get('/Pedido/ObtenerCliente?id=' + usuarioId, function(response) {
+                $('#direccionSelect').empty();
+                $('#direccionSelect').append('<option value="">-- Seleccione una dirección --</option>');
+                if (response.direcciones && response.direcciones.length > 0) {
+                    response.direcciones.forEach(d => {
+                        $('#direccionSelect').append(
+                            `<option value="${d.idDireccion}" data-completa="${d.direccionExacta}, ${d.distrito}, ${d.canton}, ${d.provincia}">
+                                ${d.alias || d.direccionExacta}
+                            </option>`
+                        );
+                    });
+                } else {
+                    $('#direccionSelect').append('<option value="">No hay direcciones registradas</option>');
+                }
+            }).fail(function() {
+                $('#direccionSelect').empty();
+                $('#direccionSelect').append('<option value="">No hay direcciones registradas</option>');
+            });
+        }
+
+        $('#pedidoForm').on('submit', function() {
+            if ($('#esEncargadoOAdmin').val() === 'true') {
+                $('#idUsuarioSeleccionado').val($('#clienteSelect').val());
+            }
+
+            if ($('#direccionSelect').val()) {
+                $('#idDireccionSeleccionada').val($('#direccionSelect').val());
+            }
+
+            const metodoTexto = $('#metodoPagoSelect option:selected').text().toLowerCase();
+            if (!metodoTexto.includes('tarjeta') && !metodoTexto.includes('efectivo')) {
+                $('#montoRecibidoInput').val($('#totalDisplay').text().replace('₡', '').replace(',', ''));
+            }
+
+            $('#btnConfirmar').prop('disabled', true);
+            $('#btnConfirmar .spinner-border').removeClass('d-none');
+            $('#btnConfirmar #btnText').text('Procesando...');
+        });
+    </script>
+}

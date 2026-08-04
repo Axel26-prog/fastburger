@@ -1,0 +1,319 @@
+@model FastBurger.Application.DTOs.PedidoDetalleDTO
+
+@{
+    ViewData["Title"] = $"Pedido #{Model.IdPedido}";
+    Layout = "_Layout";
+    var info = ViewBag.UsuarioInfo as FastBurger.Application.DTOs.InfoUsuarioDTO;
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="invoice-wrapper">
+    <div class="invoice-header text-white">
+        <div class="d-flex justify-content-between align-items-start flex-wrap mb-3">
+            <div>
+                <h2 class="mb-1 fw-bold">
+                    <i class="bi bi-receipt-cutoff me-2"></i>FastBurger
+                </h2>
+                <p class="mb-0 invoice-subtitle">Comprobante de Pedido</p>
+            </div>
+            <div class="text-end">
+                <div class="invoice-number">PEDIDO #@Model.IdPedido</div>
+                <div class="invoice-date">
+                    <i class="bi bi-calendar3 me-1"></i>@Model.FechaPedido.ToString("dd/MM/yyyy HH:mm")
+                </div>
+                @{
+                    var estadoClass = Model.Estado switch
+                    {
+                        "pendiente_pago" => "bg-secondary",
+                        "aceptada" => "bg-primary",
+                        "preparacion" => "bg-warning text-dark",
+                        "procesando" => "bg-info text-dark",
+                        "entregada" => "bg-success",
+                        "cancelada" => "bg-danger",
+                        _ => "bg-secondary"
+                    };
+                    var estadoTexto = Model.Estado switch
+                    {
+                        "pendiente_pago" => "Pendiente de pago",
+                        "aceptada" => "Aceptada",
+                        "preparacion" => "En preparación",
+                        "procesando" => "Procesando",
+                        "entregada" => "Entregada",
+                        "cancelada" => "Cancelada",
+                        _ => Model.Estado
+                    };
+                }
+                <span class="badge estado-badge @estadoClass fs-6 mt-2">@estadoTexto</span>
+            </div>
+        </div>
+        <hr class="invoice-divider" />
+        <div class="row g-3 invoice-meta">
+            <div class="col-md-3 col-sm-6">
+                <div class="meta-label">Cliente</div>
+                <div class="meta-value">@Model.NombreUsuario</div>
+                <div class="meta-extra">@Model.CorreoUsuario</div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="meta-label">Encargado</div>
+                <div class="meta-value">@(string.IsNullOrEmpty(Model.NombreEmpleado) ? "—" : Model.NombreEmpleado)</div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="meta-label">Entrega</div>
+                <div class="meta-value">
+                    <i class="bi @(Model.TipoEntrega == "recoger" ? "bi-bag-check" : "bi-truck") me-1"></i>
+                    @(Model.TipoEntrega == "recoger" ? "Recoger" : "Domicilio")
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="meta-label">Pago</div>
+                <div class="meta-value">
+                    <i class="bi bi-credit-card-2-front me-1"></i>
+                    @(Model.Pago?.NombreMetodo ?? "—")
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-1">
+        <div class="col-lg-8">
+            <div class="invoice-section">
+                <div class="invoice-section-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-list-ul me-2"></i>Detalle del Pedido
+                    </h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table invoice-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Producto / Combo</th>
+                                <th class="text-center" style="width: 80px;">Cantidad</th>
+                                <th class="text-end" style="width: 110px;">P. Unit.</th>
+                                <th class="text-end" style="width: 100px;">Impuesto</th>
+                                <th class="text-end" style="width: 110px;">Subtotal</th>
+                                <th style="width: 180px;">Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="product-name">@(item.NombreProducto ?? item.NombreCombo)</div>
+                                    </td>
+                                    <td class="text-center"><span class="qty-badge">@item.Cantidad</span></td>
+                                    <td class="text-end">₡@item.PrecioUnitario.ToString("N2")</td>
+                                    <td class="text-end text-muted">₡@item.ImpuestoUnitario.ToString("N2")</td>
+                                    <td class="text-end fw-semibold">₡@item.Subtotal.ToString("N2")</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.Notas))
+                                        {
+                                            <span class="obs-text"><i class="bi bi-chat-left-text me-1"></i>@item.Notas</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">—</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            @if (Model.Pago != null)
+            {
+                <div class="invoice-section mt-4">
+                    <div class="invoice-section-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-cash-coin me-2"></i>Información de Pago
+                        </h5>
+                    </div>
+                    <div class="invoice-section-body">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="info-block">
+                                    <div class="info-label">Método</div>
+                                    <div class="info-value">@Model.Pago.NombreMetodo</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="info-block">
+                                    <div class="info-label">Referencia</div>
+                                    <div class="info-value text-break">@(string.IsNullOrEmpty(Model.Pago.Referencia) ? "—" : Model.Pago.Referencia)</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="info-block">
+                                    <div class="info-label">Estado</div>
+                                    @{
+                                        var pagoEstadoClass = Model.Pago.Estado switch
+                                        {
+                                            "aprobado" => "bg-success",
+                                            "pendiente" => "bg-secondary",
+                                            "rechazado" => "bg-danger",
+                                            "reembolsado" => "bg-warning text-dark",
+                                            _ => "bg-secondary"
+                                        };
+                                        var pagoEstadoTexto = Model.Pago.Estado switch
+                                        {
+                                            "aprobado" => "Pagado",
+                                            "pendiente" => "Pendiente",
+                                            "rechazado" => "Rechazado",
+                                            "reembolsado" => "Reembolsado",
+                                            _ => Model.Pago.Estado
+                                        };
+                                    }
+                                    <span class="badge @pagoEstadoClass fs-6 mt-1">@pagoEstadoTexto</span>
+                                </div>
+                            </div>
+                        </div>
+                        @if (Model.Pago.MontoRecibido.HasValue && Model.Pago.MontoRecibido > Model.Pago.Monto)
+                        {
+                            <div class="vuelto-box mt-3">
+                                <div class="row text-center">
+                                    <div class="col-md-6 border-end">
+                                        <div class="info-label">Monto Recibido</div>
+                                        <div class="info-value-lg">₡@Model.Pago.MontoRecibido.Value.ToString("N2")</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="info-label text-success">Vuelto</div>
+                                        <div class="info-value-lg text-success fw-bold">₡@((Model.Pago.MontoRecibido.Value - Model.Pago.Monto).ToString("N2"))</div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-4">
+            <div class="invoice-side">
+                <div class="side-block">
+                    <div class="side-block-header">
+                        <i class="bi bi-person-circle me-2"></i>Cliente
+                    </div>
+                    <div class="side-block-body">
+                        <div class="side-name">@Model.NombreUsuario</div>
+                        <div class="side-line"><i class="bi bi-envelope me-1"></i>@Model.CorreoUsuario</div>
+                        @if (!string.IsNullOrEmpty(Model.TelefonoUsuario))
+                        {
+                            <div class="side-line"><i class="bi bi-telephone me-1"></i>@Model.TelefonoUsuario</div>
+                        }
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.NombreEmpleado))
+                {
+                    <div class="side-block">
+                        <div class="side-block-header">
+                            <i class="bi bi-person-badge me-2"></i>Encargado
+                        </div>
+                        <div class="side-block-body">
+                            <div class="side-name">@Model.NombreEmpleado</div>
+                        </div>
+                    </div>
+                }
+
+                <div class="side-block">
+                    <div class="side-block-header">
+                        <i class="bi bi-truck me-2"></i>Entrega
+                    </div>
+                    <div class="side-block-body">
+                        @if (Model.TipoEntrega == "recoger")
+                        {
+                            <span class="badge bg-info fs-6 w-100 py-2">
+                                <i class="bi bi-bag-check me-1"></i>Recoger en Tienda
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark fs-6 w-100 py-2">
+                                <i class="bi bi-truck me-1"></i>Domicilio
+                            </span>
+                            @if (!string.IsNullOrEmpty(Model.DireccionEntrega))
+                            {
+                                <div class="mt-2 side-address">
+                                    <i class="bi bi-geo-alt me-1"></i>@Model.DireccionEntrega
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <div class="totals-box">
+                    <div class="totals-header">
+                        <i class="bi bi-receipt me-2"></i>Resumen de Totales
+                    </div>
+                    <div class="totals-body">
+                        <div class="totals-row">
+                            <span>Subtotal (sin impuesto)</span>
+                            <span class="totals-amount">₡@Model.Subtotal.ToString("N2")</span>
+                        </div>
+                        @if (Model.Descuento > 0)
+                        {
+                            <div class="totals-row text-success">
+                                <span><i class="bi bi-tag me-1"></i>Descuento</span>
+                                <span class="totals-amount">-₡@Model.Descuento.ToString("N2")</span>
+                            </div>
+                        }
+                        <div class="totals-row">
+                            <span>Impuesto (13%)</span>
+                            <span class="totals-amount">₡@Model.Impuesto.ToString("N2")</span>
+                        </div>
+                        @if (Model.CostoEnvio > 0)
+                        {
+                            <div class="totals-row">
+                                <span><i class="bi bi-truck me-1"></i>Costo de Envío</span>
+                                <span class="totals-amount">₡@Model.CostoEnvio.ToString("N2")</span>
+                            </div>
+                        }
+                        <div class="totals-divider"></div>
+                        <div class="totals-row totals-grand">
+                            <span>TOTAL</span>
+                            <span>₡@Model.Total.ToString("N2")</span>
+                        </div>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Notas))
+                {
+                    <div class="side-block mt-3">
+                        <div class="side-block-header">
+                            <i class="bi bi-sticky me-2"></i>Notas
+                        </div>
+                        <div class="side-block-body">
+                            <div class="side-notes">@Model.Notas</div>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.FechaEntregaEstimada.HasValue && Model.Estado != "entregada" && Model.Estado != "cancelada")
+                {
+                    <div class="delivery-estimate mt-3">
+                        <i class="bi bi-clock-history"></i>
+                        <div>
+                            <div class="estimate-label">Entrega Estimada</div>
+                            <div class="estimate-time">@Model.FechaEntregaEstimada.Value.ToString("HH:mm")</div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="invoice-footer mt-4">
+        <a asp-action="Index" class="btn btn-outline-secondary btn-back">
+            <i class="bi bi-arrow-left me-1"></i>@(ViewBag.EsAdmin ? "Volver a Gestión de Pedidos" : "Volver a Mis Pedidos")
+        </a>
+    </div>
+</div>

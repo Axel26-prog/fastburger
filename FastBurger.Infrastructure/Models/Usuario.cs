@@ -19,8 +19,6 @@ public partial class Usuario
 
     public string Contrasena { get; set; } = null!;
 
-    public string? FotoPerfil { get; set; }
-
     public bool Activo { get; set; }
 
     public DateTime FechaRegistro { get; set; }

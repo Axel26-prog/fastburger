@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - FastBurger</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FastBurger.styles.css" asp-append-version="true" />
 </head>
@@ -38,6 +39,9 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="ProcesoPreparacion" asp-action="Index">Procesos</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Pedido" asp-action="Index">Pedidos</a>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMantenimiento" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Gestión
@@ -48,6 +52,9 @@
                                 <li><a class="dropdown-item" asp-controller="ProcesoPreparacion" asp-action="Mantenimiento">Procesos</a></li>
                                 <li><a class="dropdown-item" asp-controller="Menu" asp-action="Mantenimiento">Menús</a></li>
                             </ul>
+                        </li>
+                        <li class="nav-item ms-auto me-2">
+                            @await Component.InvokeAsync("CarritoContador")
                         </li>
                     </ul>
                 </div>

@@ -1,0 +1,165 @@
+@model IEnumerable<FastBurger.Application.DTOs.PedidoDTO>
+
+@{
+    ViewData["Title"] = (ViewBag.EsAdmin ? "Gestión de " : "Mi ") + "Historial de Pedidos";
+    var info = ViewBag.UsuarioInfo as FastBurger.Application.DTOs.InfoUsuarioDTO;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="fw-bold" style="color:#3D2B1F;">
+        @(ViewBag.EsAdmin ? "Gestión de Pedidos" : "Mi Historial de Pedidos")
+    </h1>
+</div>
+
+<div class="alert alert-info mb-4">
+    <strong>Usuario actual:</strong> @info?.Nombre @info?.Apellidos (@info?.NombreRol)
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (ViewBag.EsAdmin)
+{
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Filtros de Búsqueda</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Cliente</label>
+                    <select name="filtroUsuarioId" class="form-select" asp-items="@(new SelectList(ViewBag.Clientes, "IdUsuario", "NombreCompleto"))">
+                        <option value="">Todos los clientes</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Estado</label>
+                    <select name="estado" class="form-select">
+                        <option value="">Todos</option>
+                        <option value="pendiente_pago">Pendiente de pago</option>
+                        <option value="aceptada">Aceptada</option>
+                        <option value="preparacion">En preparación</option>
+                        <option value="procesando">Procesando</option>
+                        <option value="entregada">Entregada</option>
+                        <option value="cancelada">Cancelada</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Desde</label>
+                    <input type="date" name="fechaDesde" class="form-control" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Hasta</label>
+                    <input type="date" name="fechaHasta" class="form-control" />
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">Filtrar</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Limpiar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <div class="text-center py-5">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="#ccc" class="mb-3">
+            <path d="M6 2L0 6l6 6V2zM12 0H2v8h10V0zm10 6l-6-6v16l6-6V6zM6 22l6 6V12H6v10zm6 0h10V8H12v14z"/>
+        </svg>
+        <h4 class="text-muted">No hay pedidos registrados</h4>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th># Pedido</th>
+                    @if (ViewBag.EsAdmin)
+                    {
+                        <th>Cliente</th>
+                    }
+                    <th>Fecha</th>
+                    <th>Tipo</th>
+                    <th>Artículos</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pedido in Model)
+                {
+                    <tr>
+                        <td class="fw-bold">#@pedido.IdPedido</td>
+                        @if (ViewBag.EsAdmin)
+                        {
+                            <td>
+                                <div>@pedido.NombreUsuario</div>
+                                <small class="text-muted">@pedido.CorreoUsuario</small>
+                            </td>
+                        }
+                        <td>@pedido.FechaPedido.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>
+                            @if (pedido.TipoEntrega == "recoger")
+                            {
+                                <span class="badge bg-info">Recoger</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">Domicilio</span>
+                            }
+                        </td>
+                        <td>@pedido.TotalItems</td>
+                        <td class="fw-bold">₡@pedido.Total.ToString("N2")</td>
+                        <td>
+                            @{
+                                var estadoClass = pedido.Estado switch
+                                {
+                                    "pendiente_pago" => "bg-secondary",
+                                    "aceptada" => "bg-primary",
+                                    "preparacion" => "bg-warning text-dark",
+                                    "procesando" => "bg-info text-dark",
+                                    "entregada" => "bg-success",
+                                    "cancelada" => "bg-danger",
+                                    _ => "bg-secondary"
+                                };
+                                var estadoTexto = pedido.Estado switch
+                                {
+                                    "pendiente_pago" => "Pendiente de pago",
+                                    "aceptada" => "Aceptada",
+                                    "preparacion" => "En preparación",
+                                    "procesando" => "Procesando",
+                                    "entregada" => "Entregada",
+                                    "cancelada" => "Cancelada",
+                                    _ => pedido.Estado
+                                };
+                            }
+                            <span class="badge @estadoClass">@estadoTexto</span>
+                        </td>
+                        <td>
+                            <a asp-action="Detalle" asp-route-id="@pedido.IdPedido" class="btn btn-sm btn-outline-primary">
+                                Ver Detalle
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

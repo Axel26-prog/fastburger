@@ -12,6 +12,16 @@ builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IComboService, ComboService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<IProcesoPreparacionService, ProcesoPreparacionService>();
+builder.Services.AddScoped<IPedidoService, PedidoService>();
+builder.Services.AddScoped<ICarritoService, CarritoService>();
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 builder.Services.AddControllersWithViews();
 
@@ -30,10 +40,18 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseSession();
+
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<FastBurgerContext>();
+    await SeedData.InitializeAsync(context);
+}
 
 app.Run();

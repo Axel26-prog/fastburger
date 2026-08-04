@@ -21,6 +21,13 @@ public class ComboController : Controller
         return View(combos);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Listar()
+    {
+        var combos = await _comboService.GetAllAsync();
+        return Json(combos.Select(c => new { id = c.IdCombo, nombre = c.Nombre, precio = c.Precio, disponible = c.Disponible }));
+    }
+
     public async Task<IActionResult> Mantenimiento()
     {
         var combos = await _comboService.GetAllForMantenimientoAsync();

@@ -37,6 +37,25 @@
             }
         </p>
 
+        <div class="mb-3">
+            <label class="form-label">Cantidad</label>
+            <input type="number" class="form-control" id="cantidadProducto" value="1" min="1" max="99" style="width: 100px;" />
+        </div>
+
+        <div class="d-grid gap-2 mb-4">
+            @if (Model.Disponible)
+            {
+                <button class="btn btn-fb btn-lg agregar-carrito-detalle" data-producto-id="@Model.IdProducto" data-nombre="@Model.Nombre">
+                    <span class="spinner-border spinner-border-sm me-2 d-none" role="status"></span>
+                    <span class="btn-text">Agregar al carrito</span>
+                </button>
+            }
+            else
+            {
+                <button class="btn btn-secondary btn-lg" disabled>No disponible</button>
+            }
+        </div>
+
         @if (Model.Ingredientes.Any())
         {
             <h5 class="fw-bold mt-4 mb-3" style="color:#3D2B1F;">Ingredientes</h5>
@@ -53,3 +72,80 @@
 </div>
 
 <a asp-action="Index" class="btn btn-outline-secondary mt-4">← Volver</a>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="carritoToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-success text-white">
+            <strong class="me-auto">Carrito</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body" id="carritoToastBody">
+            Producto agregado al carrito.
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.agregar-carrito-detalle').on('click', function() {
+                const btn = $(this);
+                const productoId = btn.data('producto-id');
+                const nombre = btn.data('nombre');
+                const cantidad = parseInt($('#cantidadProducto').val()) || 1;
+
+                btn.prop('disabled', true);
+                btn.find('.spinner-border').removeClass('d-none');
+                btn.find('.btn-text').text('Agregando...');
+
+                $.ajax({
+                    url: '/Carrito/Agregar',
+                    type: 'POST',
+                    data: {
+                        idProducto: productoId,
+                        cantidad: cantidad
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            $('#carritoToastBody').text(cantidad + ' x ' + nombre + ' agregado al carrito');
+                            actualizarContadorCarrito();
+                        } else {
+                            $('#carritoToastBody').text(response.message);
+                            $('.toast-header').removeClass('bg-success').addClass('bg-danger');
+                        }
+                        var toast = new bootstrap.Toast($('#carritoToast'));
+                        toast.show();
+                        $('.toast-header').removeClass('bg-danger').addClass('bg-success');
+                    },
+                    error: function() {
+                        $('#carritoToastBody').text('Error al agregar al carrito');
+                        $('.toast-header').removeClass('bg-success').addClass('bg-danger');
+                        var toast = new bootstrap.Toast($('#carritoToast'));
+                        toast.show();
+                        $('.toast-header').removeClass('bg-danger').addClass('bg-success');
+                    },
+                    complete: function() {
+                        btn.prop('disabled', false);
+                        btn.find('.spinner-border').addClass('d-none');
+                        btn.find('.btn-text').text('Agregar al carrito');
+                    }
+                });
+            });
+
+            function actualizarContadorCarrito() {
+                $.ajax({
+                    url: '/Carrito/ObtenerContador',
+                    type: 'GET',
+                    success: function(response) {
+                        const badge = $('#carritoContadorBadge');
+                        if (response.totalItems > 0) {
+                            badge.text(response.totalItems).removeClass('d-none');
+                        } else {
+                            badge.addClass('d-none');
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+}

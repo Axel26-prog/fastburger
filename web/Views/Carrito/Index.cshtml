@@ -1,0 +1,255 @@
+@model FastBurger.Application.DTOs.ResumenCarritoDTO?
+
+@{
+    ViewData["Title"] = "Mi Carrito";
+    Layout = "_Layout";
+    var info = ViewBag.UsuarioInfo as FastBurger.Application.DTOs.InfoUsuarioDTO;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="fw-bold" style="color:#3D2B1F;">Mi Carrito</h1>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">← Continuar Comprando</a>
+</div>
+
+@if (Model == null || !Model.Items.Any())
+{
+    <div class="text-center py-5">
+        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#ccc" class="mb-4">
+            <path d="M0 1.5A.5.5 0 0 1 .5 1H2c.511 0 1.026.103 1.442.587a.5.5 0 0 1 .257.966C3.765 3.957 4.61 4.5 5.5 4.5h8.5V14H13.5a.5.5 0 0 1-.39-.812l-2-4.5a.5.5 0 0 1 0-.582l2-3.5A.5.5 0 0 1 13 5.5H3.414L2.1 1.578A.5.5 0 0 1 1.61 1H.5a.5.5 0 0 1 0-1H2a.5.5 0 0 1 .5.5v.5H3.5a.5.5 0 0 1 .433.752l1.5 3-.033.5a.5.5 0 0 1-.5.5l-1.5 3a.5.5 0 0 1-.5.5H2.5a.5.5 0 0 1-.5-.5l.033-.5 1.5-3a.5.5 0 0 1 .433-.752H1.5V1.5a.5.5 0 0 1 1 0v.5H.5a.5.5 0 0 1-.5-.5zM5 14.5h7V13.5H5v1z"/>
+        </svg>
+        <h4 class="text-muted mb-4">Tu carrito está vacío</h4>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-fb btn-lg">Ver Productos</a>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Productos en el Carrito</h5>
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="vaciarCarrito()">Vaciar Carrito</button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 50%">Producto</th>
+                                    <th class="text-center" style="width: 15%">Cantidad</th>
+                                    <th class="text-end" style="width: 15%">P. Unit.</th>
+                                    <th class="text-end" style="width: 15%">Subtotal</th>
+                                    <th style="width: 5%"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="carritoBody">
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr data-item-id="@item.IdItem">
+                                        <td>
+                                            <div class="fw-bold">@(item.NombreProducto ?? item.NombreCombo)</div>
+                                            @if (!string.IsNullOrEmpty(item.Notas))
+                                            {
+                                                <small class="text-muted">@item.Notas</small>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary me-1" onclick="cambiarCantidad(@item.IdItem, -1)">-</button>
+                                                <input type="number" 
+                                                       class="form-control form-control-sm text-center cantidad-input" 
+                                                       value="@item.Cantidad" 
+                                                       min="1" max="99"
+                                                       style="width: 60px;"
+                                                       onchange="actualizarCantidad(@item.IdItem, this.value)" 
+                                                       onclick="this.select();" />
+                                                <button type="button" class="btn btn-sm btn-outline-secondary ms-1" onclick="cambiarCantidad(@item.IdItem, 1)">+</button>
+                                            </div>
+                                        </td>
+                                        <td class="text-end">₡@item.PrecioUnitario.ToString("N2")</td>
+                                        <td class="text-end fw-bold">₡@item.Subtotal.ToString("N2")</td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="eliminarItem(@item.IdItem)">×</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm sticky-top" style="top: 100px;">
+                <div class="card-header bg-fb-primary text-white">
+                    <h5 class="mb-0">Resumen del Carrito</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-borderless mb-0">
+                        <tbody>
+                            <tr>
+                                <td>Subtotal</td>
+                                <td class="text-end" id="subtotalDisplay">₡@Model.Subtotal.ToString("N2")</td>
+                            </tr>
+                            <tr>
+                                <td>Impuesto (13%)</td>
+                                <td class="text-end" id="impuestoDisplay">₡@Model.Impuesto.ToString("N2")</td>
+                            </tr>
+                            <tr class="table-light fw-bold border-top">
+                                <td class="fs-5">Total</td>
+                                <td class="text-end fs-5" id="totalDisplay">₡@Model.Total.ToString("N2")</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <a asp-controller="Pedido" asp-action="Registrar" class="btn btn-fb-primary w-100 btn-lg">
+                        Proceder al Pago →
+                    </a>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mt-4">
+                <div class="card-body text-center">
+                    <small class="text-muted">
+                        Los precios incluyen el 13% de impuesto.<br />
+                        Para delivery se agrega ₡500 de envío.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="carritoToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-success text-white">
+            <strong class="me-auto">Carrito</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body" id="carritoToastBody">
+            Acción realizada.
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const TASA_IMPUESTO = 0.13;
+        let carritoData = @Html.Raw(Json.Serialize(Model));
+
+        function mostrarToast(mensaje, esError = false) {
+            $('#carritoToastBody').text(mensaje);
+            $('.toast-header').removeClass('bg-success').addClass(esError ? 'bg-danger' : 'bg-success');
+            var toast = new bootstrap.Toast($('#carritoToast'));
+            toast.show();
+        }
+
+        function cambiarCantidad(itemId, delta) {
+            const input = document.querySelector(`tr[data-item-id="${itemId}"] .cantidad-input`);
+            let nuevaCantidad = parseInt(input.value) + delta;
+            if (nuevaCantidad < 1) nuevaCantidad = 1;
+            if (nuevaCantidad > 99) nuevaCantidad = 99;
+            input.value = nuevaCantidad;
+            actualizarCantidad(itemId, nuevaCantidad);
+        }
+
+        function actualizarCantidad(itemId, cantidad) {
+            cantidad = parseInt(cantidad);
+            if (cantidad <= 0) {
+                eliminarItem(itemId);
+                return;
+            }
+
+            $.ajax({
+                url: '/Carrito/ActualizarCantidad',
+                type: 'POST',
+                data: { id: itemId, cantidad: cantidad },
+                success: function(response) {
+                    if (response.success) {
+                        actualizarTotales();
+                        mostrarToast('Cantidad actualizada');
+                    } else {
+                        mostrarToast(response.message || 'Error', true);
+                    }
+                },
+                error: function() {
+                    mostrarToast('Error al actualizar cantidad', true);
+                }
+            });
+        }
+
+        function eliminarItem(itemId) {
+            if (!confirm('¿Eliminar este producto del carrito?')) return;
+
+            $.ajax({
+                url: '/Carrito/Eliminar',
+                type: 'POST',
+                data: { id: itemId },
+                success: function(response) {
+                    if (response.success) {
+                        $(`tr[data-item-id="${itemId}"]`).remove();
+                        actualizarTotales();
+                        
+                        if ($('#carritoBody tr').length === 0) {
+                            location.reload();
+                        }
+                        mostrarToast('Producto eliminado');
+                        actualizarContadorCarrito();
+                    } else {
+                        mostrarToast('Error al eliminar', true);
+                    }
+                },
+                error: function() {
+                    mostrarToast('Error al eliminar', true);
+                }
+            });
+        }
+
+        function vaciarCarrito() {
+            if (!confirm('¿Vaciar todo el carrito?')) return;
+
+            $.ajax({
+                url: '/Carrito/Vaciar',
+                type: 'POST',
+                success: function() {
+                    location.reload();
+                },
+                error: function() {
+                    mostrarToast('Error al vaciar carrito', true);
+                }
+            });
+        }
+
+        function actualizarTotales() {
+            $.getJSON('/Carrito/ObtenerCarrito', function(response) {
+                if (response.success && response.carrito) {
+                    const carrito = response.carrito;
+                    const subtotal = carrito.subtotal;
+                    const impuesto = carrito.impuesto;
+                    const total = carrito.total;
+
+                    $('#subtotalDisplay').text('₡' + subtotal.toFixed(2));
+                    $('#impuestoDisplay').text('₡' + impuesto.toFixed(2));
+                    $('#totalDisplay').text('₡' + total.toFixed(2));
+                }
+            });
+        }
+
+        function actualizarContadorCarrito() {
+            $.ajax({
+                url: '/Carrito/ObtenerContador',
+                type: 'GET',
+                success: function(response) {
+                    const badge = $('#carritoContadorBadge');
+                    if (response.totalItems > 0) {
+                        badge.text(response.totalItems).removeClass('d-none');
+                    } else {
+                        badge.addClass('d-none');
+                    }
+                }
+            });
+        }
+    </script>
+}
