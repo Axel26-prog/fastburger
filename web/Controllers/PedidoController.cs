@@ -1,5 +1,6 @@
 using FastBurger.Application.DTOs;
 using FastBurger.Application.Interfaces;
+using FastBurger.Infrastructure.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FastBurger.Web.Controllers;
@@ -8,39 +9,39 @@ public class PedidoController : Controller
 {
     private readonly IPedidoService _pedidoService;
     private readonly ICarritoService _carritoService;
-    private const int DEFAULT_USUARIO_ID = 1;
-    private const int ROL_CLIENTE = 3;
-    private const int ROL_ENCARGADO = 2;
-    private const int ROL_ADMIN = 1;
+    private readonly ISesionUsuarioService _sesionUsuarioService;
 
-    public PedidoController(IPedidoService pedidoService, ICarritoService carritoService)
+    public PedidoController(IPedidoService pedidoService, ICarritoService carritoService, ISesionUsuarioService sesionUsuarioService)
     {
         _pedidoService = pedidoService;
         _carritoService = carritoService;
-    }
-
-    private int GetUsuarioIdActual()
-    {
-        if (HttpContext.Session.GetInt32("usuarioId").HasValue)
-            return HttpContext.Session.GetInt32("usuarioId")!.Value;
-        return DEFAULT_USUARIO_ID;
+        _sesionUsuarioService = sesionUsuarioService;
     }
 
     private async Task<(int usuarioId, InfoUsuarioDTO? info)> GetUsuarioActualAsync()
     {
-        var usuarioId = GetUsuarioIdActual();
-        var info = await _pedidoService.GetInfoUsuarioAsync(usuarioId);
-        return (usuarioId, info);
+        if (!_sesionUsuarioService.HaySesionActiva())
+        {
+            return (0, null);
+        }
+        var usuario = await _sesionUsuarioService.ObtenerUsuarioActualAsync();
+        var info = await _pedidoService.GetInfoUsuarioAsync(usuario.IdUsuario);
+        return (usuario.IdUsuario, info);
     }
 
     public async Task<IActionResult> Index()
     {
         var (usuarioId, info) = await GetUsuarioActualAsync();
+        if (info == null)
+        {
+            TempData["Error"] = "Debe seleccionar un usuario en /Sesion antes de continuar.";
+            return RedirectToAction("Index", "Sesion");
+        }
         ViewBag.UsuarioIdActual = usuarioId;
         ViewBag.UsuarioInfo = info;
 
         IEnumerable<PedidoDTO> pedidos;
-        bool esAdmin = info?.EsEncargadoOAdmin == true;
+        bool esAdmin = info.EsEncargadoOAdmin;
 
         if (esAdmin)
         {
@@ -74,10 +75,15 @@ public class PedidoController : Controller
     public async Task<IActionResult> Detalle(int id)
     {
         var (usuarioId, info) = await GetUsuarioActualAsync();
+        if (info == null)
+        {
+            TempData["Error"] = "Debe seleccionar un usuario en /Sesion antes de continuar.";
+            return RedirectToAction("Index", "Sesion");
+        }
         var pedido = await _pedidoService.GetDetalleByIdAsync(id);
         if (pedido == null) return NotFound();
 
-        bool esAdmin = info?.EsEncargadoOAdmin == true;
+        bool esAdmin = info.EsEncargadoOAdmin;
         ViewBag.EsAdmin = esAdmin;
 
         if (!esAdmin && pedido.IdUsuario != usuarioId)
@@ -90,10 +96,15 @@ public class PedidoController : Controller
     public async Task<IActionResult> Registrar()
     {
         var (usuarioId, info) = await GetUsuarioActualAsync();
+        if (info == null)
+        {
+            TempData["Error"] = "Debe seleccionar un usuario en /Sesion antes de continuar.";
+            return RedirectToAction("Index", "Sesion");
+        }
         ViewBag.UsuarioIdActual = usuarioId;
         ViewBag.UsuarioInfo = info;
 
-        bool esEncargadoOAdmin = info?.EsEncargadoOAdmin == true;
+        bool esEncargadoOAdmin = info.EsEncargadoOAdmin;
 
         if (esEncargadoOAdmin)
         {
@@ -162,10 +173,15 @@ public class PedidoController : Controller
     public async Task<IActionResult> Registrar(CreatePedidoDTO dto)
     {
         var (usuarioId, info) = await GetUsuarioActualAsync();
+        if (info == null)
+        {
+            TempData["Error"] = "Debe seleccionar un usuario en /Sesion antes de continuar.";
+            return RedirectToAction("Index", "Sesion");
+        }
         ViewBag.UsuarioIdActual = usuarioId;
         ViewBag.UsuarioInfo = info;
 
-        bool esEncargadoOAdmin = info?.EsEncargadoOAdmin == true;
+        bool esEncargadoOAdmin = info.EsEncargadoOAdmin;
 
         if (esEncargadoOAdmin)
         {
@@ -176,8 +192,18 @@ public class PedidoController : Controller
         var metodosPago = await _pedidoService.GetMetodosPagoAsync();
         ViewBag.MetodosPago = metodosPago;
 
-        if (!esEncargadoOAdmin)
+        // El IdEmpleado y el IdUsuario se determinan SIEMPRE desde la sesión (servidor),
+        // ignorando cualquier valor que venga del formulario/DTO.
+        if (esEncargadoOAdmin)
         {
+            // El encargado logueado es quien registra: su ID va como IdEmpleado.
+            // El IdUsuario (cliente) se mantiene del DTO (lo eligió en el dropdown).
+            dto.IdEmpleado = usuarioId;
+        }
+        else
+        {
+            // El cliente logueado es quien hace el pedido: su ID va como IdUsuario.
+            // No hay encargado en este caso.
             dto.IdUsuario = usuarioId;
             dto.IdEmpleado = 0;
         }

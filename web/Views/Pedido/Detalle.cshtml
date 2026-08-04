@@ -212,17 +212,18 @@
                     </div>
                 </div>
 
-                @if (!string.IsNullOrEmpty(Model.NombreEmpleado))
-                {
-                    <div class="side-block">
-                        <div class="side-block-header">
-                            <i class="bi bi-person-badge me-2"></i>Encargado
-                        </div>
-                        <div class="side-block-body">
-                            <div class="side-name">@Model.NombreEmpleado</div>
-                        </div>
+                <div class="side-block">
+                    <div class="side-block-header">
+                        <i class="bi bi-person-badge me-2"></i>Registrado por
                     </div>
-                }
+                    <div class="side-block-body">
+                        <div class="side-name">@(string.IsNullOrEmpty(Model.NombreEmpleado) ? "N/A" : Model.NombreEmpleado)</div>
+                        @if (string.IsNullOrEmpty(Model.NombreEmpleado))
+                        {
+                            <div class="side-line text-muted small">Pedido autoregistrado por el cliente</div>
+                        }
+                    </div>
+                </div>
 
                 <div class="side-block">
                     <div class="side-block-header">

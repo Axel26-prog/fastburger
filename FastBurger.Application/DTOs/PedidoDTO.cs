@@ -94,6 +94,6 @@ public class InfoUsuarioDTO
     public int IdRol { get; set; }
     public string? NombreRol { get; set; }
     public string NombreCompleto => $"{Nombre} {Apellidos}";
-    public bool EsCliente => IdRol == 3;
+    public bool EsCliente => IdRol == 4;
     public bool EsEncargadoOAdmin => IdRol == 1 || IdRol == 2;
 }

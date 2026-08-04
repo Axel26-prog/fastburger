@@ -371,7 +371,7 @@ public class PedidoService : IPedidoService
     {
         return await _context.Usuarios
             .Include(u => u.IdRolNavigation)
-            .Where(u => u.Activo && u.IdRol == 3)
+            .Where(u => u.Activo && u.IdRol == 4)
             .Select(u => new InfoUsuarioDTO
             {
                 IdUsuario = u.IdUsuario,
