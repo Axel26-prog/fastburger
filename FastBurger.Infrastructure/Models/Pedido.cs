@@ -51,3 +51,4 @@ public partial class Pedido
 
     public virtual ICollection<Pago> Pagos { get; set; } = new List<Pago>();
 }
+        

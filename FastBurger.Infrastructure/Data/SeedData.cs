@@ -10,6 +10,8 @@ public static class SeedData
 
     public static async Task InitializeAsync(FastBurgerContext context)
     {
+        await SembrarEstacionesAsync(context);
+
         if (await context.Pedidos.CountAsync() >= 4)
             return;
 
@@ -89,6 +91,20 @@ public static class SeedData
         }
 
         await context.SaveChangesAsync();
+    }
+
+    private static async Task SembrarEstacionesAsync(FastBurgerContext context)
+    {
+        if (!await context.EstacionCocinas.AnyAsync(e => e.Nombre == "Cocina General"))
+        {
+            await context.EstacionCocinas.AddAsync(new EstacionCocina
+            {
+                Nombre = "Cocina General",
+                Descripcion = "Estación por defecto para órdenes sin estación específica asignada.",
+                Activa = true
+            });
+            await context.SaveChangesAsync();
+        }
     }
 
     private static async Task SembrarDireccionesAsync(FastBurgerContext context)

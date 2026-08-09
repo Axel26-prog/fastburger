@@ -171,6 +171,7 @@ public class MenuService : IMenuService
 
         items.AddRange(menu.MenuProductos.Select(mp => new MenuItemDTO
         {
+            IdProducto = mp.IdProducto,
             Nombre = mp.IdProductoNavigation.Nombre,
             Precio = mp.PrecioEspecial ?? mp.IdProductoNavigation.Precio,
             ImagenUrl = mp.IdProductoNavigation.ImagenUrl,
@@ -180,6 +181,7 @@ public class MenuService : IMenuService
 
         items.AddRange(menu.MenuCombos.Select(mc => new MenuItemDTO
         {
+            IdCombo = mc.IdCombo,
             Nombre = mc.IdComboNavigation.Nombre,
             Precio = mc.PrecioEspecial ?? mc.IdComboNavigation.Precio,
             ImagenUrl = mc.IdComboNavigation.ImagenUrl,
@@ -215,6 +217,7 @@ public class MenuService : IMenuService
 
         items.AddRange(menu.MenuProductos.Select(mp => new MenuItemDTO
         {
+            IdProducto = mp.IdProducto,
             Nombre = mp.IdProductoNavigation.Nombre,
             Precio = mp.PrecioEspecial ?? mp.IdProductoNavigation.Precio,
             ImagenUrl = mp.IdProductoNavigation.ImagenUrl,
@@ -224,6 +227,7 @@ public class MenuService : IMenuService
 
         items.AddRange(menu.MenuCombos.Select(mc => new MenuItemDTO
         {
+            IdCombo = mc.IdCombo,
             Nombre = mc.IdComboNavigation.Nombre,
             Precio = mc.PrecioEspecial ?? mc.IdComboNavigation.Precio,
             ImagenUrl = mc.IdComboNavigation.ImagenUrl,

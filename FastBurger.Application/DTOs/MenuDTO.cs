@@ -30,6 +30,8 @@ public class MenuDTO
 
 public class MenuItemDTO
 {
+    public int? IdProducto { get; set; }
+    public int? IdCombo { get; set; }
     public string Nombre { get; set; } = null!;
     public decimal Precio { get; set; }
     public string? ImagenUrl { get; set; }

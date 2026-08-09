@@ -96,4 +96,5 @@ public class InfoUsuarioDTO
     public string NombreCompleto => $"{Nombre} {Apellidos}";
     public bool EsCliente => IdRol == 4;
     public bool EsEncargadoOAdmin => IdRol == 1 || IdRol == 2;
+    public bool EsCocina => IdRol == 3;
 }

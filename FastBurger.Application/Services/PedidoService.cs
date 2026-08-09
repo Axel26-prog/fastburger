@@ -3,17 +3,24 @@ using FastBurger.Application.Interfaces;
 using FastBurger.Infrastructure.Data;
 using FastBurger.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace FastBurger.Application.Services;
 
 public class PedidoService : IPedidoService
 {
     private readonly FastBurgerContext _context;
+    private readonly IMenuService _menuService;
+    private readonly IOrdenCocinaService _ordenCocinaService;
+    private readonly ILogger<PedidoService> _logger;
     private const decimal TASA_IMPUESTO = 0.13m;
 
-    public PedidoService(FastBurgerContext context)
+    public PedidoService(FastBurgerContext context, IMenuService menuService, IOrdenCocinaService ordenCocinaService, ILogger<PedidoService> logger)
     {
         _context = context;
+        _menuService = menuService;
+        _ordenCocinaService = ordenCocinaService;
+        _logger = logger;
     }
 
     public async Task<IEnumerable<PedidoDTO>> GetAllAsync()
@@ -238,10 +245,70 @@ public class PedidoService : IPedidoService
         if (dto.LineasDetalle == null || !dto.LineasDetalle.Any())
             throw new InvalidOperationException("Debe agregar al menos un producto o combo al pedido.");
 
+        var menuActual = await _menuService.GetDisponibleAsync();
+        if (menuActual == null)
+            throw new InvalidOperationException("No hay un menú disponible en este momento. No se pueden registrar pedidos.");
+
+        var productosMenu = menuActual.Items.Where(i => i.IdProducto.HasValue)
+            .ToDictionary(i => i.IdProducto!.Value, i => i.Precio);
+        var combosMenu = menuActual.Items.Where(i => i.IdCombo.HasValue)
+            .ToDictionary(i => i.IdCombo!.Value, i => i.Precio);
+
+        foreach (var linea in dto.LineasDetalle)
+        {
+            if (linea.IdProducto.HasValue)
+            {
+                if (!productosMenu.TryGetValue(linea.IdProducto.Value, out var precioMenu))
+                    throw new InvalidOperationException($"El producto con id {linea.IdProducto.Value} no está disponible en el menú actual.");
+                linea.PrecioUnitario = precioMenu;
+            }
+            else if (linea.IdCombo.HasValue)
+            {
+                if (!combosMenu.TryGetValue(linea.IdCombo.Value, out var precioMenu))
+                    throw new InvalidOperationException($"El combo con id {linea.IdCombo.Value} no está disponible en el menú actual.");
+                linea.PrecioUnitario = precioMenu;
+            }
+            else
+            {
+                throw new InvalidOperationException("Cada línea del pedido debe especificar un producto o combo.");
+            }
+        }
+
+        foreach (var linea in dto.LineasDetalle)
+        {
+            if (linea.Cantidad <= 0)
+                throw new InvalidOperationException("Todas las cantidades deben ser mayores a cero.");
+        }
+
+        var tipoEntrega = (dto.TipoEntrega ?? string.Empty).Trim().ToLowerInvariant();
+        if (tipoEntrega != "recoger" && tipoEntrega != "domicilio")
+            throw new InvalidOperationException("El tipo de entrega debe ser 'recoger' o 'domicilio'.");
+
+        if (tipoEntrega == "domicilio")
+        {
+            if (!dto.IdDireccion.HasValue || dto.IdDireccion <= 0)
+                throw new InvalidOperationException("Debe seleccionar una dirección para la entrega a domicilio.");
+
+            var direccion = await _context.DireccionUsuarios
+                .FirstOrDefaultAsync(d => d.IdDireccion == dto.IdDireccion.Value && d.IdUsuario == dto.IdUsuario);
+            if (direccion == null)
+                throw new InvalidOperationException("La dirección seleccionada no pertenece al usuario.");
+        }
+
+        if (dto.Descuento < 0)
+            throw new InvalidOperationException("El descuento no puede ser negativo.");
+
+        var subtotalPreliminar = dto.LineasDetalle.Sum(l => l.Cantidad * l.PrecioUnitario);
+        if (dto.Descuento > subtotalPreliminar)
+            throw new InvalidOperationException("El descuento no puede ser mayor al subtotal del pedido.");
+
         var subtotal = dto.LineasDetalle.Sum(l => l.Cantidad * l.PrecioUnitario);
         var descuento = dto.Descuento;
         var impuesto = (subtotal - descuento) * TASA_IMPUESTO;
         var total = subtotal - descuento + impuesto + dto.CostoEnvio;
+
+        if (tipoEntrega == "domicilio" && dto.CostoEnvio != 500m)
+            throw new InvalidOperationException("El costo de envío para entrega a domicilio debe ser ₡500.");
 
         var usuario = await _context.Usuarios.FindAsync(dto.IdUsuario);
         if (usuario == null)
@@ -250,6 +317,9 @@ public class PedidoService : IPedidoService
         var metodoPago = await _context.MetodoPagos.FindAsync(dto.IdMetodoPago);
         if (metodoPago == null)
             throw new InvalidOperationException("Método de pago no encontrado.");
+
+        if (!metodoPago.Activo)
+            throw new InvalidOperationException("El método de pago seleccionado no está activo.");
 
         var carrito = new Carrito
         {
@@ -320,6 +390,15 @@ public class PedidoService : IPedidoService
 
         _context.Pagos.Add(pago);
         await _context.SaveChangesAsync();
+
+        try
+        {
+            await _ordenCocinaService.CrearDesdePedidoAsync(pedido.IdPedido);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "No se pudo crear la orden de cocina para el pedido #{IdPedido}.", pedido.IdPedido);
+        }
 
         return await GetDetalleByIdAsync(pedido.IdPedido)!;
     }
@@ -395,21 +474,33 @@ public class PedidoService : IPedidoService
             Lineas = new List<LineaTotalesDTO>()
         };
 
+        var menuActual = await _menuService.GetDisponibleAsync();
+        var productosMenu = menuActual?.Items.Where(i => i.IdProducto.HasValue)
+            .ToDictionary(i => i.IdProducto!.Value, i => i.Precio) ?? new Dictionary<int, decimal>();
+        var combosMenu = menuActual?.Items.Where(i => i.IdCombo.HasValue)
+            .ToDictionary(i => i.IdCombo!.Value, i => i.Precio) ?? new Dictionary<int, decimal>();
+
         foreach (var linea in lineas)
         {
             var nombre = "";
+            decimal precioUnitario = linea.PrecioUnitario;
+
             if (linea.IdProducto.HasValue)
             {
                 var producto = await _context.Productos.FindAsync(linea.IdProducto.Value);
                 nombre = producto?.Nombre ?? "";
+                if (productosMenu.TryGetValue(linea.IdProducto.Value, out var precioMenu))
+                    precioUnitario = precioMenu;
             }
             else if (linea.IdCombo.HasValue)
             {
                 var combo = await _context.Combos.FindAsync(linea.IdCombo.Value);
                 nombre = combo?.Nombre ?? "";
+                if (combosMenu.TryGetValue(linea.IdCombo.Value, out var precioMenu))
+                    precioUnitario = precioMenu;
             }
 
-            var subtotalLinea = linea.Cantidad * linea.PrecioUnitario;
+            var subtotalLinea = linea.Cantidad * precioUnitario;
             var impuestoLinea = subtotalLinea * TASA_IMPUESTO;
 
             resultado.Lineas.Add(new LineaTotalesDTO
@@ -418,7 +509,7 @@ public class PedidoService : IPedidoService
                 IdCombo = linea.IdCombo,
                 Nombre = nombre,
                 Cantidad = linea.Cantidad,
-                PrecioUnitario = linea.PrecioUnitario,
+                PrecioUnitario = precioUnitario,
                 Subtotal = subtotalLinea,
                 Impuesto = impuestoLinea,
                 Total = subtotalLinea + impuestoLinea
@@ -434,14 +525,14 @@ public class PedidoService : IPedidoService
 
     public async Task<decimal> GetPrecioProductoAsync(int idProducto)
     {
-        var producto = await _context.Productos.FindAsync(idProducto);
-        return producto?.Precio ?? 0;
+        var menu = await _menuService.GetDisponibleAsync();
+        return menu?.Items.FirstOrDefault(i => i.IdProducto == idProducto)?.Precio ?? 0;
     }
 
     public async Task<decimal> GetPrecioComboAsync(int idCombo)
     {
-        var combo = await _context.Combos.FindAsync(idCombo);
-        return combo?.Precio ?? 0;
+        var menu = await _menuService.GetDisponibleAsync();
+        return menu?.Items.FirstOrDefault(i => i.IdCombo == idCombo)?.Precio ?? 0;
     }
 
     public async Task<IEnumerable<DireccionUsuarioDTO>> GetDireccionesUsuarioAsync(int idUsuario)

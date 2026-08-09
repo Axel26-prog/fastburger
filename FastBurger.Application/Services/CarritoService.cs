@@ -9,10 +9,12 @@ namespace FastBurger.Application.Services;
 public class CarritoService : ICarritoService
 {
     private readonly FastBurgerContext _context;
+    private readonly IMenuService _menuService;
 
-    public CarritoService(FastBurgerContext context)
+    public CarritoService(FastBurgerContext context, IMenuService menuService)
     {
         _context = context;
+        _menuService = menuService;
     }
 
     public async Task<ResumenCarritoDTO?> GetCarritoActivoAsync(int idUsuario)
@@ -102,6 +104,10 @@ public class CarritoService : ICarritoService
         if (dto.Cantidad <= 0)
             throw new InvalidOperationException("La cantidad debe ser mayor a cero.");
 
+        var menuActual = await _menuService.GetDisponibleAsync();
+        if (menuActual == null)
+            throw new InvalidOperationException("No hay un menú disponible en este momento.");
+
         var carrito = await _context.Carritos
             .Include(c => c.CarritoItems)
             .Where(c => c.IdUsuario == dto.IdUsuario && c.Estado == "activo")
@@ -126,13 +132,17 @@ public class CarritoService : ICarritoService
 
         if (dto.IdProducto.HasValue)
         {
+            var itemMenu = menuActual.Items.FirstOrDefault(i => i.IdProducto == dto.IdProducto.Value);
+            if (itemMenu == null)
+                throw new InvalidOperationException("El producto no está disponible en el menú actual.");
+
             var producto = await _context.Productos.FindAsync(dto.IdProducto.Value);
             if (producto == null)
                 throw new InvalidOperationException("Producto no encontrado.");
             if (!producto.Disponible)
                 throw new InvalidOperationException("El producto no está disponible.");
 
-            precioUnitario = producto.Precio;
+            precioUnitario = itemMenu.Precio;
             nombreProducto = producto.Nombre;
 
             var itemExistente = carrito.CarritoItems
@@ -158,13 +168,17 @@ public class CarritoService : ICarritoService
         }
         else if (dto.IdCombo.HasValue)
         {
+            var itemMenu = menuActual.Items.FirstOrDefault(i => i.IdCombo == dto.IdCombo.Value);
+            if (itemMenu == null)
+                throw new InvalidOperationException("El combo no está disponible en el menú actual.");
+
             var combo = await _context.Combos.FindAsync(dto.IdCombo.Value);
             if (combo == null)
                 throw new InvalidOperationException("Combo no encontrado.");
             if (!combo.Disponible)
                 throw new InvalidOperationException("El combo no está disponible.");
 
-            precioUnitario = combo.Precio;
+            precioUnitario = itemMenu.Precio;
             nombreCombo = combo.Nombre;
 
             var itemExistente = carrito.CarritoItems

@@ -1,14 +1,12 @@
 {
   "ExpandedNodes": [
     "",
-    "\\FastBurger.Infrastructure",
+    "\\FastBurger.Application",
+    "\\FastBurger.Application\\Services",
     "\\web",
-    "\\web\\Controllers",
     "\\web\\Views",
-    "\\web\\Views\\Shared",
-    "\\web\\Views\\Shared\\Components",
-    "\\web\\Views\\Shared\\Components\\CarritoContador"
+    "\\web\\Views\\Pedido"
   ],
-  "SelectedNode": "\\web\\Views\\Shared\\_Layout.cshtml",
+  "SelectedNode": "\\FastBurger.Application\\Services\\ProductoService.cs",
   "PreviewInSolutionExplorer": false
 }
