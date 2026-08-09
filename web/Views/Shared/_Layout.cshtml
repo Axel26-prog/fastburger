@@ -42,6 +42,7 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Pedido" asp-action="Index">Pedidos</a>
                         </li>
+                        @await Component.InvokeAsync("CocinaNavLink")
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMantenimiento" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Gestión

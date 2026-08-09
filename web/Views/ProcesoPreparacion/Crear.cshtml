@@ -6,18 +6,25 @@
     var estaciones = ViewBag.Estaciones as IEnumerable<FastBurger.Application.DTOs.EstacionSimpleDTO>;
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-10 col-lg-8">
-        <div class="card shadow-sm border-0 mt-4">
-            <div class="card-header" style="background-color:#3D2B1F; color:#fff;">
-                <h4 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Nuevo Proceso de Preparación</h4>
-            </div>
-            <div class="card-body">
-                <form asp-action="Crear" method="post" id="procesoForm">
-                    @Html.AntiForgeryToken()
+<div class="invoice-wrapper">
+    <div class="invoice-header text-white">
+        <h2 class="mb-1 fw-bold">
+            <i class="bi bi-plus-circle me-2"></i>Nuevo Proceso de Preparación
+        </h2>
+        <p class="mb-0 invoice-subtitle">Definir los pasos de preparación de un producto</p>
+    </div>
 
-                    <div class="mb-3">
-                        <label asp-for="IdProducto" class="form-label fw-semibold"></label>
+    <form asp-action="Crear" method="post" id="procesoForm" class="mt-4">
+        @Html.AntiForgeryToken()
+
+        <div class="invoice-section">
+            <div class="invoice-section-header">
+                <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Información del Proceso</h5>
+            </div>
+            <div class="invoice-section-body">
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <label asp-for="IdProducto" class="info-label"><i class="bi bi-box-seam me-1"></i>Producto</label>
                         <select asp-for="IdProducto" class="form-select">
                             <option value="">-- Seleccionar Producto --</option>
                             @if (productos != null)
@@ -30,33 +37,36 @@
                         </select>
                         <span asp-validation-for="IdProducto" class="text-danger small"></span>
                     </div>
-
-                    <div class="mb-3">
-                        <label asp-for="Descripcion" class="form-label fw-semibold"></label>
+                    <div class="col-md-12">
+                        <label asp-for="Descripcion" class="info-label"><i class="bi bi-card-text me-1"></i>Descripción</label>
                         <textarea asp-for="Descripcion" class="form-control" rows="2"></textarea>
                         <span asp-validation-for="Descripcion" class="text-danger small"></span>
                     </div>
-
-                    <hr class="my-4" />
-                    <h5 class="fw-bold mb-3" style="color:#3D2B1F;">Pasos del Proceso</h5>
-
-                    <div id="pasosContainer">
-                    </div>
-
-                    <button type="button" class="btn btn-outline-primary" onclick="agregarPaso()">
-                        <i class="bi bi-plus-circle me-1"></i> Agregar Paso
-                    </button>
-
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                        <a asp-action="Mantenimiento" class="btn btn-outline-secondary me-md-2">Cancelar</a>
-                        <button type="submit" class="btn btn-fb">
-                            <i class="bi bi-check-circle me-1"></i> Guardar Proceso
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
+
+        <div class="invoice-section mt-4">
+            <div class="invoice-section-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-list-ol me-2"></i>Pasos del Proceso</h5>
+                <button type="button" class="btn btn-sm btn-fb" onclick="agregarPaso()">
+                    <i class="bi bi-plus-circle me-1"></i> Agregar Paso
+                </button>
+            </div>
+            <div class="invoice-section-body">
+                <div id="pasosContainer"></div>
+            </div>
+        </div>
+
+        <div class="invoice-footer mt-4 d-flex justify-content-between flex-wrap gap-2">
+            <a asp-action="Mantenimiento" class="btn btn-back">
+                <i class="bi bi-arrow-left me-1"></i> Cancelar
+            </a>
+            <button type="submit" class="btn btn-fb-primary">
+                <i class="bi bi-check-circle me-1"></i> Guardar Proceso
+            </button>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
@@ -67,44 +77,42 @@
         function agregarPaso() {
             const container = document.getElementById('pasosContainer');
             const estaciones = @Html.Raw(Json.Serialize(estaciones));
-            
+
             let opcionesEstaciones = '<option value="">-- Estación --</option>';
             estaciones.forEach(function(est) {
                 opcionesEstaciones += `<option value="${est.idEstacion}">${est.nombre}</option>`;
             });
 
             const pasoHtml = `
-                <div class="card mb-3 paso-item" data-paso-index="${pasoIndex}">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h6 class="mb-0 fw-bold" style="color:#3D2B1F;">Paso <span class="paso-numero">${pasoIndex + 1}</span></h6>
-                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="eliminarPaso(${pasoIndex})">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 mb-2">
-                                <label class="form-label small fw-semibold">Orden</label>
+                <div class="side-block mb-3 paso-item" data-paso-index="${pasoIndex}">
+                    <div class="side-block-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0 fw-bold"><i class="bi bi-arrow-right-circle me-2"></i>Paso <span class="paso-numero">${pasoIndex + 1}</span></h6>
+                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="eliminarPaso(${pasoIndex})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                    <div class="side-block-body">
+                        <div class="row g-2">
+                            <div class="col-md-3">
+                                <label class="info-label">Orden</label>
                                 <input type="number" class="form-control" name="Pasos[${pasoIndex}].Orden" value="${pasoIndex + 1}" min="1" required />
                             </div>
-                            <div class="col-md-4 mb-2">
-                                <label class="form-label small fw-semibold">Estación</label>
+                            <div class="col-md-5">
+                                <label class="info-label">Estación</label>
                                 <select class="form-select" name="Pasos[${pasoIndex}].IdEstacion" required>
                                     ${opcionesEstaciones}
                                 </select>
                             </div>
-                            <div class="col-md-4 mb-2">
-                                <label class="form-label small fw-semibold">Tiempo (min)</label>
+                            <div class="col-md-4">
+                                <label class="info-label">Tiempo (min)</label>
                                 <input type="number" class="form-control" name="Pasos[${pasoIndex}].TiempoMin" value="5" min="1" required />
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-2">
-                                <label class="form-label small fw-semibold">Descripción</label>
+                            <div class="col-md-6">
+                                <label class="info-label">Descripción</label>
                                 <input type="text" class="form-control" name="Pasos[${pasoIndex}].Descripcion" placeholder="Ej: Freír la carne" required />
                             </div>
-                            <div class="col-md-6 mb-2">
-                                <label class="form-label small fw-semibold">Temperatura (°C) - Opcional</label>
+                            <div class="col-md-6">
+                                <label class="info-label">Temperatura (°C) - Opcional</label>
                                 <input type="number" class="form-control" name="Pasos[${pasoIndex}].TemperaturaC" placeholder="Ej: 180" />
                             </div>
                         </div>

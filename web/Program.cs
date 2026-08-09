@@ -15,6 +15,9 @@ builder.Services.AddScoped<IProcesoPreparacionService, ProcesoPreparacionService
 builder.Services.AddScoped<IPedidoService, PedidoService>();
 builder.Services.AddScoped<ICarritoService, CarritoService>();
 builder.Services.AddScoped<ISesionUsuarioService, SesionUsuarioService>();
+builder.Services.AddScoped<IOrdenCocinaService, OrdenCocinaService>();
+
+builder.Services.AddHostedService<CarritoLimpiezaBackgroundService>();
 
 builder.Services.AddHttpContextAccessor();
 

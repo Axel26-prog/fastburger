@@ -6,37 +6,60 @@
     var info = ViewBag.UsuarioInfo as FastBurger.Application.DTOs.InfoUsuarioDTO;
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="fw-bold" style="color:#3D2B1F;">Mi Carrito</h1>
-    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">← Continuar Comprando</a>
-</div>
-
-@if (Model == null || !Model.Items.Any())
-{
-    <div class="text-center py-5">
-        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#ccc" class="mb-4">
-            <path d="M0 1.5A.5.5 0 0 1 .5 1H2c.511 0 1.026.103 1.442.587a.5.5 0 0 1 .257.966C3.765 3.957 4.61 4.5 5.5 4.5h8.5V14H13.5a.5.5 0 0 1-.39-.812l-2-4.5a.5.5 0 0 1 0-.582l2-3.5A.5.5 0 0 1 13 5.5H3.414L2.1 1.578A.5.5 0 0 1 1.61 1H.5a.5.5 0 0 1 0-1H2a.5.5 0 0 1 .5.5v.5H3.5a.5.5 0 0 1 .433.752l1.5 3-.033.5a.5.5 0 0 1-.5.5l-1.5 3a.5.5 0 0 1-.5.5H2.5a.5.5 0 0 1-.5-.5l.033-.5 1.5-3a.5.5 0 0 1 .433-.752H1.5V1.5a.5.5 0 0 1 1 0v.5H.5a.5.5 0 0 1-.5-.5zM5 14.5h7V13.5H5v1z"/>
-        </svg>
-        <h4 class="text-muted mb-4">Tu carrito está vacío</h4>
-        <a asp-controller="Home" asp-action="Index" class="btn btn-fb btn-lg">Ver Productos</a>
+<div class="invoice-wrapper">
+    <div class="invoice-header text-white">
+        <div class="d-flex justify-content-between align-items-start flex-wrap">
+            <div>
+                <h2 class="mb-1 fw-bold">
+                    <i class="bi bi-cart3 me-2"></i>Mi Carrito
+                </h2>
+                <p class="mb-0 invoice-subtitle">@(info != null ? $"{info.Nombre} {info.Apellidos}" : "—")</p>
+            </div>
+            <div class="text-end">
+                @if (Model != null && Model.Items.Any())
+                {
+                    <div class="invoice-number">@Model.TotalItems <small style="font-size: 0.6em; font-weight: 500;">ítem@(Model.TotalItems == 1 ? "" : "s")</small></div>
+                }
+                else
+                {
+                    <div class="invoice-number">0 <small style="font-size: 0.6em; font-weight: 500;">ítems</small></div>
+                }
+            </div>
+        </div>
     </div>
-}
-else
-{
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Productos en el Carrito</h5>
-                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="vaciarCarrito()">Vaciar Carrito</button>
-                </div>
-                <div class="card-body p-0">
+
+    @if (Model == null || !Model.Items.Any())
+    {
+        <div class="invoice-section mt-4">
+            <div class="invoice-section-body text-center py-5">
+                <i class="bi bi-cart-x" style="font-size: 4rem; color: #ccc;"></i>
+                <h4 class="mt-3" style="color: #3D2B1F;">Tu carrito está vacío</h4>
+                <p class="text-muted mb-4">Agrega productos del menú para empezar tu pedido.</p>
+                <a asp-controller="Menu" asp-action="Disponible" class="btn btn-fb btn-lg">
+                    <i class="bi bi-book me-1"></i> Ver Menú Disponible
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4 mt-1">
+            <div class="col-lg-8">
+                <div class="invoice-section">
+                    <div class="invoice-section-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-bag me-2"></i>Productos en el Carrito
+                        </h5>
+                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="vaciarCarrito()">
+                            <i class="bi bi-trash me-1"></i> Vaciar Carrito
+                        </button>
+                    </div>
                     <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead class="table-light">
+                        <table class="table invoice-table mb-0">
+                            <thead>
                                 <tr>
-                                    <th style="width: 50%">Producto</th>
-                                    <th class="text-center" style="width: 15%">Cantidad</th>
+                                    <th style="width: 45%">Producto / Combo</th>
+                                    <th class="text-center" style="width: 20%">Cantidad</th>
                                     <th class="text-end" style="width: 15%">P. Unit.</th>
                                     <th class="text-end" style="width: 15%">Subtotal</th>
                                     <th style="width: 5%"></th>
@@ -47,29 +70,31 @@ else
                                 {
                                     <tr data-item-id="@item.IdItem">
                                         <td>
-                                            <div class="fw-bold">@(item.NombreProducto ?? item.NombreCombo)</div>
+                                            <div class="product-name">@(item.NombreProducto ?? item.NombreCombo)</div>
                                             @if (!string.IsNullOrEmpty(item.Notas))
                                             {
-                                                <small class="text-muted">@item.Notas</small>
+                                                <span class="obs-text"><i class="bi bi-chat-left-text me-1"></i>@item.Notas</span>
                                             }
                                         </td>
                                         <td class="text-center">
                                             <div class="d-flex align-items-center justify-content-center">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary me-1" onclick="cambiarCantidad(@item.IdItem, -1)">-</button>
-                                                <input type="number" 
-                                                       class="form-control form-control-sm text-center cantidad-input" 
-                                                       value="@item.Cantidad" 
+                                                <button type="button" class="btn btn-sm btn-outline-secondary me-1" onclick="cambiarCantidad(@item.IdItem, -1)">−</button>
+                                                <input type="number"
+                                                       class="form-control form-control-sm text-center cantidad-input"
+                                                       value="@item.Cantidad"
                                                        min="1" max="99"
                                                        style="width: 60px;"
-                                                       onchange="actualizarCantidad(@item.IdItem, this.value)" 
+                                                       onchange="actualizarCantidad(@item.IdItem, this.value)"
                                                        onclick="this.select();" />
                                                 <button type="button" class="btn btn-sm btn-outline-secondary ms-1" onclick="cambiarCantidad(@item.IdItem, 1)">+</button>
                                             </div>
                                         </td>
                                         <td class="text-end">₡@item.PrecioUnitario.ToString("N2")</td>
-                                        <td class="text-end fw-bold">₡@item.Subtotal.ToString("N2")</td>
+                                        <td class="text-end fw-semibold">₡@item.Subtotal.ToString("N2")</td>
                                         <td>
-                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="eliminarItem(@item.IdItem)">×</button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="eliminarItem(@item.IdItem)" title="Eliminar">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 }
@@ -78,54 +103,58 @@ else
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-4">
-            <div class="card shadow-sm sticky-top" style="top: 100px;">
-                <div class="card-header bg-fb-primary text-white">
-                    <h5 class="mb-0">Resumen del Carrito</h5>
-                </div>
-                <div class="card-body p-0">
-                    <table class="table table-borderless mb-0">
-                        <tbody>
-                            <tr>
-                                <td>Subtotal</td>
-                                <td class="text-end" id="subtotalDisplay">₡@Model.Subtotal.ToString("N2")</td>
-                            </tr>
-                            <tr>
-                                <td>Impuesto (13%)</td>
-                                <td class="text-end" id="impuestoDisplay">₡@Model.Impuesto.ToString("N2")</td>
-                            </tr>
-                            <tr class="table-light fw-bold border-top">
-                                <td class="fs-5">Total</td>
-                                <td class="text-end fs-5" id="totalDisplay">₡@Model.Total.ToString("N2")</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="card-footer">
-                    <a asp-controller="Pedido" asp-action="Registrar" class="btn btn-fb-primary w-100 btn-lg">
-                        Proceder al Pago →
+            <div class="col-lg-4">
+                <div class="invoice-side">
+                    <div class="totals-box">
+                        <div class="totals-header">
+                            <i class="bi bi-receipt me-2"></i>Resumen del Carrito
+                        </div>
+                        <div class="totals-body">
+                            <div class="totals-row">
+                                <span>Subtotal</span>
+                                <span class="totals-amount" id="subtotalDisplay">₡@Model.Subtotal.ToString("N2")</span>
+                            </div>
+                            <div class="totals-row">
+                                <span>Impuesto (13%)</span>
+                                <span class="totals-amount" id="impuestoDisplay">₡@Model.Impuesto.ToString("N2")</span>
+                            </div>
+                            <div class="totals-divider"></div>
+                            <div class="totals-row totals-grand">
+                                <span>TOTAL</span>
+                                <span id="totalDisplay">₡@Model.Total.ToString("N2")</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a asp-controller="Pedido" asp-action="Registrar" class="btn btn-fb-primary w-100 btn-lg mt-3">
+                        <i class="bi bi-arrow-right-circle me-1"></i> Proceder al Pago
                     </a>
-                </div>
-            </div>
 
-            <div class="card shadow-sm mt-4">
-                <div class="card-body text-center">
-                    <small class="text-muted">
-                        Los precios incluyen el 13% de impuesto.<br />
-                        Para delivery se agrega ₡500 de envío.
-                    </small>
+                    <div class="side-block mt-3">
+                        <div class="side-block-body text-center">
+                            <small class="text-muted">
+                                <i class="bi bi-info-circle me-1"></i>Los precios incluyen el 13% de impuesto.<br />
+                                Para delivery se agrega ₡500 de envío.
+                            </small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+    }
+
+    <div class="invoice-footer mt-4">
+        <a asp-controller="Menu" asp-action="Disponible" class="btn btn-back">
+            <i class="bi bi-arrow-left me-1"></i> Continuar Comprando
+        </a>
     </div>
-}
+</div>
 
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
     <div id="carritoToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header bg-success text-white">
-            <strong class="me-auto">Carrito</strong>
+            <i class="bi bi-check-circle-fill me-2"></i><strong class="me-auto">Carrito</strong>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
         </div>
         <div class="toast-body" id="carritoToastBody">
@@ -191,7 +220,7 @@ else
                     if (response.success) {
                         $(`tr[data-item-id="${itemId}"]`).remove();
                         actualizarTotales();
-                        
+
                         if ($('#carritoBody tr').length === 0) {
                             location.reload();
                         }

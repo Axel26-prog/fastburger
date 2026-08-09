@@ -4,71 +4,99 @@
     ViewData["Title"] = "Mantenimiento de Procesos";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="fw-bold" style="color:#3D2B1F;">Mantenimiento de Procesos</h1>
-    <a asp-action="Crear" class="btn btn-fb">
-        <i class="bi bi-plus-circle"></i> Nuevo Proceso
-    </a>
-</div>
-
-<div class="card shadow-sm border-0">
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover mb-0">
-                <thead style="background-color:#3D2B1F; color:#fff;">
-                    <tr>
-                        <th class="py-3">Producto</th>
-                        <th class="py-3">Descripción</th>
-                        <th class="py-3 text-center">Pasos</th>
-                        <th class="py-3 text-center">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var proceso in Model)
-                    {
-                        <tr>
-                            <td class="align-middle fw-semibold">@proceso.NombreProducto</td>
-                            <td class="align-middle">
-                                @if (!string.IsNullOrEmpty(proceso.Descripcion))
-                                {
-                                    <span class="text-muted">@(proceso.Descripcion.Length > 50 ? proceso.Descripcion.Substring(0, 50) + "..." : proceso.Descripcion)</span>
-                                }
-                                else
-                                {
-                                    <span class="text-muted">Sin descripción</span>
-                                }
-                            </td>
-                            <td class="align-middle text-center">
-                                <span class="badge rounded-pill" style="background:#E63946;">@proceso.CantidadPasos pasos</span>
-                            </td>
-                            <td class="align-middle text-center">
-                                <a asp-action="Detalle" asp-route-id="@proceso.IdProceso" 
-                                   class="btn btn-sm btn-outline-secondary me-1" title="Ver Detalle">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                                <a asp-action="Modificar" asp-route-id="@proceso.IdProceso" 
-                                   class="btn btn-sm btn-outline-primary me-1" title="Modificar">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <form asp-action="Eliminar" asp-route-id="@proceso.IdProceso" 
-                                      method="post" class="d-inline" 
-                                      onsubmit="return confirm('¿Está seguro que desea eliminar este proceso?');">
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+<div class="invoice-wrapper">
+    <div class="invoice-header text-white">
+        <div class="d-flex justify-content-between align-items-start flex-wrap">
+            <div>
+                <h2 class="mb-1 fw-bold">
+                    <i class="bi bi-gear me-2"></i>Mantenimiento de Procesos
+                </h2>
+                <p class="mb-0 invoice-subtitle">Administrar los procesos de preparación</p>
+            </div>
+            <div class="text-end">
+                <a asp-action="Crear" class="btn btn-fb">
+                    <i class="bi bi-plus-circle me-1"></i> Nuevo Proceso
+                </a>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="mt-4">
-    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
-        ← Volver al Inicio
-    </a>
+    @if (!Model.Any())
+    {
+        <div class="invoice-section mt-4">
+            <div class="invoice-section-body text-center py-5">
+                <i class="bi bi-diagram-3" style="font-size: 4rem; color: #ccc;"></i>
+                <h4 class="mt-3" style="color: #3D2B1F;">No hay procesos registrados</h4>
+                <p class="text-muted mb-3">Comience creando el primer proceso de preparación.</p>
+                <a asp-action="Crear" class="btn btn-fb">
+                    <i class="bi bi-plus-circle me-1"></i> Crear Primer Proceso
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="invoice-section mt-4">
+            <div class="invoice-section-header">
+                <h5 class="mb-0"><i class="bi bi-list-ul me-2"></i>Listado de Procesos (@Model.Count())</h5>
+            </div>
+            <div class="table-responsive">
+                <table class="table invoice-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Descripción</th>
+                            <th class="text-center">Pasos</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var proceso in Model)
+                        {
+                            <tr>
+                                <td class="product-name">@proceso.NombreProducto</td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(proceso.Descripcion))
+                                    {
+                                        <span class="text-muted">@(proceso.Descripcion.Length > 50 ? proceso.Descripcion.Substring(0, 50) + "..." : proceso.Descripcion)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted fst-italic">Sin descripción</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <span class="qty-badge" style="background:#E63946;">@proceso.CantidadPasos</span>
+                                </td>
+                                <td class="text-center">
+                                    <a asp-action="Detalle" asp-route-id="@proceso.IdProceso"
+                                       class="btn btn-sm btn-outline-secondary me-1" title="Ver Detalle">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a asp-action="Modificar" asp-route-id="@proceso.IdProceso"
+                                       class="btn btn-sm btn-fb me-1" title="Modificar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form asp-action="Eliminar" asp-route-id="@proceso.IdProceso"
+                                          method="post" class="d-inline"
+                                          onsubmit="return confirm('¿Está seguro que desea eliminar este proceso?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+
+    <div class="invoice-footer mt-4">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-back">
+            <i class="bi bi-arrow-left me-1"></i> Volver al Inicio
+        </a>
+    </div>
 </div>

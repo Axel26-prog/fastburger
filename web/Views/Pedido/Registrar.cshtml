@@ -13,42 +13,48 @@
 <input type="hidden" id="rolIdActual" value="@info?.IdRol" />
 
 <div class="invoice-wrapper">
-    <div class="invoice-header bg-fb-primary text-white p-4 rounded mb-4">
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <h2 class="mb-0">FastBurger</h2>
-                <p class="mb-0 opacity-75">Registro de Pedido</p>
+    <div class="invoice-header text-white">
+        <div class="d-flex justify-content-between align-items-start flex-wrap">
+            <div>
+                <h2 class="mb-1 fw-bold">
+                    <i class="bi bi-receipt-cutoff me-2"></i>FastBurger
+                </h2>
+                <p class="mb-0 invoice-subtitle">Registro de Pedido</p>
             </div>
-            <div class="col-md-6 text-end">
-                <h4 class="mb-1">Fecha: @fechaActual</h4>
-                <p class="mb-0 opacity-75">NUEVO PEDIDO</p>
+            <div class="text-end">
+                <div class="invoice-date">
+                    <i class="bi bi-calendar3 me-1"></i>@fechaActual
+                </div>
+                <span class="badge estado-badge bg-warning text-dark fs-6 mt-2">
+                    <i class="bi bi-pencil-square me-1"></i>NUEVO PEDIDO
+                </span>
             </div>
         </div>
     </div>
 
     @if (TempData["Error"] != null)
     {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            @TempData["Error"]
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm mt-3" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["Error"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
 
-    <form asp-action="Registrar" method="post" id="pedidoForm">
+    <form asp-action="Registrar" method="post" id="pedidoForm" novalidate class="mt-3">
         @Html.AntiForgeryToken()
 
         <div class="row">
             <div class="col-md-8">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-light">
-                        <h5 class="mb-0">Datos del Cliente</h5>
+                <div class="invoice-section mb-4">
+                    <div class="invoice-section-header">
+                        <h5 class="mb-0"><i class="bi bi-person me-2"></i>Datos del Cliente</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="invoice-section-body">
                         @if (esEncargadoOAdmin)
                         {
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="form-label">Seleccionar Cliente *</label>
+                                    <label class="info-label">Seleccionar Cliente *</label>
                                     <select id="clienteSelect" class="form-select" required>
                                         <option value="">-- Seleccione un cliente --</option>
                                         @foreach (var cliente in ViewBag.Clientes)
@@ -62,6 +68,7 @@
                                             </option>
                                         }
                                     </select>
+                                    <div class="invalid-feedback">Seleccione un cliente para el pedido.</div>
                                 </div>
                             </div>
                         }
@@ -69,21 +76,21 @@
                         <div id="infoClienteSection" class="@(esEncargadoOAdmin ? "mt-3" : "")">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="form-label">Nombre</label>
+                                    <label class="info-label">Nombre</label>
                                     <input type="text" id="clienteNombre" class="form-control" value="@info?.Nombre" readonly />
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Apellidos</label>
+                                    <label class="info-label">Apellidos</label>
                                     <input type="text" id="clienteApellidos" class="form-control" value="@info?.Apellidos" readonly />
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Correo</label>
+                                    <label class="info-label">Correo</label>
                                     <input type="text" id="clienteCorreo" class="form-control" value="@info?.Correo" readonly />
                                 </div>
                             </div>
                             <div class="row mt-2">
                                 <div class="col-md-4">
-                                    <label class="form-label">Teléfono</label>
+                                    <label class="info-label">Teléfono</label>
                                     <input type="text" id="clienteTelefono" class="form-control" value="@info?.Telefono" readonly />
                                 </div>
                             </div>
@@ -95,22 +102,22 @@
 
                 @if (esEncargadoOAdmin)
                 {
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-light">
-                            <h5 class="mb-0">Encargado que Registra</h5>
+                    <div class="invoice-section mb-4">
+                        <div class="invoice-section-header">
+                            <h5 class="mb-0"><i class="bi bi-person-badge me-2"></i>Encargado que Registra</h5>
                         </div>
-                        <div class="card-body">
+                        <div class="invoice-section-body">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="form-label">Nombre</label>
+                                    <label class="info-label">Nombre</label>
                                     <input type="text" class="form-control" value="@info?.Nombre" readonly />
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Apellidos</label>
+                                    <label class="info-label">Apellidos</label>
                                     <input type="text" class="form-control" value="@info?.Apellidos" readonly />
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Rol</label>
+                                    <label class="info-label">Rol</label>
                                     <input type="text" class="form-control" value="@info?.NombreRol" readonly />
                                 </div>
                             </div>
@@ -119,17 +126,17 @@
                     </div>
                 }
 
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-light">
-                        <h5 class="mb-0">Método de Entrega</h5>
+                <div class="invoice-section mb-4">
+                    <div class="invoice-section-header">
+                        <h5 class="mb-0"><i class="bi bi-truck me-2"></i>Método de Entrega</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="invoice-section-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-check mb-2">
                                     <input class="form-check-input" type="radio" name="TipoEntrega" id="tipoRecoger" value="recoger" checked onchange="calcularTotales()">
                                     <label class="form-check-label" for="tipoRecoger">
-                                        <strong>Recoger en Tienda</strong>
+                                        <strong><i class="bi bi-bag-check me-1"></i>Recoger en Tienda</strong>
                                         <small class="d-block text-muted">Sin costo adicional</small>
                                     </label>
                                 </div>
@@ -138,7 +145,7 @@
                                 <div class="form-check mb-2">
                                     <input class="form-check-input" type="radio" name="TipoEntrega" id="tipoDelivery" value="domicilio" onchange="calcularTotales()">
                                     <label class="form-check-label" for="tipoDelivery">
-                                        <strong>Domicilio</strong>
+                                        <strong><i class="bi bi-truck me-1"></i>Domicilio</strong>
                                         <small class="d-block text-muted">₡500 costo de envío</small>
                                     </label>
                                 </div>
@@ -146,55 +153,58 @@
                         </div>
 
                         <div id="direccionSection" class="mt-3 d-none">
-                            <label class="form-label">Dirección de Entrega</label>
-                            <select id="direccionSelect" class="form-select">
+                            <label class="info-label">Dirección de Entrega *</label>
+                            <select id="direccionSelect" class="form-select" required>
                                 <option value="">-- Seleccione una dirección --</option>
                             </select>
+                            <div class="invalid-feedback" id="direccionError">Seleccione una dirección para la entrega a domicilio.</div>
                             <input type="hidden" id="idDireccionSeleccionada" name="IdDireccion" />
                         </div>
                     </div>
                 </div>
 
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Detalle del Pedido</h5>
+                <div class="invoice-section mb-4">
+                    <div class="invoice-section-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="bi bi-list-ul me-2"></i>Detalle del Pedido</h5>
                         <div>
-                            <button type="button" class="btn btn-sm btn-outline-primary me-2" onclick="agregarLineaProducto()">+ Producto</button>
-                            <button type="button" class="btn btn-sm btn-outline-success" onclick="agregarLineaCombo()">+ Combo</button>
+                            <button type="button" class="btn btn-sm btn-fb me-2" onclick="agregarLineaProducto()">
+                                <i class="bi bi-plus-circle me-1"></i> Producto
+                            </button>
+                            <button type="button" class="btn btn-sm btn-fb" onclick="agregarLineaCombo()">
+                                <i class="bi bi-plus-circle me-1"></i> Combo
+                            </button>
                         </div>
                     </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0" id="detalleTable">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th style="width: 28%">Producto / Combo</th>
-                                        <th class="text-center" style="width: 10%">Cantidad</th>
-                                        <th class="text-end" style="width: 13%">P. Unit.</th>
-                                        <th class="text-end" style="width: 12%">Impuesto</th>
-                                        <th class="text-end" style="width: 12%">Subtotal</th>
-                                        <th style="width: 20%">Observaciones</th>
-                                        <th style="width: 5%"></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="detalleBody">
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="p-3 text-center text-muted" id="emptyDetalle">
-                            <p>No hay productos agregados. Use los botones de arriba para agregar.</p>
-                        </div>
+                    <div class="table-responsive">
+                        <table class="table invoice-table mb-0" id="detalleTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 28%">Producto / Combo</th>
+                                    <th class="text-center" style="width: 10%">Cantidad</th>
+                                    <th class="text-end" style="width: 13%">P. Unit.</th>
+                                    <th class="text-end" style="width: 12%">Impuesto</th>
+                                    <th class="text-end" style="width: 12%">Subtotal</th>
+                                    <th style="width: 20%">Observaciones</th>
+                                    <th style="width: 5%"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="detalleBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="p-3 text-center text-muted" id="emptyDetalle">
+                        <p class="mb-0">No hay productos agregados. Use los botones de arriba para agregar.</p>
                     </div>
                 </div>
 
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-light">
-                        <h5 class="mb-0">Datos del Pago</h5>
+                <div class="invoice-section mb-4">
+                    <div class="invoice-section-header">
+                        <h5 class="mb-0"><i class="bi bi-cash-coin me-2"></i>Datos del Pago</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="invoice-section-body">
                         <div class="row">
                             <div class="col-md-4">
-                                <label class="form-label">Método de Pago *</label>
+                                <label class="info-label">Método de Pago *</label>
                                 <select name="IdMetodoPago" id="metodoPagoSelect" class="form-select" required>
                                     <option value="">-- Seleccione --</option>
                                     @foreach (var metodo in ViewBag.MetodosPago)
@@ -202,13 +212,15 @@
                                         <option value="@metodo.IdMetodo">@metodo.Nombre</option>
                                     }
                                 </select>
+                                <div class="invalid-feedback" id="metodoPagoError">Seleccione un método de pago.</div>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Descuento (₡)</label>
+                                <label class="info-label">Descuento (₡)</label>
                                 <input type="number" name="Descuento" id="descuentoInput" class="form-control" value="0" min="0" step="100" oninput="calcularTotales()" />
+                                <div class="invalid-feedback" id="descuentoError">El descuento no puede ser mayor al subtotal ni negativo.</div>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Referencia</label>
+                                <label class="info-label">Referencia</label>
                                 <input type="text" name="ReferenciaPago" class="form-control" placeholder="Opcional" />
                             </div>
                         </div>
@@ -216,16 +228,19 @@
                         <div id="pagoTarjetaSection" class="mt-3 d-none">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="form-label">Número de Tarjeta</label>
-                                    <input type="text" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19" />
+                                    <label class="info-label">Número de Tarjeta *</label>
+                                    <input type="text" id="numeroTarjetaInput" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19" inputmode="numeric" autocomplete="off" />
+                                    <div class="invalid-feedback" id="numeroTarjetaError"></div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label">Vencimiento</label>
-                                    <input type="text" class="form-control" placeholder="MM/YY" maxlength="5" />
+                                    <label class="info-label">Vencimiento *</label>
+                                    <input type="text" id="vencimientoTarjetaInput" class="form-control" placeholder="MM/YY" maxlength="5" inputmode="numeric" autocomplete="off" />
+                                    <div class="invalid-feedback" id="vencimientoTarjetaError"></div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label">CVV</label>
-                                    <input type="text" class="form-control" placeholder="123" maxlength="4" />
+                                    <label class="info-label">CVV *</label>
+                                    <input type="text" id="cvvTarjetaInput" class="form-control" placeholder="123" maxlength="4" inputmode="numeric" autocomplete="off" />
+                                    <div class="invalid-feedback" id="cvvTarjetaError"></div>
                                 </div>
                             </div>
                         </div>
@@ -233,11 +248,12 @@
                         <div id="pagoEfectivoSection" class="mt-3 d-none">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="form-label">Monto con que Paga (₡) *</label>
+                                    <label class="info-label">Monto con que Paga (₡) *</label>
                                     <input type="number" name="MontoRecibido" id="montoRecibidoInput" class="form-control" min="0" step="100" oninput="calcularVuelto()" />
+                                    <div class="invalid-feedback" id="montoRecibidoError"></div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Vuelto</label>
+                                    <label class="info-label">Vuelto</label>
                                     <input type="text" id="vueltoDisplay" class="form-control" readonly value="₡0.00" />
                                 </div>
                             </div>
@@ -245,68 +261,73 @@
                     </div>
                 </div>
 
-                <div class="card shadow-sm">
-                    <div class="card-header bg-light">
-                        <h5 class="mb-0">Notas del Pedido</h5>
+                <div class="invoice-section">
+                    <div class="invoice-section-header">
+                        <h5 class="mb-0"><i class="bi bi-sticky me-2"></i>Notas del Pedido</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="invoice-section-body">
                         <textarea name="Notas" class="form-control" rows="2" placeholder="Indicaciones especiales para el pedido..."></textarea>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-4">
-                <div class="card shadow-sm sticky-top" style="top: 100px;">
-                    <div class="card-header bg-fb-primary text-white">
-                        <h5 class="mb-0">Resumen del Pedido</h5>
+                <div class="invoice-side" style="position: sticky; top: 90px;">
+                    <div class="totals-box">
+                        <div class="totals-header">
+                            <i class="bi bi-receipt me-2"></i>Resumen del Pedido
+                        </div>
+                        <div class="totals-body">
+                            <div class="totals-row">
+                                <span>Subtotal</span>
+                                <span class="totals-amount" id="subtotalDisplay">₡0.00</span>
+                            </div>
+                            <div class="totals-row text-success">
+                                <span><i class="bi bi-tag me-1"></i>Descuento</span>
+                                <span class="totals-amount" id="descuentoDisplay">-₡0.00</span>
+                            </div>
+                            <div class="totals-row">
+                                <span>Impuesto (13%)</span>
+                                <span class="totals-amount" id="impuestoDisplay">₡0.00</span>
+                            </div>
+                            <div class="totals-row">
+                                <span><i class="bi bi-truck me-1"></i>Costo de Envío</span>
+                                <span class="totals-amount" id="envioDisplay">₡0.00</span>
+                            </div>
+                            <div class="totals-divider"></div>
+                            <div class="totals-row totals-grand">
+                                <span>TOTAL</span>
+                                <span id="totalDisplay">₡0.00</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body p-0">
-                        <table class="table table-borderless mb-0">
-                            <tbody>
-                                <tr>
-                                    <td>Subtotal</td>
-                                    <td class="text-end" id="subtotalDisplay">₡0.00</td>
-                                </tr>
-                                <tr class="text-success">
-                                    <td>Descuento</td>
-                                    <td class="text-end" id="descuentoDisplay">-₡0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Impuesto (13%)</td>
-                                    <td class="text-end" id="impuestoDisplay">₡0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Costo de Envío</td>
-                                    <td class="text-end" id="envioDisplay">₡0.00</td>
-                                </tr>
-                                <tr class="table-dark fw-bold border-top">
-                                    <td class="fs-5">TOTAL</td>
-                                    <td class="text-end fs-5" id="totalDisplay">₡0.00</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="card-footer">
-                        <input type="hidden" name="CostoEnvio" id="costoEnvioHidden" value="0" />
-                        <button type="submit" class="btn btn-fb-primary w-100 btn-lg" id="btnConfirmar" disabled>
-                            <span class="spinner-border spinner-border-sm me-2 d-none" role="status"></span>
-                            <span id="btnText">Confirmar Pedido</span>
-                        </button>
-                        <p class="text-muted text-center small mb-0 mt-2">
-                            Al confirmar, el pedido pasará a estado "Aceptada"
-                        </p>
-                    </div>
+
+                    <input type="hidden" name="CostoEnvio" id="costoEnvioHidden" value="0" />
+                    <button type="submit" class="btn btn-fb-primary w-100 btn-lg mt-3" id="btnConfirmar" disabled>
+                        <span class="spinner-border spinner-border-sm me-2 d-none" role="status"></span>
+                        <span id="btnText"><i class="bi bi-check-circle me-1"></i>Confirmar Pedido</span>
+                    </button>
+                    <p class="text-muted text-center small mb-0 mt-2">
+                        Al confirmar, el pedido pasará a estado "Aceptada"
+                    </p>
                 </div>
             </div>
         </div>
     </form>
 
-    <div class="mt-4">
-        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
-            ← Continuar Comprando
+    <div class="invoice-footer mt-4">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-back">
+            <i class="bi bi-arrow-left me-1"></i> Continuar Comprando
         </a>
     </div>
 </div>
+
+@if (ViewBag.MenuActual == null)
+{
+    <div class="alert alert-warning shadow-sm mt-3">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>No hay un menú disponible en este momento. Solo podrá registrar pedidos con productos que ya estén agregados al carrito; no podrá agregar nuevos productos ni combos hasta que se active un menú.
+    </div>
+}
 
 <div class="modal fade" id="productoModal" tabindex="-1">
     <div class="modal-dialog">
@@ -398,6 +419,72 @@
                     $('#pagoTarjetaSection').addClass('d-none');
                     $('#pagoEfectivoSection').addClass('d-none');
                 }
+                if (!metodoTexto.includes('tarjeta')) {
+                    mostrarError('#numeroTarjetaInput', '');
+                    mostrarError('#vencimientoTarjetaInput', '');
+                    mostrarError('#cvvTarjetaInput', '');
+                }
+                if (!metodoTexto.includes('efectivo')) {
+                    mostrarError('#montoRecibidoInput', '');
+                }
+                validarFormulario();
+            });
+
+            $('#numeroTarjetaInput').on('input', function() {
+                let digitos = $(this).val().replace(/\D/g, '').slice(0, 16);
+                let formateado = digitos.match(/.{1,4}/g)?.join(' ') ?? '';
+                $(this).val(formateado);
+                mostrarError('#numeroTarjetaInput', '');
+                validarFormulario();
+            }).on('blur', function() {
+                validarNumeroTarjeta(true);
+                validarFormulario();
+            });
+
+            $('#vencimientoTarjetaInput').on('input', function() {
+                let digitos = $(this).val().replace(/\D/g, '').slice(0, 4);
+                if (digitos.length >= 2) {
+                    digitos = digitos.slice(0, 2) + '/' + digitos.slice(2);
+                }
+                $(this).val(digitos);
+                mostrarError('#vencimientoTarjetaInput', '');
+                validarFormulario();
+            }).on('blur', function() {
+                validarVencimientoTarjeta(true);
+                validarFormulario();
+            });
+
+            $('#cvvTarjetaInput').on('input', function() {
+                let digitos = $(this).val().replace(/\D/g, '').slice(0, 4);
+                $(this).val(digitos);
+                mostrarError('#cvvTarjetaInput', '');
+                validarFormulario();
+            }).on('blur', function() {
+                validarCvv(true);
+                validarFormulario();
+            });
+
+            $('#montoRecibidoInput').on('input', function() {
+                mostrarError('#montoRecibidoInput', '');
+            }).on('blur', function() {
+                validarMontoEfectivo(true);
+                validarFormulario();
+            });
+
+            $('#descuentoInput').on('input', function() {
+                mostrarError('#descuentoInput', '');
+            }).on('blur', function() {
+                validarDescuento(true);
+                validarFormulario();
+            });
+
+            $('#direccionSelect').on('change', function() {
+                mostrarError('#direccionSelect', '');
+                validarFormulario();
+            });
+
+            $('input[name="TipoEntrega"]').on('change', function() {
+                validarDireccionEntrega(false);
                 validarFormulario();
             });
 
@@ -415,17 +502,29 @@
         });
 
         function cargarProductos() {
-            $.getJSON('/Producto/Listar', function(productos) {
-                productosData = productos.filter(p => p.disponible);
+            var menu = @Html.Raw(Json.Serialize(ViewBag.MenuActual));
+            if (!menu) {
+                productosData = [];
                 renderizarProductos(productosData);
-            });
+                return;
+            }
+            productosData = (menu.items || [])
+                .filter(i => i.tipo === 'Producto' && i.idProducto != null)
+                .map(i => ({ id: i.idProducto, nombre: i.nombre, precio: i.precio, disponible: true }));
+            renderizarProductos(productosData);
         }
 
         function cargarCombos() {
-            $.getJSON('/Combo/Listar', function(combos) {
-                combosData = combos.filter(c => c.disponible);
+            var menu = @Html.Raw(Json.Serialize(ViewBag.MenuActual));
+            if (!menu) {
+                combosData = [];
                 renderizarCombos(combosData);
-            });
+                return;
+            }
+            combosData = (menu.items || [])
+                .filter(i => i.tipo === 'Combo' && i.idCombo != null)
+                .map(i => ({ id: i.idCombo, nombre: i.nombre, precio: i.precio, disponible: true }));
+            renderizarCombos(combosData);
         }
 
         function renderizarProductos(productos) {
@@ -620,8 +719,10 @@
 
             if (tipoEntrega === 'domicilio') {
                 $('#direccionSection').removeClass('d-none');
+                $('#direccionSelect').prop('required', true);
             } else {
                 $('#direccionSection').addClass('d-none');
+                $('#direccionSelect').prop('required', false);
             }
 
             if (descuento > 0) {
@@ -638,16 +739,165 @@
             const montoRecibido = parseFloat($('#montoRecibidoInput').val()) || 0;
             const vuelto = montoRecibido - total;
             $('#vueltoDisplay').val(vuelto >= 0 ? '₡' + vuelto.toFixed(2) : 'Monto insuficiente');
+            validarFormulario();
+        }
+
+        function mostrarError(inputId, mensaje) {
+            const $input = $(inputId);
+            if (mensaje) {
+                $input.addClass('is-invalid');
+                const $fb = $input.nextAll('.invalid-feedback').first();
+                if ($fb.length) $fb.text(mensaje);
+            } else {
+                $input.removeClass('is-invalid');
+            }
+        }
+
+        function obtenerTotal() {
+            return parseFloat($('#totalDisplay').text().replace('₡', '').replace(/,/g, '')) || 0;
+        }
+
+        function obtenerSubtotal() {
+            let subtotal = 0;
+            lineasDetalle.forEach(l => { subtotal += l.cantidad * l.precioUnitario; });
+            return subtotal;
+        }
+
+        function metodoSeleccionado() {
+            return ($('#metodoPagoSelect').find('option:selected').text() || '').toLowerCase();
+        }
+
+        function validarVencimiento(valor) {
+            const m = valor.match(/^(\d{2})\/(\d{2})$/);
+            if (!m) return false;
+            const mes = parseInt(m[1], 10);
+            const anioCorto = parseInt(m[2], 10);
+            if (mes < 1 || mes > 12) return false;
+            const ahora = new Date();
+            const anioActual = ahora.getFullYear();
+            const anioBase = Math.floor(anioActual / 100) * 100;
+            const anioExp = anioBase + anioCorto;
+            const fechaExp = new Date(anioExp, mes, 0, 23, 59, 59);
+            return fechaExp >= ahora;
+        }
+
+        function validarNumeroTarjeta(mostrarMsg) {
+            const $input = $('#numeroTarjetaInput');
+            const valor = $input.val() || '';
+            const digitos = valor.replace(/\D/g, '');
+            if ($input.is(':hidden')) {
+                mostrarError('#numeroTarjetaInput', '');
+                return true;
+            }
+            let msg = '';
+            if (!digitos) msg = 'Ingrese el número de tarjeta.';
+            else if (digitos.length !== 16) msg = 'El número de tarjeta debe tener 16 dígitos.';
+            if (mostrarMsg) mostrarError('#numeroTarjetaInput', msg);
+            return !msg;
+        }
+
+        function validarVencimientoTarjeta(mostrarMsg) {
+            const $input = $('#vencimientoTarjetaInput');
+            if ($input.is(':hidden')) {
+                mostrarError('#vencimientoTarjetaInput', '');
+                return true;
+            }
+            const valor = ($input.val() || '').trim();
+            let msg = '';
+            if (!valor) msg = 'Ingrese la fecha de vencimiento.';
+            else if (!validarVencimiento(valor)) msg = 'Fecha de vencimiento inválida o caducada.';
+            if (mostrarMsg) mostrarError('#vencimientoTarjetaInput', msg);
+            return !msg;
+        }
+
+        function validarCvv(mostrarMsg) {
+            const $input = $('#cvvTarjetaInput');
+            if ($input.is(':hidden')) {
+                mostrarError('#cvvTarjetaInput', '');
+                return true;
+            }
+            const valor = ($input.val() || '').replace(/\D/g, '');
+            let msg = '';
+            if (!valor) msg = 'Ingrese el CVV.';
+            else if (valor.length < 3) msg = 'El CVV debe tener al menos 3 dígitos.';
+            if (mostrarMsg) mostrarError('#cvvTarjetaInput', msg);
+            return !msg;
+        }
+
+        function validarMontoEfectivo(mostrarMsg) {
+            const $input = $('#montoRecibidoInput');
+            if ($input.is(':hidden')) {
+                mostrarError('#montoRecibidoInput', '');
+                return true;
+            }
+            const monto = parseFloat($input.val()) || 0;
+            const total = obtenerTotal();
+            let msg = '';
+            if (!monto || monto <= 0) msg = 'Ingrese el monto con el que paga.';
+            else if (monto < total) msg = 'El monto recibido es insuficiente para cubrir el total.';
+            if (mostrarMsg) mostrarError('#montoRecibidoInput', msg);
+            return !msg;
+        }
+
+        function validarDescuento(mostrarMsg) {
+            const $input = $('#descuentoInput');
+            const descuento = parseFloat($input.val()) || 0;
+            const subtotal = obtenerSubtotal();
+            let msg = '';
+            if (isNaN(descuento) || descuento < 0) msg = 'El descuento no puede ser negativo.';
+            else if (descuento > subtotal) msg = 'El descuento no puede ser mayor al subtotal.';
+            if (mostrarMsg) mostrarError('#descuentoInput', msg);
+            return !msg;
+        }
+
+        function validarDireccionEntrega(mostrarMsg) {
+            const $select = $('#direccionSelect');
+            const tipoEntrega = $('input[name="TipoEntrega"]:checked').val();
+            if (tipoEntrega !== 'domicilio') {
+                mostrarError('#direccionSelect', '');
+                $select.removeClass('is-invalid');
+                return true;
+            }
+            if ($select.is(':hidden')) return true;
+            const val = $select.val();
+            const msg = (!val) ? 'Seleccione una dirección de entrega.' : '';
+            if (mostrarMsg) mostrarError('#direccionSelect', msg);
+            return !msg;
+        }
+
+        function validarCliente(mostrarMsg) {
+            const esAdmin = $('#esEncargadoOAdmin').val() === 'true';
+            if (!esAdmin) return true;
+            const $select = $('#clienteSelect');
+            const val = $select.val();
+            const msg = (!val) ? 'Seleccione un cliente para el pedido.' : '';
+            if (mostrarMsg) mostrarError('#clienteSelect', msg);
+            return !msg;
+        }
+
+        function validarMetodoPago(mostrarMsg) {
+            const $select = $('#metodoPagoSelect');
+            const val = $select.val();
+            const msg = (!val) ? 'Seleccione un método de pago.' : '';
+            if (mostrarMsg) mostrarError('#metodoPagoSelect', msg);
+            return !msg;
+        }
+
+        function validarTodo(mostrarMsg) {
+            return validarCliente(mostrarMsg)
+                && validarMetodoPago(mostrarMsg)
+                && validarDireccionEntrega(mostrarMsg)
+                && validarDescuento(mostrarMsg)
+                && validarNumeroTarjeta(mostrarMsg)
+                && validarVencimientoTarjeta(mostrarMsg)
+                && validarCvv(mostrarMsg)
+                && validarMontoEfectivo(mostrarMsg);
         }
 
         function validarFormulario() {
             const tieneLineas = lineasDetalle.length > 0;
-            const esAdmin = $('#esEncargadoOAdmin').val() === 'true';
-            const tieneCliente = esAdmin ? ($('#clienteSelect').val() !== '') : true;
-            const tieneMetodoPago = $('#metodoPagoSelect').val() !== '';
-
-            const formularioValido = tieneLineas && tieneCliente && tieneMetodoPago;
-            $('#btnConfirmar').prop('disabled', !formularioValido);
+            const ok = tieneLineas && validarTodo(false);
+            $('#btnConfirmar').prop('disabled', !ok);
         }
 
         function cargarDirecciones(usuarioId) {
@@ -671,7 +921,25 @@
             });
         }
 
-        $('#pedidoForm').on('submit', function() {
+        $('#pedidoForm').on('submit', function(e) {
+            const tieneLineas = lineasDetalle.length > 0;
+            if (!tieneLineas) {
+                e.preventDefault();
+                alert('Debe agregar al menos un producto o combo al pedido.');
+                return;
+            }
+
+            if (!validarTodo(true)) {
+                e.preventDefault();
+                validarFormulario();
+                const primerError = $('.is-invalid').first();
+                if (primerError.length) {
+                    primerError[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    primerError.focus();
+                }
+                return;
+            }
+
             if ($('#esEncargadoOAdmin').val() === 'true') {
                 $('#idUsuarioSeleccionado').val($('#clienteSelect').val());
             }

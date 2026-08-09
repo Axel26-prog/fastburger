@@ -6,152 +6,174 @@
     var combos = ViewBag.Combos as IEnumerable<FastBurger.Application.DTOs.ComboSimpleDTO>;
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-10 col-lg-8">
-        <div class="card shadow-sm border-0 mt-4">
-            <div class="card-header" style="background-color:#3D2B1F; color:#fff;">
-                <h4 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Modificar Menú</h4>
-            </div>
-            <div class="card-body">
-                <form asp-action="Modificar" method="post" id="menuForm">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" asp-for="IdMenu" />
+<div class="invoice-wrapper">
+    <div class="invoice-header text-white">
+        <h2 class="mb-1 fw-bold">
+            <i class="bi bi-pencil-square me-2"></i>Modificar Menú
+        </h2>
+        <p class="mb-0 invoice-subtitle">@Model.Nombre</p>
+    </div>
 
-                    <div class="mb-3">
-                        <label asp-for="Nombre" class="form-label fw-semibold"></label>
+    <form asp-action="Modificar" method="post" id="menuForm" class="mt-4">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="IdMenu" />
+
+        <div class="invoice-section">
+            <div class="invoice-section-header">
+                <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Información del Menú</h5>
+            </div>
+            <div class="invoice-section-body">
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <label asp-for="Nombre" class="info-label"><i class="bi bi-tag me-1"></i>Nombre</label>
                         <input asp-for="Nombre" class="form-control" />
                         <span asp-validation-for="Nombre" class="text-danger small"></span>
                     </div>
-
-                    <div class="mb-3">
-                        <label asp-for="Descripcion" class="form-label fw-semibold"></label>
+                    <div class="col-md-12">
+                        <label asp-for="Descripcion" class="info-label"><i class="bi bi-card-text me-1"></i>Descripción</label>
                         <textarea asp-for="Descripcion" class="form-control" rows="2"></textarea>
                         <span asp-validation-for="Descripcion" class="text-danger small"></span>
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="FechaInicio" class="form-label fw-semibold"></label>
-                            <input asp-for="FechaInicio" class="form-control" type="date" />
-                            <span asp-validation-for="FechaInicio" class="text-danger small"></span>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="FechaFin" class="form-label fw-semibold"></label>
-                            <input asp-for="FechaFin" class="form-control" type="date" />
-                            <span asp-validation-for="FechaFin" class="text-danger small"></span>
-                            @if (ViewData.ModelState.ContainsKey("FechaFin") && ViewData.ModelState["FechaFin"].Errors.Any())
-                            {
-                                <span class="text-danger small">@ViewData.ModelState["FechaFin"].Errors.First().ErrorMessage</span>
-                            }
-                        </div>
+                    <div class="col-md-6">
+                        <label asp-for="FechaInicio" class="info-label"><i class="bi bi-calendar-plus me-1"></i>Fecha Inicio</label>
+                        <input asp-for="FechaInicio" class="form-control" type="date" />
+                        <span asp-validation-for="FechaInicio" class="text-danger small"></span>
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="HoraInicio" class="form-label fw-semibold"></label>
-                            <input asp-for="HoraInicio" class="form-control" type="time" />
-                            <span asp-validation-for="HoraInicio" class="text-danger small"></span>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="HoraFin" class="form-label fw-semibold"></label>
-                            <input asp-for="HoraFin" class="form-control" type="time" />
-                            <span asp-validation-for="HoraFin" class="text-danger small"></span>
-                        </div>
+                    <div class="col-md-6">
+                        <label asp-for="FechaFin" class="info-label"><i class="bi bi-calendar-x me-1"></i>Fecha Fin</label>
+                        <input asp-for="FechaFin" class="form-control" type="date" />
+                        <span asp-validation-for="FechaFin" class="text-danger small"></span>
+                        @if (ViewData.ModelState.ContainsKey("FechaFin") && ViewData.ModelState["FechaFin"].Errors.Any())
+                        {
+                            <span class="text-danger small">@ViewData.ModelState["FechaFin"].Errors.First().ErrorMessage</span>
+                        }
                     </div>
-
-                    <div class="mb-3">
-                        <label asp-for="DiasSemana" class="form-label fw-semibold"></label>
+                    <div class="col-md-6">
+                        <label asp-for="HoraInicio" class="info-label"><i class="bi bi-clock me-1"></i>Hora Inicio</label>
+                        <input asp-for="HoraInicio" class="form-control" type="time" />
+                        <span asp-validation-for="HoraInicio" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="HoraFin" class="info-label"><i class="bi bi-clock-history me-1"></i>Hora Fin</label>
+                        <input asp-for="HoraFin" class="form-control" type="time" />
+                        <span asp-validation-for="HoraFin" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-12">
+                        <label asp-for="DiasSemana" class="info-label"><i class="bi bi-calendar-week me-1"></i>Días de la Semana</label>
                         <input asp-for="DiasSemana" class="form-control" placeholder="Ej: Lunes a Viernes" />
                         <span asp-validation-for="DiasSemana" class="text-danger small"></span>
                     </div>
-
-                    <hr class="my-4" />
-                    <h5 class="fw-bold mb-3" style="color:#3D2B1F;">Productos</h5>
-
-                    <div class="mb-3">
-                        <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
-                            @if (productos != null && productos.Any())
-                            {
-                                @foreach (var prod in productos)
-                                {
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input producto-check" type="checkbox"
-                                               name="ProductoIds" value="@prod.IdProducto"
-                                               id="prod-@prod.IdProducto"
-                                               data-precio="@prod.Precio"
-                                               @(Model.ProductoIds.Contains(prod.IdProducto) ? "checked" : "")
-                                               onchange="togglePrecioProducto(@prod.IdProducto)" />
-                                        <label class="form-check-label" for="prod-@prod.IdProducto">
-                                            @prod.Nombre - <span class="text-muted">₡@prod.Precio.ToString("N2")</span>
-                                        </label>
-                                        <div class="mt-2 ms-4" id="precio-producto-@prod.IdProducto" style="@(Model.ProductoIds.Contains(prod.IdProducto) ? "display:block;" : "display:none;")">
-                                            <label class="form-label small">Precio Especial (opcional)</label>
-                                            <input type="number" class="form-control form-control-sm"
-                                                   name="PreciosProductos[@prod.IdProducto]"
-                                                   value="@(Model.PreciosProductos.TryGetValue(prod.IdProducto, out var pp) && pp.HasValue ? pp.Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : "")"
-                                                   placeholder="@prod.Precio.ToString("N2")" step="0.01" min="0" />
-                                        </div>
-                                    </div>
-                                }
-                            }
-                            else
-                            {
-                                <p class="text-muted">No hay productos disponibles.</p>
-                            }
-                        </div>
-                    </div>
-
-                    <hr class="my-4" />
-                    <h5 class="fw-bold mb-3" style="color:#3D2B1F;">Combos</h5>
-
-                    <div class="mb-3">
-                        <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
-                            @if (combos != null && combos.Any())
-                            {
-                                @foreach (var combo in combos)
-                                {
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input combo-check" type="checkbox"
-                                               name="ComboIds" value="@combo.IdCombo"
-                                               id="combo-@combo.IdCombo"
-                                               data-precio="@combo.Precio"
-                                               @(Model.ComboIds.Contains(combo.IdCombo) ? "checked" : "")
-                                               onchange="togglePrecioCombo(@combo.IdCombo)" />
-                                        <label class="form-check-label" for="combo-@combo.IdCombo">
-                                            @combo.Nombre - <span class="text-muted">₡@combo.Precio.ToString("N2")</span>
-                                        </label>
-                                        <div class="mt-2 ms-4" id="precio-combo-@combo.IdCombo" style="@(Model.ComboIds.Contains(combo.IdCombo) ? "display:block;" : "display:none;")">
-                                            <label class="form-label small">Precio Especial (opcional)</label>
-                                            <input type="number" class="form-control form-control-sm"
-                                                   name="PreciosCombos[@combo.IdCombo]"
-                                                   value="@(Model.PreciosCombos.TryGetValue(combo.IdCombo, out var pc) && pc.HasValue ? pc.Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : "")"
-                                                   placeholder="@combo.Precio.ToString("N2")" step="0.01" min="0" />
-                                        </div>
-                                    </div>
-                                }
-                            }
-                            else
-                            {
-                                <p class="text-muted">No hay combos disponibles.</p>
-                            }
-                        </div>
-                    </div>
-
-                    <div class="mb-3 form-check">
-                        <input asp-for="Activo" class="form-check-input" />
-                        <label asp-for="Activo" class="form-check-label fw-semibold"></label>
-                    </div>
-
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                        <a asp-action="Mantenimiento" class="btn btn-outline-secondary me-md-2">Cancelar</a>
-                        <button type="submit" class="btn btn-fb">
-                            <i class="bi bi-check-circle me-1"></i> Guardar Cambios
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
+
+        <div class="invoice-section mt-4">
+            <div class="invoice-section-header">
+                <h5 class="mb-0"><i class="bi bi-box-seam me-2"></i>Productos</h5>
+            </div>
+            <div class="invoice-section-body">
+                <div class="row g-2" style="max-height: 240px; overflow-y: auto;">
+                    @if (productos != null && productos.Any())
+                    {
+                        @foreach (var prod in productos)
+                        {
+                            <div class="col-md-6">
+                                <div class="form-check d-flex align-items-center p-2 rounded" style="background:#FFF8F0;">
+                                    <input class="form-check-input me-2 producto-check" type="checkbox"
+                                           name="ProductoIds" value="@prod.IdProducto"
+                                           id="prod-@prod.IdProducto"
+                                           data-precio="@prod.Precio"
+                                           @(Model.ProductoIds.Contains(prod.IdProducto) ? "checked" : "")
+                                           onchange="togglePrecioProducto(@prod.IdProducto)" />
+                                    <label class="form-check-label flex-grow-1" for="prod-@prod.IdProducto">
+                                        @prod.Nombre
+                                        <span class="text-muted small">— ₡@prod.Precio.ToString("N2")</span>
+                                    </label>
+                                    <div class="ms-2" id="precio-producto-@prod.IdProducto" style="@(Model.ProductoIds.Contains(prod.IdProducto) ? "display:block;" : "display:none;")">
+                                        <input type="number" class="form-control form-control-sm"
+                                               name="PreciosProductos[@prod.IdProducto]"
+                                               value="@(Model.PreciosProductos.TryGetValue(prod.IdProducto, out var pp) && pp.HasValue ? pp.Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : "")"
+                                               placeholder="₡@prod.Precio.ToString("N2")" step="0.01" min="0" style="width:90px;" />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-12">
+                            <p class="text-muted mb-0">No hay productos disponibles.</p>
+                        </div>
+                    }
+                </div>
+                <small class="text-muted"><i class="bi bi-info-circle me-1"></i>Si especifica un precio, reemplazará al precio original del producto en el menú.</small>
+            </div>
+        </div>
+
+        <div class="invoice-section mt-4">
+            <div class="invoice-section-header">
+                <h5 class="mb-0"><i class="bi bi-grid-3x3-gap-fill me-2"></i>Combos</h5>
+            </div>
+            <div class="invoice-section-body">
+                <div class="row g-2" style="max-height: 240px; overflow-y: auto;">
+                    @if (combos != null && combos.Any())
+                    {
+                        @foreach (var combo in combos)
+                        {
+                            <div class="col-md-6">
+                                <div class="form-check d-flex align-items-center p-2 rounded" style="background:#FFF8F0;">
+                                    <input class="form-check-input me-2 combo-check" type="checkbox"
+                                           name="ComboIds" value="@combo.IdCombo"
+                                           id="combo-@combo.IdCombo"
+                                           data-precio="@combo.Precio"
+                                           @(Model.ComboIds.Contains(combo.IdCombo) ? "checked" : "")
+                                           onchange="togglePrecioCombo(@combo.IdCombo)" />
+                                    <label class="form-check-label flex-grow-1" for="combo-@combo.IdCombo">
+                                        @combo.Nombre
+                                        <span class="text-muted small">— ₡@combo.Precio.ToString("N2")</span>
+                                    </label>
+                                    <div class="ms-2" id="precio-combo-@combo.IdCombo" style="@(Model.ComboIds.Contains(combo.IdCombo) ? "display:block;" : "display:none;")">
+                                        <input type="number" class="form-control form-control-sm"
+                                               name="PreciosCombos[@combo.IdCombo]"
+                                               value="@(Model.PreciosCombos.TryGetValue(combo.IdCombo, out var pc) && pc.HasValue ? pc.Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : "")"
+                                               placeholder="₡@combo.Precio.ToString("N2")" step="0.01" min="0" style="width:90px;" />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-12">
+                            <p class="text-muted mb-0">No hay combos disponibles.</p>
+                        </div>
+                    }
+                </div>
+                <small class="text-muted"><i class="bi bi-info-circle me-1"></i>Si especifica un precio, reemplazará al precio original del combo en el menú.</small>
+            </div>
+        </div>
+
+        <div class="invoice-section mt-4">
+            <div class="invoice-section-header">
+                <h5 class="mb-0"><i class="bi bi-toggle-on me-2"></i>Estado</h5>
+            </div>
+            <div class="invoice-section-body">
+                <div class="form-check form-switch">
+                    <input asp-for="Activo" class="form-check-input" type="checkbox" role="switch" />
+                    <label asp-for="Activo" class="form-check-label fw-semibold"></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="invoice-footer mt-4 d-flex justify-content-between flex-wrap gap-2">
+            <a asp-action="Mantenimiento" class="btn btn-back">
+                <i class="bi bi-arrow-left me-1"></i> Cancelar
+            </a>
+            <button type="submit" class="btn btn-fb-primary">
+                <i class="bi bi-check-circle me-1"></i> Guardar Cambios
+            </button>
+        </div>
+    </form>
 </div>
 
 @section Scripts {

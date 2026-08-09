@@ -4,79 +4,142 @@
     ViewData["Title"] = Model.Nombre;
 }
 
-<div class="row g-5 mt-2">
-    <div class="col-md-5">
-        @if (!string.IsNullOrEmpty(Model.ImagenUrl))
-        {
-            <img src="@Model.ImagenUrl" alt="@Model.Nombre" class="img-fluid rounded shadow-sm" style="max-width:100%;" />
-        }
-        else
-        {
-            <div class="rounded shadow-sm d-flex align-items-center justify-content-center" style="width:100%; height:300px; background:#f0f0f0;">
-                <span class="text-muted fs-5">Sin imagen disponible</span>
+<div class="invoice-wrapper">
+    <div class="invoice-header text-white">
+        <div class="d-flex justify-content-between align-items-start flex-wrap">
+            <div>
+                <h2 class="mb-1 fw-bold">
+                    <i class="bi bi-box-seam me-2"></i>@Model.Nombre
+                </h2>
+                <p class="mb-0 invoice-subtitle">Detalle del Producto</p>
             </div>
-        }
+            <div class="text-end">
+                <div class="invoice-number">₡@Model.Precio.ToString("N2")</div>
+                <div class="mt-2">
+                    @if (Model.Disponible)
+                    {
+                        <span class="badge estado-badge bg-success fs-6"><i class="bi bi-check-circle me-1"></i>Disponible</span>
+                    }
+                    else
+                    {
+                        <span class="badge estado-badge bg-danger fs-6"><i class="bi bi-x-circle me-1"></i>No disponible</span>
+                    }
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-7">
-        <h1 class="fw-bold mb-3" style="color:#3D2B1F;">@Model.Nombre</h1>
-        <span class="badge mb-3" style="background:#F4A261; color:#3D2B1F;">@Model.NombreCategoria</span>
 
-        <p class="fs-4 fw-bold" style="color:#E63946;">₡@Model.Precio</p>
-
-        <p class="text-muted">@Model.Descripcion</p>
-
-        <p>
-            <strong>Disponible:</strong>
-            @if (Model.Disponible)
-            {
-                <span class="badge bg-success">Sí</span>
-            }
-            else
-            {
-                <span class="badge bg-danger">No</span>
-            }
-        </p>
-
-        <div class="mb-3">
-            <label class="form-label">Cantidad</label>
-            <input type="number" class="form-control" id="cantidadProducto" value="1" min="1" max="99" style="width: 100px;" />
+    <div class="row g-4 mt-1">
+        <div class="col-md-5">
+            <div class="invoice-section">
+                <div class="invoice-section-body text-center p-3">
+                    @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+                    {
+                        <img src="@Model.ImagenUrl" alt="@Model.Nombre" class="img-fluid rounded" style="max-width:100%;" />
+                    }
+                    else
+                    {
+                        <div class="d-flex align-items-center justify-content-center" style="height:300px; background:#f0f0f0; border-radius:8px;">
+                            <div>
+                                <i class="bi bi-image" style="font-size: 4rem; color: #ccc;"></i>
+                                <p class="text-muted mt-2 mb-0">Sin imagen disponible</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
+        <div class="col-md-7">
+            <div class="invoice-section mb-3">
+                <div class="invoice-section-header">
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Información</h5>
+                </div>
+                <div class="invoice-section-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="info-label"><i class="bi bi-tag me-1"></i>Categoría</div>
+                            <div class="info-value">@Model.NombreCategoria</div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="info-label"><i class="bi bi-clock me-1"></i>Tiempo de Prep.</div>
+                            <div class="info-value">@Model.TiempoPrepMin min</div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="info-label"><i class="bi bi-fire me-1"></i>Calorías</div>
+                            <div class="info-value">@(Model.Calorias?.ToString() ?? "—")</div>
+                        </div>
+                        <div class="col-12">
+                            <div class="info-label"><i class="bi bi-card-text me-1"></i>Descripción</div>
+                            <div class="info-value">@Model.Descripcion</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <div class="d-grid gap-2 mb-4">
-            @if (Model.Disponible)
+            <div class="invoice-section mb-3">
+                <div class="invoice-section-header">
+                    <h5 class="mb-0"><i class="bi bi-cart-plus me-2"></i>Agregar al Carrito</h5>
+                </div>
+                <div class="invoice-section-body">
+                    <div class="row align-items-end g-2">
+                        <div class="col-md-4">
+                            <label class="info-label"><i class="bi bi-123 me-1"></i>Cantidad</label>
+                            <input type="number" class="form-control" id="cantidadProducto" value="1" min="1" max="99" />
+                        </div>
+                        <div class="col-md-8">
+                            @if (Model.Disponible)
+                            {
+                                <button class="btn btn-fb-primary btn-lg w-100 agregar-carrito-detalle" data-producto-id="@Model.IdProducto" data-nombre="@Model.Nombre">
+                                    <span class="spinner-border spinner-border-sm me-2 d-none" role="status"></span>
+                                    <span class="btn-text"><i class="bi bi-cart-plus me-1"></i>Agregar al Carrito</span>
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-secondary btn-lg w-100" disabled>
+                                    <i class="bi bi-x-circle me-1"></i>No disponible
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.Ingredientes.Any())
             {
-                <button class="btn btn-fb btn-lg agregar-carrito-detalle" data-producto-id="@Model.IdProducto" data-nombre="@Model.Nombre">
-                    <span class="spinner-border spinner-border-sm me-2 d-none" role="status"></span>
-                    <span class="btn-text">Agregar al carrito</span>
-                </button>
-            }
-            else
-            {
-                <button class="btn btn-secondary btn-lg" disabled>No disponible</button>
+                <div class="invoice-section">
+                    <div class="invoice-section-header">
+                        <h5 class="mb-0"><i class="bi bi-list-check me-2"></i>Ingredientes</h5>
+                    </div>
+                    <div class="invoice-section-body">
+                        <div class="row g-2">
+                            @foreach (var ingrediente in Model.Ingredientes)
+                            {
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center p-2 rounded" style="background:#FFF8F0;">
+                                        <i class="bi bi-check-circle-fill me-2" style="color:#E63946;"></i>
+                                        <span>@ingrediente</span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
             }
         </div>
+    </div>
 
-        @if (Model.Ingredientes.Any())
-        {
-            <h5 class="fw-bold mt-4 mb-3" style="color:#3D2B1F;">Ingredientes</h5>
-            <ul class="list-unstyled">
-                @foreach (var ingrediente in Model.Ingredientes)
-                {
-                    <li class="mb-2">
-                        <span style="color:#E63946;">✓</span> @ingrediente
-                    </li>
-                }
-            </ul>
-        }
+    <div class="invoice-footer mt-4">
+        <a asp-action="Index" class="btn btn-back">
+            <i class="bi bi-arrow-left me-1"></i> Volver a Productos
+        </a>
     </div>
 </div>
-
-<a asp-action="Index" class="btn btn-outline-secondary mt-4">← Volver</a>
 
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
     <div id="carritoToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header bg-success text-white">
-            <strong class="me-auto">Carrito</strong>
+            <i class="bi bi-check-circle-fill me-2"></i><strong class="me-auto">Carrito</strong>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
         </div>
         <div class="toast-body" id="carritoToastBody">
@@ -127,7 +190,7 @@
                     complete: function() {
                         btn.prop('disabled', false);
                         btn.find('.spinner-border').addClass('d-none');
-                        btn.find('.btn-text').text('Agregar al carrito');
+                        btn.find('.btn-text').html('<i class="bi bi-cart-plus me-1"></i>Agregar al Carrito');
                     }
                 });
             });

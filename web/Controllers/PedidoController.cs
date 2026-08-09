@@ -10,12 +10,14 @@ public class PedidoController : Controller
     private readonly IPedidoService _pedidoService;
     private readonly ICarritoService _carritoService;
     private readonly ISesionUsuarioService _sesionUsuarioService;
+    private readonly IMenuService _menuService;
 
-    public PedidoController(IPedidoService pedidoService, ICarritoService carritoService, ISesionUsuarioService sesionUsuarioService)
+    public PedidoController(IPedidoService pedidoService, ICarritoService carritoService, ISesionUsuarioService sesionUsuarioService, IMenuService menuService)
     {
         _pedidoService = pedidoService;
         _carritoService = carritoService;
         _sesionUsuarioService = sesionUsuarioService;
+        _menuService = menuService;
     }
 
     private async Task<(int usuarioId, InfoUsuarioDTO? info)> GetUsuarioActualAsync()
@@ -115,6 +117,9 @@ public class PedidoController : Controller
         var metodosPago = await _pedidoService.GetMetodosPagoAsync();
         ViewBag.MetodosPago = metodosPago;
 
+        var menuActual = await _menuService.GetDisponibleAsync();
+        ViewBag.MenuActual = menuActual;
+
         var carrito = await _carritoService.GetCarritoActivoAsync(usuarioId);
         ViewBag.Carrito = carrito;
 
@@ -192,18 +197,18 @@ public class PedidoController : Controller
         var metodosPago = await _pedidoService.GetMetodosPagoAsync();
         ViewBag.MetodosPago = metodosPago;
 
-        // El IdEmpleado y el IdUsuario se determinan SIEMPRE desde la sesión (servidor),
-        // ignorando cualquier valor que venga del formulario/DTO.
+        var menuActual = await _menuService.GetDisponibleAsync();
+        ViewBag.MenuActual = menuActual;
+
+        var carrito = await _carritoService.GetCarritoActivoAsync(usuarioId);
+        ViewBag.Carrito = carrito;
+
         if (esEncargadoOAdmin)
         {
-            // El encargado logueado es quien registra: su ID va como IdEmpleado.
-            // El IdUsuario (cliente) se mantiene del DTO (lo eligió en el dropdown).
             dto.IdEmpleado = usuarioId;
         }
         else
         {
-            // El cliente logueado es quien hace el pedido: su ID va como IdUsuario.
-            // No hay encargado en este caso.
             dto.IdUsuario = usuarioId;
             dto.IdEmpleado = 0;
         }

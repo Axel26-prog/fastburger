@@ -4,45 +4,74 @@
     ViewData["Title"] = "Productos";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="fw-bold" style="color:#3D2B1F;">Productos</h1>
-</div>
+<div class="invoice-wrapper">
+    <div class="invoice-header text-white">
+        <div class="d-flex justify-content-between align-items-start flex-wrap">
+            <div>
+                <h2 class="mb-1 fw-bold">
+                    <i class="bi bi-grid-3x3-gap me-2"></i>Catálogo de Productos
+                </h2>
+                <p class="mb-0 invoice-subtitle">Nuestra selección de productos disponibles</p>
+            </div>
+            <div class="text-end">
+                <div class="invoice-number">@Model.Count() <small style="font-size: 0.6em; font-weight: 500;">productos</small></div>
+            </div>
+        </div>
+    </div>
 
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-    @foreach (var producto in Model)
+    @if (!Model.Any())
     {
-        <div class="col">
-            <div class="card h-100 shadow-sm border-0 card-fb">
-                @if (!string.IsNullOrEmpty(producto.ImagenUrl))
-                {
-                    <img src="@producto.ImagenUrl" class="card-img-top" alt="@producto.Nombre" style="height:200px; object-fit:cover;" />
-                }
-                else
-                {
-                    <div class="card-img-top d-flex align-items-center justify-content-center" style="height:200px; background:#f0f0f0;">
-                        <span class="text-muted">Sin imagen disponible</span>
-                    </div>
-                }
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title fw-bold" style="color:#3D2B1F;">@producto.Nombre</h5>
-                    <span class="badge bg-secondary mb-2 align-self-start">@producto.NombreCategoria</span>
-                    <p class="card-text fs-4 fw-bold mt-auto text-end" style="color:#E63946;">₡@producto.Precio</p>
-                    <div class="d-grid gap-2">
-                        <a asp-action="Detalle" asp-route-id="@producto.IdProducto" class="btn btn-outline-primary">Ver Detalle</a>
-                        @if (producto.Disponible)
+        <div class="invoice-section mt-4">
+            <div class="invoice-section-body text-center py-5">
+                <i class="bi bi-box" style="font-size: 4rem; color: #ccc;"></i>
+                <h4 class="mt-3" style="color: #3D2B1F;">No hay productos disponibles</h4>
+                <p class="text-muted mb-0">Aún no se han registrado productos en el sistema.</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mt-1">
+            @foreach (var producto in Model)
+            {
+                <div class="col">
+                    <div class="side-block h-100 card-fb" style="margin-bottom: 0;">
+                        @if (!string.IsNullOrEmpty(producto.ImagenUrl))
                         {
-                            <button class="btn btn-fb agregar-carrito" data-producto-id="@producto.IdProducto" data-nombre="@producto.Nombre">
-                                <span class="spinner-border spinner-border-sm me-1 d-none" role="status"></span>
-                                <span class="btn-text">Agregar al carrito</span>
-                            </button>
+                            <img src="@producto.ImagenUrl" class="img-fluid" alt="@producto.Nombre" style="height:200px; width:100%; object-fit:cover; border-radius:12px 12px 0 0;" />
                         }
                         else
                         {
-                            <button class="btn btn-secondary" disabled>No disponible</button>
+                            <div class="d-flex align-items-center justify-content-center" style="height:200px; background:#f0f0f0; border-radius:12px 12px 0 0;">
+                                <i class="bi bi-image" style="font-size: 3rem; color: #ccc;"></i>
+                            </div>
                         }
+                        <div class="side-block-body d-flex flex-column">
+                            <h6 class="side-name mb-1">@producto.Nombre</h6>
+                            <span class="badge mb-2 align-self-start" style="background:#F4A261; color:#3D2B1F;">
+                                @producto.NombreCategoria
+                            </span>
+                            <p class="card-text fs-4 fw-bold mt-auto mb-2 text-end" style="color:#E63946;">₡@producto.Precio.ToString("N2")</p>
+                            <div class="d-grid gap-2">
+                                <a asp-action="Detalle" asp-route-id="@producto.IdProducto" class="btn btn-fb">
+                                    <i class="bi bi-eye me-1"></i> Ver Detalle
+                                </a>
+                                @if (producto.Disponible)
+                                {
+                                    <button class="btn btn-fb-primary agregar-carrito" data-producto-id="@producto.IdProducto" data-nombre="@producto.Nombre">
+                                        <span class="spinner-border spinner-border-sm me-1 d-none" role="status"></span>
+                                        <span class="btn-text"><i class="bi bi-cart-plus me-1"></i>Agregar al carrito</span>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-secondary" disabled><i class="bi bi-x-circle me-1"></i>No disponible</button>
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
     }
 </div>
@@ -50,7 +79,7 @@
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
     <div id="carritoToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header bg-success text-white">
-            <strong class="me-auto">Carrito</strong>
+            <i class="bi bi-check-circle-fill me-2"></i><strong class="me-auto">Carrito</strong>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
         </div>
         <div class="toast-body" id="carritoToastBody">
@@ -100,7 +129,7 @@
                     complete: function() {
                         btn.prop('disabled', false);
                         btn.find('.spinner-border').addClass('d-none');
-                        btn.find('.btn-text').text('Agregar al carrito');
+                        btn.find('.btn-text').html('<i class="bi bi-cart-plus me-1"></i>Agregar al carrito');
                     }
                 });
             });
