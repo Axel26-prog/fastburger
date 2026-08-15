@@ -51,11 +51,14 @@
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMantenimiento">
                                     <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-graph-up me-2"></i>Tablero</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" asp-controller="Producto" asp-action="Mantenimiento">Productos</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Combo" asp-action="Mantenimiento">Combos</a></li>
                                     <li><a class="dropdown-item" asp-controller="ProcesoPreparacion" asp-action="Mantenimiento">Procesos</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Menu" asp-action="Mantenimiento">Menús</a></li>
+                                    @if (User.IsInRole("Administrador"))
+                                    {
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" asp-controller="Producto" asp-action="Mantenimiento">Productos</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Combo" asp-action="Mantenimiento">Combos</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Menu" asp-action="Mantenimiento">Menús</a></li>
+                                    }
                                 </ul>
                             </li>
                         }

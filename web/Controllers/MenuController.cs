@@ -38,14 +38,14 @@ public class MenuController : Controller
         return View(menu);
     }
 
-    [Authorize(Roles = "Administrador,Encargado")]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Mantenimiento()
     {
         var menus = await _menuService.GetAllForMantenimientoAsync();
         return View("Mantenimiento/Index", menus.OrderByDescending(m => m.FechaInicio));
     }
 
-    [Authorize(Roles = "Administrador,Encargado")]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Crear()
     {
         var productos = await _menuService.GetProductosDisponiblesAsync();
@@ -57,7 +57,7 @@ public class MenuController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrador,Encargado")]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Crear(CreateMenuDTO dto)
     {
         if (ModelState.IsValid)
@@ -93,7 +93,7 @@ public class MenuController : Controller
         return View(dto);
     }
 
-    [Authorize(Roles = "Administrador,Encargado")]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Modificar(int id)
     {
         var menu = await _menuService.GetByIdForEditAsync(id);
@@ -109,7 +109,7 @@ public class MenuController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrador,Encargado")]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Modificar(UpdateMenuDTO dto)
     {
         if (ModelState.IsValid)
@@ -147,7 +147,7 @@ public class MenuController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrador,Encargado")]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Eliminar(int id)
     {
         await _menuService.DeleteAsync(id);

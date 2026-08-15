@@ -29,7 +29,7 @@ public class ComboController : Controller
         return Json(combos.Select(c => new { id = c.IdCombo, nombre = c.Nombre, precio = c.Precio, disponible = c.Disponible }));
     }
 
-    [Authorize(Roles = "Administrador,Encargado")]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Mantenimiento()
     {
         var combos = await _comboService.GetAllForMantenimientoAsync();
@@ -43,7 +43,7 @@ public class ComboController : Controller
         return View(combo);
     }
 
-    [Authorize(Roles = "Administrador,Encargado")]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Crear()
     {
         var productos = await _comboService.GetProductosAsync();
@@ -53,7 +53,7 @@ public class ComboController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrador,Encargado")]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Crear(CreateComboDTO dto)
     {
         if (ModelState.IsValid)
@@ -80,7 +80,7 @@ public class ComboController : Controller
         return View(dto);
     }
 
-    [Authorize(Roles = "Administrador,Encargado")]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Modificar(int id)
     {
         var combo = await _comboService.GetByIdAsync(id);
@@ -105,7 +105,7 @@ public class ComboController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrador,Encargado")]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Modificar(UpdateComboDTO dto)
     {
         if (ModelState.IsValid)
@@ -145,7 +145,7 @@ public class ComboController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrador,Encargado")]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Eliminar(int id)
     {
         await _comboService.DeleteAsync(id);

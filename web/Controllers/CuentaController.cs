@@ -22,7 +22,7 @@ public class CuentaController : Controller
     public IActionResult Login(string? returnUrl = null)
     {
         if (User.Identity?.IsAuthenticated == true)
-            return RedirectToAction("Index", "Home");
+            return RedirigirPorRolOHome();
 
         ViewBag.ReturnUrl = returnUrl;
         return View();
@@ -70,6 +70,9 @@ public class CuentaController : Controller
         if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             return Redirect(returnUrl);
 
+        if (string.Equals(resultado.NombreRol, "Cocina", StringComparison.OrdinalIgnoreCase))
+            return RedirectToAction("Index", "Cocina");
+
         return RedirectToAction("Index", "Home");
     }
 
@@ -77,7 +80,7 @@ public class CuentaController : Controller
     public IActionResult Registro()
     {
         if (User.Identity?.IsAuthenticated == true)
-            return RedirectToAction("Index", "Home");
+            return RedirigirPorRolOHome();
 
         return View();
     }
@@ -117,5 +120,14 @@ public class CuentaController : Controller
     {
         ViewBag.RolRequerido = rol;
         return View();
+    }
+
+    private IActionResult RedirigirPorRolOHome()
+    {
+        var rol = User.FindFirst(ClaimTypes.Role)?.Value;
+        if (string.Equals(rol, "Cocina", StringComparison.OrdinalIgnoreCase))
+            return RedirectToAction("Index", "Cocina");
+
+        return RedirectToAction("Index", "Home");
     }
 }
