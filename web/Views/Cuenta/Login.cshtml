@@ -1,0 +1,68 @@
+@using FastBurger.Application.DTOs
+@model LoginDTO
+@{
+    ViewData["Title"] = "Iniciar Sesión";
+    Layout = "_Layout";
+    var returnUrl = ViewBag.ReturnUrl as string;
+}
+
+<div class="invoice-wrapper">
+    <div class="invoice-header text-white">
+        <h2 class="mb-1 fw-bold">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+        </h2>
+        <p class="mb-0 invoice-subtitle">Ingrese sus credenciales para continuar</p>
+    </div>
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-5">
+            <div class="invoice-section">
+                <div class="invoice-section-body">
+                    <form asp-action="Login" method="post">
+                        <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Correo" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <input asp-for="Correo" class="form-control form-control-lg" placeholder="correo@ejemplo.com" autocomplete="username" />
+                            </div>
+                            <span asp-validation-for="Correo" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Contrasena" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                <input asp-for="Contrasena" class="form-control form-control-lg" placeholder="••••••••" autocomplete="current-password" />
+                            </div>
+                            <span asp-validation-for="Contrasena" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input asp-for="Recordarme" class="form-check-input" />
+                            <label asp-for="Recordarme" class="form-check-label">Recordarme por 7 días</label>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-lg text-white" style="background-color: #c8102e;">
+                                <i class="bi bi-box-arrow-in-right me-1"></i>Ingresar
+                            </button>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <span>¿No tiene cuenta? </span>
+                            <a asp-action="Registro" class="fw-bold text-decoration-none">Regístrese aquí</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

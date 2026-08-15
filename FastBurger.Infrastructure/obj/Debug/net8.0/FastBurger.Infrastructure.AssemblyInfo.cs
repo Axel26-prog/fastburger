@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FastBurger.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bea629b61d6a39b1bc4b98ea3cc1cdc5aa36b6f8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5aa67b76ed05603090712381ddcd85638f6a7877")]
 [assembly: System.Reflection.AssemblyProductAttribute("FastBurger.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FastBurger.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

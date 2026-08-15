@@ -1,2 +1,16 @@
 ﻿<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+    // Validador de contrasena: mayuscula, minuscula y numero.
+    $.validator.addMethod("contrasena", function (value, element) {
+        if (!value) return true;
+        var min = parseInt($(element).attr("data-val-contrasena-min") || "6", 10);
+        return value.length >= min && /[A-Z]/.test(value) && /[a-z]/.test(value) && /\d/.test(value);
+    });
+
+    $.validator.unobtrusive.adapters.add("contrasena", ["min"], function (options) {
+        options.rules["contrasena"] = true;
+        options.messages["contrasena"] = options.message;
+    });
+</script>

@@ -1,5 +1,6 @@
 using FastBurger.Application.DTOs;
 using FastBurger.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FastBurger.Web.Controllers;
@@ -35,12 +36,14 @@ public class ProductoController : Controller
         return View(producto);
     }
 
+    [Authorize(Roles = "Administrador,Encargado")]
     public async Task<IActionResult> Mantenimiento()
     {
         var productos = await _productoService.GetAllForMantenimientoAsync();
         return View("Mantenimiento/Index", productos);
     }
 
+    [Authorize(Roles = "Administrador,Encargado")]
     public async Task<IActionResult> Crear()
     {
         var categorias = await _productoService.GetCategoriasAsync();
@@ -52,6 +55,7 @@ public class ProductoController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Administrador,Encargado")]
     public async Task<IActionResult> Crear(CreateProductoDTO dto)
     {
         if (ModelState.IsValid)
@@ -115,6 +119,7 @@ public class ProductoController : Controller
         return View(dto);
     }
 
+    [Authorize(Roles = "Administrador,Encargado")]
     public async Task<IActionResult> Modificar(int id)
     {
         var producto = await _productoService.GetByIdAsync(id);
@@ -145,6 +150,7 @@ public class ProductoController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Administrador,Encargado")]
     public async Task<IActionResult> Modificar(UpdateProductoDTO dto)
     {
         if (ModelState.IsValid)
@@ -221,6 +227,7 @@ public class ProductoController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Administrador,Encargado")]
     public async Task<IActionResult> Eliminar(int id)
     {
         await _productoService.DeleteAsync(id);

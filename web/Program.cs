@@ -1,6 +1,11 @@
 using FastBurger.Application.Interfaces;
 using FastBurger.Application.Services;
 using FastBurger.Infrastructure.Data;
+using FastBurger.Infrastructure.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,11 +21,11 @@ builder.Services.AddScoped<IPedidoService, PedidoService>();
 builder.Services.AddScoped<ICarritoService, CarritoService>();
 builder.Services.AddScoped<ISesionUsuarioService, SesionUsuarioService>();
 builder.Services.AddScoped<IOrdenCocinaService, OrdenCocinaService>();
-
+builder.Services.AddScoped<IAutenticacionService, AutenticacionService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddSingleton<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();
 builder.Services.AddHostedService<CarritoLimpiezaBackgroundService>();
-
 builder.Services.AddHttpContextAccessor();
-
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -28,36 +33,84 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add(new AuthorizeFilter());
+});
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Cuenta/Login";
+        options.LogoutPath = "/Cuenta/Logout";
+        options.AccessDeniedPath = "/Cuenta/AccesoDenegado";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.SlidingExpiration = true;
+        options.Cookie.HttpOnly = true;
+        options.Cookie.IsEssential = true;
+        options.Events = new CookieAuthenticationEvents
+        {
+            OnRedirectToAccessDenied = context =>
+            {
+                var roles = "";
+                var endpoint = context.HttpContext.GetEndpoint();
+                if (endpoint?.Metadata != null)
+                {
+                    var authz = endpoint.Metadata.GetMetadata<AuthorizeAttribute>();
+                    if (authz != null && !string.IsNullOrEmpty(authz.Roles))
+                        roles = authz.Roles;
+                }
+
+                var uri = context.RedirectUri;
+                if (!string.IsNullOrEmpty(roles))
+                    uri += (uri.Contains('?') ? "&" : "?") + "rol=" + Uri.EscapeDataString(roles);
+
+                context.Response.Redirect(uri);
+                return Task.CompletedTask;
+            }
+        };
+    });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseSession();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<FastBurgerContext>();
-    await SeedData.InitializeAsync(context);
+    var hasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher<Usuario>>();
+    await HashearUsuariosExistentes(context, hasher);
 }
 
 app.Run();
+
+static async Task HashearUsuariosExistentes(FastBurgerContext context, IPasswordHasher<Usuario> hasher)
+{
+    var usuarios = await context.Usuarios
+        .Where(u => !u.Contrasena.StartsWith("AQAAAA"))
+        .ToListAsync();
+
+    if (usuarios.Count == 0)
+        return;
+
+    foreach (var u in usuarios)
+        u.Contrasena = hasher.HashPassword(u, u.Contrasena);
+
+    await context.SaveChangesAsync();
+}

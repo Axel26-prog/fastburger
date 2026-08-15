@@ -1,0 +1,86 @@
+@using FastBurger.Application.DTOs
+@model RegistroClienteDTO
+@{
+    ViewData["Title"] = "Registrarse";
+    Layout = "_Layout";
+}
+
+<div class="invoice-wrapper">
+    <div class="invoice-header text-white">
+        <h2 class="mb-1 fw-bold">
+            <i class="bi bi-person-plus me-2"></i>Crear Cuenta
+        </h2>
+        <p class="mb-0 invoice-subtitle">Registro de nuevo cliente</p>
+    </div>
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-6">
+            <div class="invoice-section">
+                <div class="invoice-section-body">
+                    <form asp-action="Registro" method="post">
+                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Nombre" class="form-label fw-bold"></label>
+                                <input asp-for="Nombre" class="form-control" autocomplete="given-name" />
+                                <span asp-validation-for="Nombre" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Apellidos" class="form-label fw-bold"></label>
+                                <input asp-for="Apellidos" class="form-control" autocomplete="family-name" />
+                                <span asp-validation-for="Apellidos" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Correo" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <input asp-for="Correo" class="form-control" placeholder="correo@ejemplo.com" autocomplete="email" />
+                            </div>
+                            <span asp-validation-for="Correo" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Telefono" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                <input asp-for="Telefono" class="form-control" placeholder="8888-8888" autocomplete="tel" />
+                            </div>
+                            <span asp-validation-for="Telefono" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Contrasena" class="form-label fw-bold"></label>
+                                <input asp-for="Contrasena" class="form-control" autocomplete="new-password" />
+                                <span asp-validation-for="Contrasena" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ConfirmarContrasena" class="form-label fw-bold"></label>
+                                <input asp-for="ConfirmarContrasena" class="form-control" autocomplete="new-password" />
+                                <span asp-validation-for="ConfirmarContrasena" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-lg text-white" style="background-color: #c8102e;">
+                                <i class="bi bi-person-plus me-1"></i>Registrarme
+                            </button>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <span>¿Ya tiene cuenta? </span>
+                            <a asp-action="Login" class="fw-bold text-decoration-none">Inicie sesión aquí</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

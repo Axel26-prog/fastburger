@@ -1,5 +1,6 @@
 using FastBurger.Application.DTOs;
 using FastBurger.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FastBurger.Web.Controllers;
@@ -19,6 +20,7 @@ public class ProcesoPreparacionController : Controller
         return View(procesos);
     }
 
+    [Authorize(Roles = "Administrador,Encargado")]
     public async Task<IActionResult> Mantenimiento()
     {
         var procesos = await _procesoPreparacionService.GetAllForMantenimientoAsync();
@@ -32,6 +34,7 @@ public class ProcesoPreparacionController : Controller
         return View(proceso);
     }
 
+    [Authorize(Roles = "Administrador,Encargado")]
     public async Task<IActionResult> Crear()
     {
         var productos = await _procesoPreparacionService.GetProductosDisponiblesAsync();
@@ -43,6 +46,7 @@ public class ProcesoPreparacionController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Administrador,Encargado")]
     public async Task<IActionResult> Crear(CreateProcesoPreparacionDTO dto)
     {
         if (ModelState.IsValid)
@@ -58,6 +62,7 @@ public class ProcesoPreparacionController : Controller
         return View(dto);
     }
 
+    [Authorize(Roles = "Administrador,Encargado")]
     public async Task<IActionResult> Modificar(int id)
     {
         var proceso = await _procesoPreparacionService.GetByIdAsync(id);
@@ -89,6 +94,7 @@ public class ProcesoPreparacionController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Administrador,Encargado")]
     public async Task<IActionResult> Modificar(UpdateProcesoPreparacionDTO dto)
     {
         if (ModelState.IsValid)
@@ -106,6 +112,7 @@ public class ProcesoPreparacionController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Administrador,Encargado")]
     public async Task<IActionResult> Eliminar(int id)
     {
         await _procesoPreparacionService.DeleteAsync(id);

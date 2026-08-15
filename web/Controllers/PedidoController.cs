@@ -1,10 +1,12 @@
 using FastBurger.Application.DTOs;
 using FastBurger.Application.Interfaces;
 using FastBurger.Infrastructure.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FastBurger.Web.Controllers;
 
+[Authorize]
 public class PedidoController : Controller
 {
     private readonly IPedidoService _pedidoService;
@@ -22,13 +24,20 @@ public class PedidoController : Controller
 
     private async Task<(int usuarioId, InfoUsuarioDTO? info)> GetUsuarioActualAsync()
     {
-        if (!_sesionUsuarioService.HaySesionActiva())
+        var idUsuario = _sesionUsuarioService.ObtenerIdUsuarioActual();
+        if (!idUsuario.HasValue)
+            return (0, null);
+
+        try
+        {
+            var usuario = await _sesionUsuarioService.ObtenerUsuarioActualAsync();
+            var info = await _pedidoService.GetInfoUsuarioAsync(usuario.IdUsuario);
+            return (usuario.IdUsuario, info);
+        }
+        catch (InvalidOperationException)
         {
             return (0, null);
         }
-        var usuario = await _sesionUsuarioService.ObtenerUsuarioActualAsync();
-        var info = await _pedidoService.GetInfoUsuarioAsync(usuario.IdUsuario);
-        return (usuario.IdUsuario, info);
     }
 
     public async Task<IActionResult> Index()
@@ -36,8 +45,8 @@ public class PedidoController : Controller
         var (usuarioId, info) = await GetUsuarioActualAsync();
         if (info == null)
         {
-            TempData["Error"] = "Debe seleccionar un usuario en /Sesion antes de continuar.";
-            return RedirectToAction("Index", "Sesion");
+            TempData["Error"] = "Su cuenta ya no est\u00e1 disponible. Inicie sesi\u00f3n nuevamente.";
+            return RedirectToAction("Login", "Cuenta");
         }
         ViewBag.UsuarioIdActual = usuarioId;
         ViewBag.UsuarioInfo = info;
@@ -79,8 +88,8 @@ public class PedidoController : Controller
         var (usuarioId, info) = await GetUsuarioActualAsync();
         if (info == null)
         {
-            TempData["Error"] = "Debe seleccionar un usuario en /Sesion antes de continuar.";
-            return RedirectToAction("Index", "Sesion");
+            TempData["Error"] = "Su cuenta ya no est\u00e1 disponible. Inicie sesi\u00f3n nuevamente.";
+            return RedirectToAction("Login", "Cuenta");
         }
         var pedido = await _pedidoService.GetDetalleByIdAsync(id);
         if (pedido == null) return NotFound();
@@ -100,8 +109,8 @@ public class PedidoController : Controller
         var (usuarioId, info) = await GetUsuarioActualAsync();
         if (info == null)
         {
-            TempData["Error"] = "Debe seleccionar un usuario en /Sesion antes de continuar.";
-            return RedirectToAction("Index", "Sesion");
+            TempData["Error"] = "Su cuenta ya no est\u00e1 disponible. Inicie sesi\u00f3n nuevamente.";
+            return RedirectToAction("Login", "Cuenta");
         }
         ViewBag.UsuarioIdActual = usuarioId;
         ViewBag.UsuarioInfo = info;
@@ -180,8 +189,8 @@ public class PedidoController : Controller
         var (usuarioId, info) = await GetUsuarioActualAsync();
         if (info == null)
         {
-            TempData["Error"] = "Debe seleccionar un usuario en /Sesion antes de continuar.";
-            return RedirectToAction("Index", "Sesion");
+            TempData["Error"] = "Su cuenta ya no est\u00e1 disponible. Inicie sesi\u00f3n nuevamente.";
+            return RedirectToAction("Login", "Cuenta");
         }
         ViewBag.UsuarioIdActual = usuarioId;
         ViewBag.UsuarioInfo = info;

@@ -1,0 +1,42 @@
+@{
+    ViewData["Title"] = "Acceso Denegado";
+    Layout = "_Layout";
+
+    var rolReq = ViewBag.RolRequerido as string;
+    var rolTexto = "";
+    if (!string.IsNullOrEmpty(rolReq))
+    {
+        var partes = rolReq.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        rolTexto = string.Join(" o ", partes);
+    }
+}
+
+<div class="invoice-wrapper">
+    <div class="invoice-header text-white">
+        <h2 class="mb-1 fw-bold">
+            <i class="bi bi-shield-lock me-2"></i>Acceso Denegado
+        </h2>
+        <p class="mb-0 invoice-subtitle">No tiene permisos para acceder a esta sección</p>
+    </div>
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-6 text-center">
+            <div class="invoice-section">
+                <div class="invoice-section-body">
+                    <i class="bi bi-exclamation-triangle-fill text-warning" style="font-size: 4rem;"></i>
+                    @if (!string.IsNullOrEmpty(rolTexto))
+                    {
+                        <p class="fw-bold mt-3">Solo los usuarios con rol @rolTexto pueden acceder a esta sección.</p>
+                    }
+                    else
+                    {
+                        <p class="fw-bold mt-3">Su rol actual no permite acceder a esta funcionalidad.</p>
+                    }
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-lg text-white mt-2" style="background-color: #c8102e;">
+                        <i class="bi bi-house me-1"></i>Volver al Inicio
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

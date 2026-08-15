@@ -1,29 +1,26 @@
 using FastBurger.Application.DTOs;
 using FastBurger.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FastBurger.Web.Controllers;
 
+[Authorize]
 public class CarritoController : Controller
 {
     private readonly ICarritoService _carritoService;
-    private const int DEFAULT_USUARIO_ID = 1;
+    private readonly ISesionUsuarioService _sesionUsuarioService;
 
-    public CarritoController(ICarritoService carritoService)
+    public CarritoController(ICarritoService carritoService, ISesionUsuarioService sesionUsuarioService)
     {
         _carritoService = carritoService;
+        _sesionUsuarioService = sesionUsuarioService;
     }
 
     private int GetUsuarioIdActual()
     {
-        if (int.TryParse(Request.Query["usuarioId"], out int usuarioId))
-        {
-            HttpContext.Session.SetInt32("usuarioId", usuarioId);
-            return usuarioId;
-        }
-        if (HttpContext.Session.GetInt32("usuarioId").HasValue)
-            return HttpContext.Session.GetInt32("usuarioId")!.Value;
-        return DEFAULT_USUARIO_ID;
+        var id = _sesionUsuarioService.ObtenerIdUsuarioActual();
+        return id ?? 0;
     }
 
     [HttpPost]

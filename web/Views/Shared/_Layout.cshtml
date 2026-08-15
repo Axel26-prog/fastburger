@@ -43,20 +43,26 @@
                             <a class="nav-link" asp-controller="Pedido" asp-action="Index">Pedidos</a>
                         </li>
                         @await Component.InvokeAsync("CocinaNavLink")
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMantenimiento" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Gestión
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMantenimiento">
-                                <li><a class="dropdown-item" asp-controller="Producto" asp-action="Mantenimiento">Productos</a></li>
-                                <li><a class="dropdown-item" asp-controller="Combo" asp-action="Mantenimiento">Combos</a></li>
-                                <li><a class="dropdown-item" asp-controller="ProcesoPreparacion" asp-action="Mantenimiento">Procesos</a></li>
-                                <li><a class="dropdown-item" asp-controller="Menu" asp-action="Mantenimiento">Menús</a></li>
-                            </ul>
-                        </li>
+                        @if (User.IsInRole("Administrador") || User.IsInRole("Encargado"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMantenimiento" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Gestión
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMantenimiento">
+                                    <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-graph-up me-2"></i>Tablero</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" asp-controller="Producto" asp-action="Mantenimiento">Productos</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Combo" asp-action="Mantenimiento">Combos</a></li>
+                                    <li><a class="dropdown-item" asp-controller="ProcesoPreparacion" asp-action="Mantenimiento">Procesos</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Menu" asp-action="Mantenimiento">Menús</a></li>
+                                </ul>
+                            </li>
+                        }
                         <li class="nav-item ms-auto me-2">
                             @await Component.InvokeAsync("CarritoContador")
                         </li>
+                        @await Component.InvokeAsync("UsuarioNav")
                     </ul>
                 </div>
             </div>
@@ -64,6 +70,20 @@
     </header>
     <div class="container flex-grow-1">
             <main role="main" class="pb-3" style="padding-top: 80px;">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
             @RenderBody()
         </main>
     </div>

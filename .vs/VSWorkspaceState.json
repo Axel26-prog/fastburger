@@ -2,11 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\FastBurger.Application",
-    "\\FastBurger.Application\\Services",
     "\\web",
-    "\\web\\Views",
-    "\\web\\Views\\Pedido"
+    "\\web\\Controllers",
+    "\\web\\Views\\Pedido",
+    "\\web\\Views\\Usuarios"
   ],
-  "SelectedNode": "\\FastBurger.Application\\Services\\ProductoService.cs",
+  "SelectedNode": "\\web\\Program.cs",
   "PreviewInSolutionExplorer": false
 }

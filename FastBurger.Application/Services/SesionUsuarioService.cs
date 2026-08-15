@@ -1,8 +1,9 @@
+using System.Security.Claims;
 using FastBurger.Application.Interfaces;
 using FastBurger.Infrastructure.Data;
 using FastBurger.Infrastructure.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace FastBurger.Application.Services;
 
@@ -19,12 +20,17 @@ public class SesionUsuarioService : ISesionUsuarioService
 
     public int? ObtenerIdUsuarioActual()
     {
-        return _httpContextAccessor.HttpContext?.Session.GetInt32("usuarioId");
+        var user = _httpContextAccessor.HttpContext?.User;
+        if (user?.Identity?.IsAuthenticated != true)
+            return null;
+
+        var claim = user.FindFirst(ClaimTypes.NameIdentifier);
+        return int.TryParse(claim?.Value, out var id) ? id : null;
     }
 
     public bool HaySesionActiva()
     {
-        return ObtenerIdUsuarioActual().HasValue;
+        return _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated == true;
     }
 
     public async Task<Usuario> ObtenerUsuarioActualAsync()
@@ -33,7 +39,7 @@ public class SesionUsuarioService : ISesionUsuarioService
         if (!idUsuario.HasValue)
         {
             throw new InvalidOperationException(
-                "No hay un usuario activo en la sesión. Vaya a /Sesion para seleccionar un usuario antes de continuar.");
+                "No hay un usuario con sesi\u00f3n activa. Inicie sesi\u00f3n para continuar.");
         }
 
         var usuario = await _context.Usuarios
@@ -43,7 +49,7 @@ public class SesionUsuarioService : ISesionUsuarioService
         if (usuario == null)
         {
             throw new InvalidOperationException(
-                $"El usuario con ID {idUsuario.Value} registrado en la sesión ya no existe. Vaya a /Sesion para seleccionar un usuario válido.");
+                $"El usuario con ID {idUsuario.Value} registrado en la sesi\u00f3n ya no existe. Inicie sesi\u00f3n con un usuario v\u00e1lido.");
         }
 
         return usuario;

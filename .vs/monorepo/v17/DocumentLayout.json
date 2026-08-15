@@ -3,6 +3,50 @@
   "WorkspaceRootPath": "C:\\Users\\Axel\\source\\repos\\monorepo\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:web\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\DashboardController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:web\\Controllers\\DashboardController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\DashboardService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:FastBurger.Application\\Services\\DashboardService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\UsuariosController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:web\\Controllers\\UsuariosController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\CuentaController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:web\\Controllers\\CuentaController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Validations\\ContrasenaValidaAttribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:FastBurger.Application\\Validations\\ContrasenaValidaAttribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\FastBurger.Application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:FastBurger.Application\\FastBurger.Application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\AutenticacionService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:FastBurger.Application\\Services\\AutenticacionService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Interfaces\\IAutenticacionService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:FastBurger.Application\\Interfaces\\IAutenticacionService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\DTOs\\AutenticacionDTO.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:FastBurger.Application\\DTOs\\AutenticacionDTO.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\PedidoController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:web\\Controllers\\PedidoController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\ProductoService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:FastBurger.Application\\Services\\ProductoService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -13,10 +57,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\PedidoService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:FastBurger.Application\\Services\\PedidoService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\PedidoController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:web\\Controllers\\PedidoController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Views\\Pedido\\Index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -114,24 +154,141 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "ProcesoPreparacionService.cs",
-              "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\ProcesoPreparacionService.cs",
-              "RelativeDocumentMoniker": "FastBurger.Application\\Services\\ProcesoPreparacionService.cs",
-              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\ProcesoPreparacionService.cs",
-              "RelativeToolTip": "FastBurger.Application\\Services\\ProcesoPreparacionService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "DashboardController.cs",
+              "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\DashboardController.cs",
+              "RelativeDocumentMoniker": "web\\Controllers\\DashboardController.cs",
+              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\DashboardController.cs",
+              "RelativeToolTip": "web\\Controllers\\DashboardController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-09T01:43:52.378Z",
+              "WhenOpened": "2026-08-14T22:16:38.409Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DashboardService.cs",
+              "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\DashboardService.cs",
+              "RelativeDocumentMoniker": "FastBurger.Application\\Services\\DashboardService.cs",
+              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\DashboardService.cs",
+              "RelativeToolTip": "FastBurger.Application\\Services\\DashboardService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADUAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-14T22:15:09.706Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ContrasenaValidaAttribute.cs",
+              "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Validations\\ContrasenaValidaAttribute.cs",
+              "RelativeDocumentMoniker": "FastBurger.Application\\Validations\\ContrasenaValidaAttribute.cs",
+              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Validations\\ContrasenaValidaAttribute.cs",
+              "RelativeToolTip": "FastBurger.Application\\Validations\\ContrasenaValidaAttribute.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-14T21:46:52.297Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "FastBurger.Application.csproj",
+              "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\FastBurger.Application.csproj",
+              "RelativeDocumentMoniker": "FastBurger.Application\\FastBurger.Application.csproj",
+              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\FastBurger.Application.csproj",
+              "RelativeToolTip": "FastBurger.Application\\FastBurger.Application.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-08-14T21:46:27.122Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UsuariosController.cs",
+              "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\UsuariosController.cs",
+              "RelativeDocumentMoniker": "web\\Controllers\\UsuariosController.cs",
+              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\UsuariosController.cs",
+              "RelativeToolTip": "web\\Controllers\\UsuariosController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-14T18:55:46.539Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "CuentaController.cs",
+              "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\CuentaController.cs",
+              "RelativeDocumentMoniker": "web\\Controllers\\CuentaController.cs",
+              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\CuentaController.cs",
+              "RelativeToolTip": "web\\Controllers\\CuentaController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAABHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-14T18:51:15.353Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AutenticacionService.cs",
+              "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\AutenticacionService.cs",
+              "RelativeDocumentMoniker": "FastBurger.Application\\Services\\AutenticacionService.cs",
+              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\AutenticacionService.cs",
+              "RelativeToolTip": "FastBurger.Application\\Services\\AutenticacionService.cs",
+              "ViewState": "AgIAALMAAAAAAAAAAAAAANEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-14T18:46:12.421Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "IAutenticacionService.cs",
+              "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Interfaces\\IAutenticacionService.cs",
+              "RelativeDocumentMoniker": "FastBurger.Application\\Interfaces\\IAutenticacionService.cs",
+              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Interfaces\\IAutenticacionService.cs",
+              "RelativeToolTip": "FastBurger.Application\\Interfaces\\IAutenticacionService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-14T18:43:33.957Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Program.cs",
+              "RelativeDocumentMoniker": "web\\Program.cs",
+              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Program.cs",
+              "RelativeToolTip": "web\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFYAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-14T18:19:15.987Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "AutenticacionDTO.cs",
+              "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\DTOs\\AutenticacionDTO.cs",
+              "RelativeDocumentMoniker": "FastBurger.Application\\DTOs\\AutenticacionDTO.cs",
+              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\DTOs\\AutenticacionDTO.cs",
+              "RelativeToolTip": "FastBurger.Application\\DTOs\\AutenticacionDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-14T18:33:46.184Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Views\\Pedido\\Index.cshtml",
               "RelativeDocumentMoniker": "web\\Views\\Pedido\\Index.cshtml",
@@ -139,12 +296,36 @@
               "RelativeToolTip": "web\\Views\\Pedido\\Index.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-08-09T01:22:34.597Z",
+              "WhenOpened": "2026-08-09T01:22:34.597Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "PedidoController.cs",
+              "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\PedidoController.cs",
+              "RelativeDocumentMoniker": "web\\Controllers\\PedidoController.cs",
+              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\PedidoController.cs",
+              "RelativeToolTip": "web\\Controllers\\PedidoController.cs",
+              "ViewState": "AgIAACgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-07T03:41:32.821Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 12,
+              "Title": "ProcesoPreparacionService.cs",
+              "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\ProcesoPreparacionService.cs",
+              "RelativeDocumentMoniker": "FastBurger.Application\\Services\\ProcesoPreparacionService.cs",
+              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\ProcesoPreparacionService.cs",
+              "RelativeToolTip": "FastBurger.Application\\Services\\ProcesoPreparacionService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-09T01:43:52.378Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
               "Title": "_Layout.cshtml.css",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Views\\Shared\\_Layout.cshtml.css",
               "RelativeDocumentMoniker": "web\\Views\\Shared\\_Layout.cshtml.css",
@@ -156,20 +337,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "PedidoController.cs",
-              "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\PedidoController.cs",
-              "RelativeDocumentMoniker": "web\\Controllers\\PedidoController.cs",
-              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\PedidoController.cs",
-              "RelativeToolTip": "web\\Controllers\\PedidoController.cs",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAAAEwAAAA0AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-07T03:41:32.821Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 15,
               "Title": "MenuService.cs",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\MenuService.cs",
               "RelativeDocumentMoniker": "FastBurger.Application\\Services\\MenuService.cs",
@@ -181,7 +349,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 18,
               "Title": "Registrar.cshtml",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Views\\Pedido\\Registrar.cshtml",
               "RelativeDocumentMoniker": "web\\Views\\Pedido\\Registrar.cshtml",
@@ -193,7 +361,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 19,
               "Title": "SesionController.cs",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\SesionController.cs",
               "RelativeDocumentMoniker": "web\\Controllers\\SesionController.cs",
@@ -205,7 +373,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 20,
               "Title": "SesionUsuarioService.cs",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\SesionUsuarioService.cs",
               "RelativeDocumentMoniker": "FastBurger.Application\\Services\\SesionUsuarioService.cs",
@@ -217,33 +385,31 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 13,
               "Title": "PedidoService.cs",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\PedidoService.cs",
               "RelativeDocumentMoniker": "FastBurger.Application\\Services\\PedidoService.cs",
-              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\PedidoService.cs*",
-              "RelativeToolTip": "FastBurger.Application\\Services\\PedidoService.cs*",
+              "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\PedidoService.cs",
+              "RelativeToolTip": "FastBurger.Application\\Services\\PedidoService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAMoBAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-07T03:39:52.784Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-07T03:39:52.784Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 11,
               "Title": "ProductoService.cs",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\ProductoService.cs",
               "RelativeDocumentMoniker": "FastBurger.Application\\Services\\ProductoService.cs",
               "ToolTip": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\ProductoService.cs",
               "RelativeToolTip": "FastBurger.Application\\Services\\ProductoService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAAANgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-07T03:23:54.136Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-07T03:23:54.136Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 16,
               "Title": "MenuDTO.cs",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\DTOs\\MenuDTO.cs",
               "RelativeDocumentMoniker": "FastBurger.Application\\DTOs\\MenuDTO.cs",
@@ -255,7 +421,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 21,
               "Title": "CarritoService.cs",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\Services\\CarritoService.cs",
               "RelativeDocumentMoniker": "FastBurger.Application\\Services\\CarritoService.cs",
@@ -267,7 +433,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 22,
               "Title": "CreatePedidoDTO.cs",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Application\\DTOs\\CreatePedidoDTO.cs",
               "RelativeDocumentMoniker": "FastBurger.Application\\DTOs\\CreatePedidoDTO.cs",
@@ -279,7 +445,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 23,
               "Title": "Pago.cs",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Infrastructure\\Models\\Pago.cs",
               "RelativeDocumentMoniker": "FastBurger.Infrastructure\\Models\\Pago.cs",
@@ -291,7 +457,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 24,
               "Title": "EstacionCocina.cs",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Infrastructure\\Models\\EstacionCocina.cs",
               "RelativeDocumentMoniker": "FastBurger.Infrastructure\\Models\\EstacionCocina.cs",
@@ -303,7 +469,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 25,
               "Title": "CategoriaProducto.cs",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Infrastructure\\Models\\CategoriaProducto.cs",
               "RelativeDocumentMoniker": "FastBurger.Infrastructure\\Models\\CategoriaProducto.cs",
@@ -315,7 +481,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 27,
               "Title": "FastBurgerContext.cs",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Infrastructure\\Data\\FastBurgerContext.cs",
               "RelativeDocumentMoniker": "FastBurger.Infrastructure\\Data\\FastBurgerContext.cs",
@@ -327,7 +493,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 26,
               "Title": "Carrito.cs",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Infrastructure\\Models\\Carrito.cs",
               "RelativeDocumentMoniker": "FastBurger.Infrastructure\\Models\\Carrito.cs",
@@ -339,7 +505,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 28,
               "Title": "Pedido.cs",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\FastBurger.Infrastructure\\Models\\Pedido.cs",
               "RelativeDocumentMoniker": "FastBurger.Infrastructure\\Models\\Pedido.cs",
@@ -351,7 +517,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 29,
               "Title": "AUDITORIA_AVANCE5.md",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\AUDITORIA_AVANCE5.md",
               "RelativeDocumentMoniker": "web\\AUDITORIA_AVANCE5.md",
@@ -363,7 +529,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 30,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "web\\Views\\Shared\\_Layout.cshtml",
@@ -375,7 +541,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 31,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Views\\Carrito\\Index.cshtml",
               "RelativeDocumentMoniker": "web\\Views\\Carrito\\Index.cshtml",
@@ -387,7 +553,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 32,
               "Title": "Default.cshtml",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Views\\Shared\\Components\\CarritoContador\\Default.cshtml",
               "RelativeDocumentMoniker": "web\\Views\\Shared\\Components\\CarritoContador\\Default.cshtml",
@@ -399,7 +565,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 33,
               "Title": "CarritoController.cs",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Controllers\\CarritoController.cs",
               "RelativeDocumentMoniker": "web\\Controllers\\CarritoController.cs",
@@ -411,7 +577,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 35,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "web\\Views\\Home\\Index.cshtml",
@@ -423,7 +589,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 34,
               "Title": "FastBurger.Web.csproj",
               "DocumentMoniker": "C:\\Users\\Axel\\source\\repos\\monorepo\\web\\FastBurger.Web.csproj",
               "RelativeDocumentMoniker": "web\\FastBurger.Web.csproj",

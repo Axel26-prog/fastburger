@@ -1,0 +1,88 @@
+@model FastBurger.Application.DTOs.CrearStaffDTO
+
+@{
+    ViewData["Title"] = "Crear Usuario";
+    var roles = ViewBag.Roles as List<string>;
+}
+
+<div class="invoice-wrapper">
+    <div class="invoice-header text-white">
+        <h2 class="mb-1 fw-bold">
+            <i class="bi bi-person-plus me-2"></i>Nuevo Usuario
+        </h2>
+        <p class="mb-0 invoice-subtitle">Crear usuario con rol Encargado o Cocina</p>
+    </div>
+
+    <form asp-action="Crear" method="post" class="mt-4">
+        @Html.AntiForgeryToken()
+
+        <div class="invoice-section">
+            <div class="invoice-section-header">
+                <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Información del Usuario</h5>
+            </div>
+            <div class="invoice-section-body">
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Nombre" class="info-label"><i class="bi bi-person me-1"></i>Nombre</label>
+                        <input asp-for="Nombre" class="form-control" autocomplete="given-name" />
+                        <span asp-validation-for="Nombre" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Apellidos" class="info-label"><i class="bi bi-person me-1"></i>Apellidos</label>
+                        <input asp-for="Apellidos" class="form-control" autocomplete="family-name" />
+                        <span asp-validation-for="Apellidos" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Correo" class="info-label"><i class="bi bi-envelope me-1"></i>Correo</label>
+                        <input asp-for="Correo" class="form-control" placeholder="correo@ejemplo.com" autocomplete="email" />
+                        <span asp-validation-for="Correo" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Telefono" class="info-label"><i class="bi bi-telephone me-1"></i>Teléfono</label>
+                        <input asp-for="Telefono" class="form-control" placeholder="8888-8888" autocomplete="tel" />
+                        <span asp-validation-for="Telefono" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Rol" class="info-label"><i class="bi bi-shield-lock me-1"></i>Rol</label>
+                        <select asp-for="Rol" class="form-select">
+                            <option value="">-- Seleccionar Rol --</option>
+                            @if (roles != null)
+                            {
+                                @foreach (var rol in roles)
+                                {
+                                    <option value="@rol">@rol</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="Rol" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Contrasena" class="info-label"><i class="bi bi-lock me-1"></i>Contraseña</label>
+                        <input asp-for="Contrasena" class="form-control" autocomplete="new-password" />
+                        <span asp-validation-for="Contrasena" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="ConfirmarContrasena" class="info-label"><i class="bi bi-lock-fill me-1"></i>Confirmar Contraseña</label>
+                        <input asp-for="ConfirmarContrasena" class="form-control" autocomplete="new-password" />
+                        <span asp-validation-for="ConfirmarContrasena" class="text-danger small"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="invoice-footer mt-4">
+            <button type="submit" class="btn btn-fb">
+                <i class="bi bi-check-circle me-1"></i>Crear Usuario
+            </button>
+            <a asp-action="Index" class="btn btn-back ms-2">
+                <i class="bi bi-arrow-left me-1"></i>Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
