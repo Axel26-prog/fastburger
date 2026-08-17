@@ -36,6 +36,18 @@ builder.Services.AddSession(options =>
 builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add(new AuthorizeFilter());
+
+    var mb = options.ModelBindingMessageProvider;
+    mb.SetAttemptedValueIsInvalidAccessor((value, field) => "El valor ingresado no es válido.");
+    mb.SetMissingBindRequiredValueAccessor(field => "Este campo es obligatorio.");
+    mb.SetMissingKeyOrValueAccessor(() => "Este campo es obligatorio.");
+    mb.SetMissingRequestBodyRequiredValueAccessor(() => "Se requiere un cuerpo de solicitud no vacío.");
+    mb.SetNonPropertyAttemptedValueIsInvalidAccessor(value => "El valor ingresado no es válido.");
+    mb.SetNonPropertyUnknownValueIsInvalidAccessor(() => "El valor proporcionado no es válido.");
+    mb.SetNonPropertyValueMustBeANumberAccessor(() => "El campo debe ser un número.");
+    mb.SetUnknownValueIsInvalidAccessor(field => "El valor proporcionado no es válido.");
+    mb.SetValueIsInvalidAccessor(value => $"El valor '{value}' no es válido.");
+    mb.SetValueMustBeANumberAccessor(field => "El campo debe ser un número.");
 });
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

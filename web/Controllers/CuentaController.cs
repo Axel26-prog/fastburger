@@ -59,8 +59,8 @@ public class CuentaController : Controller
 
         var propiedades = new AuthenticationProperties
         {
-            IsPersistent = dto.Recordarme,
-            ExpiresUtc = dto.Recordarme ? DateTimeOffset.UtcNow.AddDays(7) : DateTimeOffset.UtcNow.AddMinutes(30)
+            IsPersistent = false,
+            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30)
         };
 
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, propiedades);

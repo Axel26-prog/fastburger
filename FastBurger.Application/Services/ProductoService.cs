@@ -78,7 +78,12 @@ public class ProductoService : IProductoService
             TiempoPrepMin = producto.TiempoPrepMin,
             Calorias = producto.Calorias,
             NombreCategoria = producto.IdCategoriaNavigation.Nombre,
-            Ingredientes = producto.ProductoIngredientes.Select(pi => pi.IdIngredienteNavigation.Nombre).ToList(),
+            Ingredientes = producto.ProductoIngredientes.Select(pi => new IngredienteProductoDTO
+            {
+                IdIngrediente = pi.IdIngredienteNavigation.IdIngrediente,
+                Nombre = pi.IdIngredienteNavigation.Nombre,
+                Alergenico = pi.IdIngredienteNavigation.Alergenico
+            }).ToList(),
             IngredienteIds = producto.ProductoIngredientes.Select(pi => pi.IdIngrediente).ToList()
         };
     }

@@ -12,7 +12,7 @@ public class ProductoDTO
     public int TiempoPrepMin { get; set; }
     public int? Calorias { get; set; }
     public string? NombreCategoria { get; set; }
-    public List<string> Ingredientes { get; set; } = new();
+    public List<IngredienteProductoDTO> Ingredientes { get; set; } = new();
     public List<int> IngredienteIds { get; set; } = new();
 }
 
@@ -59,4 +59,11 @@ public class IngredienteDTO
     public string? Descripcion { get; set; }
     public bool Alergenico { get; set; }
     public string UnidadMedida { get; set; } = null!;
+}
+
+public class IngredienteProductoDTO
+{
+    public int IdIngrediente { get; set; }
+    public string Nombre { get; set; } = null!;
+    public bool Alergenico { get; set; }
 }

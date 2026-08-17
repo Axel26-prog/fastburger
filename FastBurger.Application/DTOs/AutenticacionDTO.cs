@@ -13,8 +13,6 @@ public class LoginDTO
     [DataType(DataType.Password)]
     public string Contrasena { get; set; } = null!;
 
-    public bool Recordarme { get; set; }
-
     public string? ReturnUrl { get; set; }
 }
 

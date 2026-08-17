@@ -405,6 +405,8 @@
                     }
                     validarFormulario();
                 });
+            } else {
+                cargarDirecciones($('#idUsuarioSeleccionado').val());
             }
 
             $('#metodoPagoSelect').on('change', function() {
